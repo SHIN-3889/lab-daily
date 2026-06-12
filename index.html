@@ -306,8 +306,7 @@ function renderAnalView(visTasks, daily){
         var hasData = !!gcGroups[key];
         var cls = 'gc-cell' + (hasData ? ' gc-cell-active' : ' gc-cell-empty');
         html += '<div class="'+cls+'" onclick="selectGcNum('+JSON.stringify(key)+')">'+
-                '<div>#'+found+'</div>'+
-                (hasData ? '<div style="font-size:9px;opacity:.7;">'+gcGroups[key].length+'건</div>' : '')+
+                '#'+found+
                 '</div>';
       } else {
         html += '<div class="gc-blank"></div>';
