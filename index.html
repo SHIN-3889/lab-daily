@@ -67,7 +67,7 @@
   .empty { color:#aaa; font-size:12px; padding:6px 0; }
   /* GC 실험실 배치 */
   .gc-layout { position:relative; width:100%; overflow-x:auto; margin-bottom:10px; }
-  .gc-map { display:grid; grid-template-columns:repeat(12,40px); grid-template-rows:repeat(8,40px); gap:4px; min-width:528px; }
+  .gc-map { display:grid; grid-template-columns:repeat(14,40px); grid-template-rows:repeat(8,40px); gap:4px; min-width:616px; }
   .gc-cell { width:40px; height:40px; display:flex; align-items:center; justify-content:center;
     border-radius:9px; font-size:12px; font-weight:700; cursor:pointer;
     border:2px solid #e3e8ee; background:#f4f6f9; color:#ccc; user-select:none; transition:all .15s; }
@@ -282,12 +282,14 @@ function renderAnalView(visTasks, daily){
 
   // 실험실 GC 배치 (row, col) - 12열 8행 그리드
   var GC_POS = {
-    1:[8,1], 2:[7,1], 3:[6,1], 4:[5,1], 5:[4,1], 6:[3,1], 7:[2,3],
+    1:[8,1], 2:[7,1], 3:[6,1], 4:[5,1], 5:[4,1], 6:[3,1],
+    7:[2,2],
     8:[1,3], 9:[1,4], 10:[1,5], 11:[1,6],
-    12:[2,7], 13:[3,7], 14:[4,7], 15:[5,7], 16:[6,7],
-    17:[6,8], 18:[5,8], 19:[4,8], 20:[3,8],
-    21:[1,9], 22:[1,10], 23:[1,11], 24:[1,12],
-    25:[2,11], 26:[2,12], 27:[3,12]
+    12:[2,8],
+    13:[3,10], 14:[4,10], 15:[5,10], 16:[6,10],
+    17:[6,11], 18:[5,11], 19:[4,11], 20:[3,11],
+    21:[1,8], 22:[1,9], 23:[1,10], 24:[1,11], 25:[1,12], 26:[1,13],
+    27:[2,14]
   };
 
   var html = '<div class="anal-card">';
