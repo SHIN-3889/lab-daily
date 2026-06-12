@@ -77,6 +77,19 @@
   .gc-cell-selected { background:#2980b9 !important; border-color:#1a5276 !important; color:#fff !important; }
   .gc-blank { width:28px; height:28px; }
   .gc-sample-area { border-top:1px solid #eaf0f6; padding-top:6px; min-height:40px; }
+  /* GC 팝업 */
+  .gc-popup-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; z-index:1000; padding:20px; }
+  .gc-popup { background:#fff; border-radius:14px; max-width:420px; width:100%; max-height:75vh; overflow-y:auto; box-shadow:0 10px 40px rgba(0,0,0,.3); }
+  .gc-popup-head { font-size:17px; font-weight:800; color:#1a5276; padding:16px 18px; border-bottom:2px solid #eaf2f8; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:#fff; }
+  .gc-popup-close { cursor:pointer; font-size:18px; color:#999; padding:2px 8px; border-radius:6px; }
+  .gc-popup-close:hover { background:#f0f0f0; }
+  .gc-popup-body { padding:10px 18px 18px; }
+  /* 분석 토글 카드 */
+  .anal-toggle { cursor:pointer; }
+  .anal-toggle-head { display:flex; align-items:center; justify-content:space-between; }
+  .anal-count { font-size:12px; color:#888; font-weight:600; }
+  .anal-arrow { font-size:11px; margin-left:2px; }
+  .anal-toggle-body { margin-top:8px; }
   @media (max-width:600px) {
     .slot-cols { flex-direction:column; }
   }
@@ -280,7 +293,6 @@ function renderAnalView(visTasks, daily){
 
   window._gcData = gcGroups;
 
-  // 실험실 GC 배치 (row, col) - 12열 8행 그리드
   var GC_POS = {
     1:[8,1], 2:[7,1], 3:[6,1], 4:[5,1], 5:[4,1], 6:[3,1],
     7:[2,2],
@@ -289,14 +301,12 @@ function renderAnalView(visTasks, daily){
     13:[3,8], 14:[4,8], 15:[5,8], 16:[6,8],
     17:[6,10], 18:[5,10], 19:[4,10], 20:[3,10],
     21:[1,11], 22:[1,12], 23:[1,13], 24:[1,14], 25:[1,15], 26:[1,16],
-    27:[2,18]
+    27:[2,17]
   };
 
   var html = '<div class="anal-card">';
   html += '<div class="anal-title">🔬 GC</div>';
   html += '<div class="gc-layout"><div class="gc-map">';
-
-  // 그리드 셀 생성 (8행 × 12열)
   for (var row=1; row<=8; row++) {
     for (var col=1; col<=18; col++) {
       var found = null;
@@ -307,56 +317,70 @@ function renderAnalView(visTasks, daily){
         var key = String(found);
         var hasData = !!gcGroups[key];
         var cls = 'gc-cell' + (hasData ? ' gc-cell-active' : ' gc-cell-empty');
-        html += '<div class="'+cls+'" onclick="selectGcNum('+JSON.stringify(key)+')">'+
-                '#'+found+
-                '</div>';
+        html += '<div class="'+cls+'" onclick="openGcPopup('+JSON.stringify(key)+')">#'+found+'</div>';
       } else {
         html += '<div class="gc-blank"></div>';
       }
     }
   }
+  html += '</div></div></div>';
 
-  html += '</div></div>';
-  html += '<div id="gcSampleList" class="gc-sample-area"></div>';
-  html += '</div>';
-
-  // 기타 분석 카드
+  // 기타 분석 카드 - 토글(접기/펼치기)
   var otherKeys = Object.keys(otherGroups).sort(function(a,b){
     if (a==='성적서') return 1; if (b==='성적서') return -1;
     return a.localeCompare(b,'ko');
   });
-  otherKeys.forEach(function(a){
-    html += '<div class="anal-card"><div class="anal-title">🔬 '+esc(a)+'</div>';
+  otherKeys.forEach(function(a, idx){
+    var aid = 'anal-toggle-'+idx;
+    html += '<div class="anal-card anal-toggle" onclick="toggleAnal(this)">';
+    html += '<div class="anal-toggle-head"><span class="anal-title" style="margin:0;">🔬 '+esc(a)+'</span>';
+    html += '<span class="anal-count">'+otherGroups[a].length+'건 <span class="anal-arrow">▾</span></span></div>';
+    html += '<div class="anal-toggle-body" style="display:none;">';
     otherGroups[a].forEach(function(item){
       var pcls = PROC_CLS[item.proc]||'';
       html += '<div class="anal-sample"><span class="s-name">'+esc(item.sample)+'</span>'+
               '<span class="s-proc '+pcls+'">'+esc(item.proc)+'</span></div>';
     });
-    html += '</div>';
+    html += '</div></div>';
   });
 
   return html || '<div class="card"><div class="empty">표시할 항목이 없어요</div></div>';
 }
 
-function selectGcNum(num){
-  document.querySelectorAll('.gc-cell').forEach(function(c){ c.classList.remove('gc-cell-selected'); });
-  document.querySelectorAll('.gc-cell').forEach(function(c){
-    if (c.textContent.trim().startsWith('#'+num)) c.classList.add('gc-cell-selected');
-  });
-  var list = document.getElementById('gcSampleList');
-  if (!list) return;
-  var data = window._gcData && window._gcData[num];
-  if (!data || data.length === 0) {
-    list.innerHTML = '<div class="empty" style="padding:10px 4px;">오늘 #'+num+' 분석 없음</div>';
-    return;
-  }
-  list.innerHTML = '<div style="padding:8px 4px 4px;font-size:12px;color:#888;font-weight:600;">#'+num+' 분석 샘플 ('+data.length+'건)</div>'+
-    data.map(function(item){
-      var pcls = (PROC_CLS||{})[item.proc]||'';
-      return '<div class="anal-sample"><span class="s-name">'+item.sample+'</span>'+
-             '<span class="s-proc '+pcls+'">'+item.proc+'</span></div>';
-    }).join('');
+// 분석 카드 토글
+function toggleAnal(card){
+  var body = card.querySelector('.anal-toggle-body');
+  var arrow = card.querySelector('.anal-arrow');
+  if (body.style.display === 'none') { body.style.display='block'; if(arrow)arrow.textContent='▴'; }
+  else { body.style.display='none'; if(arrow)arrow.textContent='▾'; }
 }
+
+// GC 클릭 시 팝업
+function openGcPopup(num){
+  var data = window._gcData && window._gcData[num];
+  if (!data || data.length === 0) return;
+  var html = '<div class="gc-popup-overlay" onclick="closeGcPopup(event)">';
+  html += '<div class="gc-popup" onclick="event.stopPropagation();">';
+  html += '<div class="gc-popup-head">🔬 GC #'+num+' <span style="font-size:13px;color:#888;font-weight:400;">('+data.length+'건)</span>';
+  html += '<span class="gc-popup-close" onclick="closeGcPopup(event)">✕</span></div>';
+  html += '<div class="gc-popup-body">';
+  data.forEach(function(item){
+    var pcls = (PROC_CLS||{})[item.proc]||'';
+    html += '<div class="anal-sample"><span class="s-name">'+item.sample+'</span>'+
+            '<span class="s-proc '+pcls+'">'+item.proc+'</span></div>';
+  });
+  html += '</div></div></div>';
+  var div = document.createElement('div');
+  div.id = 'gcPopupRoot';
+  div.innerHTML = html;
+  document.body.appendChild(div);
+}
+function closeGcPopup(e){
+  if(e) e.stopPropagation();
+  var root = document.getElementById('gcPopupRoot');
+  if (root) root.remove();
+}
+
 
 
 function setView(v){ var tk=todayKey(); var d=loadDaily(tk); d.view = (v==='anal'?'anal':'day'); saveDaily(tk,d); render(); }
