@@ -63,11 +63,11 @@
   .btn-green { background:#27ae60; color:#fff; }
   .btn-red { background:#fdecea; color:#c0392b; padding:6px 10px; }
   .row { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
-  .adhoc-input { flex:1; border:1px solid #ccd6e0; border-radius:8px; padding:9px; font-size:13px; min-width:140px; }
+  .adhoc-input { flex:1; border:1px solid #ccd6e0; border-radius:8px; padding:9px; font-size:13px; min-width:756px; }
   .empty { color:#aaa; font-size:12px; padding:6px 0; }
   /* GC 실험실 배치 */
   .gc-layout { position:relative; width:100%; overflow-x:auto; margin-bottom:10px; }
-  .gc-map { display:grid; grid-template-columns:repeat(14,40px); grid-template-rows:repeat(8,40px); gap:4px; min-width:616px; }
+  .gc-map { display:grid; grid-template-columns:repeat(18,40px); grid-template-rows:repeat(8,40px); gap:4px; min-width:756px; }
   .gc-cell { width:40px; height:40px; display:flex; align-items:center; justify-content:center;
     border-radius:9px; font-size:12px; font-weight:700; cursor:pointer;
     border:2px solid #e3e8ee; background:#f4f6f9; color:#ccc; user-select:none; transition:all .15s; }
@@ -285,11 +285,11 @@ function renderAnalView(visTasks, daily){
     1:[8,1], 2:[7,1], 3:[6,1], 4:[5,1], 5:[4,1], 6:[3,1],
     7:[2,2],
     8:[1,3], 9:[1,4], 10:[1,5], 11:[1,6],
-    12:[2,8],
-    13:[3,10], 14:[4,10], 15:[5,10], 16:[6,10],
-    17:[6,11], 18:[5,11], 19:[4,11], 20:[3,11],
-    21:[1,8], 22:[1,9], 23:[1,10], 24:[1,11], 25:[1,12], 26:[1,13],
-    27:[2,14]
+    12:[2,7],
+    13:[3,8], 14:[4,8], 15:[5,8], 16:[6,8],
+    17:[6,10], 18:[5,10], 19:[4,10], 20:[3,10],
+    21:[1,11], 22:[1,12], 23:[1,13], 24:[1,14], 25:[1,15], 26:[1,16],
+    27:[2,18]
   };
 
   var html = '<div class="anal-card">';
@@ -298,7 +298,7 @@ function renderAnalView(visTasks, daily){
 
   // 그리드 셀 생성 (8행 × 12열)
   for (var row=1; row<=8; row++) {
-    for (var col=1; col<=12; col++) {
+    for (var col=1; col<=18; col++) {
       var found = null;
       for (var n=1; n<=27; n++) {
         if (GC_POS[n] && GC_POS[n][0]===row && GC_POS[n][1]===col) { found=n; break; }
