@@ -357,40 +357,6 @@ function selectGcNum(num){
 }
 
 
-function selectGcNum(num){
-  // 이전 선택 해제
-  document.querySelectorAll('.gc-cell').forEach(function(c){ c.classList.remove('gc-cell-selected'); });
-  var cell = document.querySelector('.gc-cell[onclick*="\''+num+'\'"]');
-  if (cell) cell.classList.add('gc-cell-selected');
-  var list = document.getElementById('gcSampleList');
-  if (!list) return;
-  var data = window._gcData && window._gcData[num];
-  if (!data || data.length === 0) {
-    list.innerHTML = '<div class="empty" style="padding:10px;">오늘 #'+num+' 분석 없음</div>';
-    return;
-  }
-  list.innerHTML = '<div style="padding:8px 4px 4px;font-size:12px;color:#888;font-weight:600;">#'+num+' 분석 샘플 ('+data.length+'건)</div>' +
-    data.map(function(item){
-      var pcls = (PROC_CLS||{})[item.proc]||'';
-      return '<div class="anal-sample"><span class="s-name">'+item.sample+'</span><span class="s-proc '+pcls+'">'+item.proc+'</span></div>';
-    }).join('');
-}
-
-
-function selectGcNum(num){
-  document.querySelectorAll('.gc-num-btn').forEach(function(b){ b.classList.remove('gc-num-active'); });
-  var btns = document.querySelectorAll('.gc-num-btn');
-  btns.forEach(function(b){ if(b.textContent.startsWith('#'+num)) b.classList.add('gc-num-active'); });
-  if (btn) btn.classList.add('gc-num-active');
-  var list = document.getElementById('gcSampleList');
-  if (!list || !window._gcData || !window._gcData[num]) return;
-  list.innerHTML = window._gcData[num].map(function(item){
-    var pcls = (window.PROC_CLS||{})[item.proc]||'';
-    return '<div class="anal-sample"><span class="s-name">'+item.sample+'</span><span class="s-proc '+pcls+'">'+item.proc+'</span></div>';
-  }).join('');
-}
-
-
 function setView(v){ var tk=todayKey(); var d=loadDaily(tk); d.view = (v==='anal'?'anal':'day'); saveDaily(tk,d); render(); }
 function setShift(s){ var tk=todayKey(); var d=loadDaily(tk); d.shift=s; saveDaily(tk,d); render(); }
 function toggleCond(key){ var tk=todayKey(); var d=loadDaily(tk); d[key]=!d[key]; saveDaily(tk,d); render(); }
