@@ -63,19 +63,19 @@
   .btn-green { background:#27ae60; color:#fff; }
   .btn-red { background:#fdecea; color:#c0392b; padding:6px 10px; }
   .row { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
-  .adhoc-input { flex:1; border:1px solid #ccd6e0; border-radius:8px; padding:9px; font-size:13px; min-width:756px; }
+  .adhoc-input { flex:1; border:1px solid #ccd6e0; border-radius:8px; padding:9px; font-size:13px; min-width:540px; }
   .empty { color:#aaa; font-size:12px; padding:6px 0; }
   /* GC 실험실 배치 */
   .gc-layout { position:relative; width:100%; overflow-x:auto; margin-bottom:10px; }
-  .gc-map { display:grid; grid-template-columns:repeat(18,40px); grid-template-rows:repeat(8,40px); gap:4px; min-width:756px; }
-  .gc-cell { width:40px; height:40px; display:flex; align-items:center; justify-content:center;
-    border-radius:9px; font-size:12px; font-weight:700; cursor:pointer;
+  .gc-map { display:grid; grid-template-columns:repeat(18,28px); grid-template-rows:repeat(8,28px); gap:3px; min-width:540px; }
+  .gc-cell { width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+    border-radius:6px; font-size:10px; font-weight:700; cursor:pointer;
     border:2px solid #e3e8ee; background:#f4f6f9; color:#ccc; user-select:none; transition:all .15s; }
   .gc-cell-active { background:#eaf2f8; border-color:#2980b9; color:#1a5276; }
   .gc-cell-active:hover { background:#d6eaf8; }
   .gc-cell-empty { cursor:default; }
   .gc-cell-selected { background:#2980b9 !important; border-color:#1a5276 !important; color:#fff !important; }
-  .gc-blank { width:40px; height:40px; }
+  .gc-blank { width:28px; height:28px; }
   .gc-sample-area { border-top:1px solid #eaf0f6; padding-top:6px; min-height:40px; }
   @media (max-width:600px) {
     .slot-cols { flex-direction:column; }
