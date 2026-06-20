@@ -43,7 +43,9 @@
   "links": {
     "U-FB-120/125": "Toluene (U-125,120)"
   },
-  "warnings": {},
+  "warnings": {
+    "U-FB-120/125": "샘플"
+  },
   "displayNames": {},
   "condStates": {
     "cond200": false,
