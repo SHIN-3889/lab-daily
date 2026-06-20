@@ -32,7 +32,7 @@
     "Naphtha": "1.GSC 보관 (CS2 호용), GSC는 RVP Psi(단저)로 입력\n2.수입남사는 보압점이 화학현대답화에 중확점을 부탁하고(6227), MTBE에는 데이타 나오지 못해 결대 됨(6193)\n3.Saybot Blank는 셈플 색깔도 넣었고 그냥 잡는다\n4.GS남사는 reformulyzer Method PIPNA,Na 수입남사는 행지하는 데이터 분광이 필요함\n5.수입남사 Bottle에서 갈아와서 셈플을 받아와서 Bottle을 가지고 Bottle을 갖다가서 모아놓다 모면데이터가 오토값이다 입력\n6.GS남사는 분석이 끝나고 갈아드기다 비비고 SAmple 갈아드기 모아놓다 오토 후성장이 보강수서 모데가\n7.GS남사는 S.G.B.Distillation,WTR 만 분석\n8.남사는 분석이 끝나지난 안나서 글나디고 분석이 있어도 항유가 주고있는 영진서 변선 놓치주아면",
     "NaOCl": "1.U/C에 데이터 들자지않고 글나디고 분목하고 MTBE에 (6227), MTBE는 데이터 나오지 못해 결대 됨(6193)\n2.저자검수신 조정에서 유효염소가 13이라면 분석에 결과 성적서에서 데이터를 불러주면 됨",
     "검수": "1. BD에서 오는 DMF ->의뢰접수 후 WTR확인후 입력\n2. MEOH의 PERMANGANATE TIME은 15도씨에서 방치했을때 기준색이 되는데 2시간도 넘게걸림 보통은 WTR만 보고.. 가끔씩 Distillation을 보는데 Distillation Range는 MAX 1.0이다.",
-    "C3 LPG (#2)": "1.GSC 보관 (CS2 호용), GSC는 RVP Psi(단저)로 입력",
+    "C3 LPG (#2)": "1. 설날,추석 같이 연휴가 긴 경우 C3 LPG,Mixed C4 샘플이 걸렸을 경우 그 전 데이터를 참고하여 입력한다.",
     "Mixed C4 (#2)": "1.수입남사 중 한건의 PIANO_GS 를 선택해서 답아와서 PIANO_GS 를 선택해서",
     "C4 LPG (#1,#2)": "1.#1 C4 LPG 분석에는 답나지 모니지 않은 항유가 있다",
     "Steam(HS,LS)": "1.LS는 Low Pressure Steam, HS는 High Pressure Steam이고 주로 Steam을 사용한다.",
