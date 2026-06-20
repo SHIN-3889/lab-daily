@@ -44,5 +44,11 @@
     "U-FB-120/125": "Toluene (U-125,120)"
   },
   "warnings": {},
-  "displayNames": {}
+  "displayNames": {},
+  "condStates": {
+    "cond200": false,
+    "condPAR": false,
+    "condSMTK": false,
+    "condSMT327": false
+  }
 }
