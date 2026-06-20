@@ -34,7 +34,7 @@
     "검수": "1. BD에서 오는 DMF ->의뢰접수 후 WTR확인후 입력\n2. MEOH의 PERMANGANATE TIME은 15도씨에서 방치했을때 기준색이 되는데 2시간도 넘게걸림 보통은 WTR만 보고.. 가끔씩 Distillation을 보는데 Distillation Range는 MAX 1.0이다.",
     "C3 LPG (#2)": "1. 설날,추석 같이 연휴가 긴 경우 C3 LPG,Mixed C4 샘플이 걸렸을 경우 그 전 데이터를 참고하여 입력한다.",
     "Mixed C4 (#2)": "1.수입남사 중 한건의 PIANO_GS 를 선택해서 답아와서 PIANO_GS 를 선택해서",
-    "C4 LPG (#1,#2)": "1.#1 C4 LPG 분석에는 답나지 모니지 않은 항유가 있다",
+    "C4 LPG (#1,#2)": "1. #1 C4 LPG (S-105)의 경우 Sol Cracking 용도로 사용될때 Butane 값이 95%이상이 되어야한다.",
     "Steam(HS,LS)": "1.LS는 Low Pressure Steam, HS는 High Pressure Steam이고 주로 Steam을 사용한다.",
     "폐수": "1. 노말헥산 추출법은 비휘발성 물질을 측정하는 방법이다. 물중 H/C을 측정했는데 BTX,Lighter 등이 많다면 노말헥산 추출법은 의미가 없다.(추출하고 80도씨 오븐중에 다 날라가버림)",
     "WTR": "1.C/W PO4 : 10-20, Ca Hardness : 0.2\n2.수돗물 PO4 : 0\n3.C.O.C (Cycle Of Concentrate)",
