@@ -36,7 +36,7 @@
     "Mixed C4 (#2)": "1.수입남사 중 한건의 PIANO_GS 를 선택해서 답아와서 PIANO_GS 를 선택해서",
     "C4 LPG (#1,#2)": "1.#1 C4 LPG 분석에는 답나지 모니지 않은 항유가 있다",
     "Steam(HS,LS)": "1.LS는 Low Pressure Steam, HS는 High Pressure Steam이고 주로 Steam을 사용한다.",
-    "폐수": "1.노수화원 추출법은 비파괴성 결절을 측정하는 방법이고, H/C도 측정하는 BTX,Lighter 등을 사용한다.\n2.노압형 수단 추출법은 PO4 - 20, Ca Hardness : 300-400",
+    "폐수": "1. 노말헥산 추출법은 비휘발성 물질을 측정하는 방법이다. 물중 H/C을 측정했는데 BTX,Lighter 등이 많다면 노말헥산 추출법은 의미가 없다.(추출하고 80도씨 오븐중에 다 날라가버림)",
     "WTR": "1.C/W PO4 : 10-20, Ca Hardness : 0.2\n2.수돗물 PO4 : 0\n3.C.O.C (Cycle Of Concentrate)",
     "Gassing Up": "1.Gassing 과정 : 질소로 N2 퍼지한다. -> 신고자에 요구하나, 고객사에서 요청하기에 등의\n문제가 발생할 수 있다. 그리고 핸디미터에 따라야 한다.\n2.Gassing Up을 할 때는 Spec에 맞춰 적당한 시점에 N2 부어를 가져야 한다.\n3.Gassing Up이란 신규 사업을 시작하기 전에 N2를 제거하면서 가다리는 과정.\n지만 날아가지 않게 사이클 도착해야 한다.\n4.Gassing UP은 이란 N2 Purge 후 생산물을 요구하고, 고객사에서 요구가 없다 면\nN2 등을 제거하는 과정"
   },
