@@ -16,7 +16,7 @@
     "PIP's (Q-780)": "1. 일본으로 출하시에 Distillation(DP), Carbonyl을 분석\n2. 펌프에서 따는 경우가 아니면 봄베1개(보관용) Bottle1개(분석용)를 가지고 샘플링을 한다.",
     "DCPD (Q-770)": "1. 비중,WTR,TBC,T/S,Color 분석\n2. DCPD Distillation이 필요할 경우 Raw C9+(FBP) Method를 이용한다\n3. 펌프에서 따는 경우가 아니면 봄베1개(보관용) Bottle1개(분석용)를 가지고 샘플링을 한다.\n4. 펌프에서 따는 경우 #20에 불러오기하면 불러와짐\n5. 한화솔루션으로 가는 DCPD의 경우(GA-771) 분석후 결과승인 후 성적서를 보내주면 된다.",
     "Benzene (U-119,123)": "1. Distillation시 소수점 까지 적어주기\n2. Distillation 50% 기준온도 80.1, 만약 50%가 80.2이라면 (80.2-80.1=0.1)를 IBP,EP에 뺴준다.\n3. T/S 볼때 LT1이 아니라 소수점 2째자리까지 알려주기\n4. U-119A/B는 금호P&B로 보낼때에만 뜸\n5. U-123B는 항상 돌고있음 SM에 공급됨",
-    "Toluene (U-125,120)": "1.Distillation 50% 기준은 110.6, 만약 50%가 111.1이라면 (111.1-110.6=0.5)를 IBP,EP에 빼준다.\n2.T/S 별별 LTI이 아니라 소수점 2제자리까지 알겨주기",
+    "Toluene (U-125,120)": "1. Distillation시 소수점 까지 적어주기\n2. Distillation 50% 기준온도 110.6 , 만약 50%가 111.1이라면 (111.1-110.6=0.5)를 IBP,EP에 뺴준다.\n3. T/S 볼때 LT1이 아니라 소수점 2째자리까지 알려주기\n4. 물 봐야됨, T/S 안봐도 됨\n5. U-125,120 은 같은 포인트에서 뜸 주로 Tank LORRY 출하에 사용됨\n6. High Purity Toluene의 경우 실제로 비중을 분석해서 입력하고 나머지 톨루엔들을 대표비중을 사용한다.",
     "Xylene (U-117,126)": "1.iso-xylene(EB 15%+Xylene 85%) 대표비중 0.8700, Mixed-Xylene(EB 55%+Xylene 45%) 대표비중 0.8710\n2.1공장 M-Xylene(U-117)의 경우 AWC가 높다.(No.4)\n3.isomer Xylene의 경우 1일에 1번 반환 분리에서 확인된다.",
     "LOP": "1. 비중,B.N,WTR,Gum,T/S 분석\n2. 불러오기하면 Method가 PG(SS-3)으로 불러와지는데 Method를 PG Diene(DCPD LOP)로 바꿔서 분석해야한다.(봉우리 묶음 문제)\n3. 3공장 PG탱크(S-101 출하에서 목요일날 보는거)로 들어가서 BTX 원료로 사용된다.",
     "PG": "1. PG Peroxide는 제온법으로 한다.\n2. 분석시에 Method를 PG Diene(출하)로 분석해야한다.\n3. PG Thiophene의 경우 톨루엔으로 희석해서 질러야한다. (대충 Sample 2g에 톨루엔으로 Make Up) 단! 톨루엔으로 50ml Make Up할려고하면 GC찌를때 실린지가 안닿으므로 50ml보다 쪼금 더 Make Up하면 좋다\n4. 수입PG말고 탱크터미널에서 따는 PG(T-206)의 경우 Xylene샘플포인트 바로 옆에 GA-206A,B 두개의 펌프가 있는데 돌아가고 있는 펌프에서 따면된다.",
