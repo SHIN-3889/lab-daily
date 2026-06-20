@@ -31,7 +31,7 @@
     "C5-NA-R": "1.CS-R 60%, NA-R 35%, M-Xylene 5%\n2.RVP kgf로 환산해서 입력\n3.비중이 보존 CS-R가 NA-R보다 낮으로 비중을 보고\n4.CS-R를 저장하는 기상의 탱크 R-111E\n4.5M 대표비중 : 0.9112\n5.냉장고에 채물을 모으면 갖다 분배두는곳에 가져다 놓으면 Bottle을 갖다가서\nSampling해 용\n6.CS NAR 검토 도려용 확인 (C5R 111C-> RGA128ABC / NAR 118->GA144ABC / XYL->GA137AB)\n7.CS-R,NA-R,Xylene 기상에서 N,A-R이 비싸므로 NA-R이 검사하기는 경향이 강함\n8.CS-R (R-111C) 비중검사를 줄하검사->C5->NA-Raffinate (신규) 입력\nNA-R (R-118) 비중검사를 가상에 줄하고 NA-R을 입력에 (신규)",
     "Naphtha": "1.GSC 보관 (CS2 호용), GSC는 RVP Psi(단저)로 입력\n2.수입남사는 보압점이 화학현대답화에 중확점을 부탁하고(6227), MTBE에는 데이타 나오지 못해 결대 됨(6193)\n3.Saybot Blank는 셈플 색깔도 넣었고 그냥 잡는다\n4.GS남사는 reformulyzer Method PIPNA,Na 수입남사는 행지하는 데이터 분광이 필요함\n5.수입남사 Bottle에서 갈아와서 셈플을 받아와서 Bottle을 가지고 Bottle을 갖다가서 모아놓다 모면데이터가 오토값이다 입력\n6.GS남사는 분석이 끝나고 갈아드기다 비비고 SAmple 갈아드기 모아놓다 오토 후성장이 보강수서 모데가\n7.GS남사는 S.G.B.Distillation,WTR 만 분석\n8.남사는 분석이 끝나지난 안나서 글나디고 분석이 있어도 항유가 주고있는 영진서 변선 놓치주아면",
     "NaOCl": "1.U/C에 데이터 들자지않고 글나디고 분목하고 MTBE에 (6227), MTBE는 데이터 나오지 못해 결대 됨(6193)\n2.저자검수신 조정에서 유효염소가 13이라면 분석에 결과 성적서에서 데이터를 불러주면 됨",
-    "검수": "1.B0에서 오는 DMF가 사용된다.\n2.MEOH의 PERMANGANATE 두 입니다는 행지에서 답근하고 있도\n보호 WTR등 그 가정에 행자 답근아고, 그 가정에 행자 답근아고, 그 답근이 답하다",
+    "검수": "1. BD에서 오는 DMF ->의뢰접수 후 WTR확인후 입력\n2. MEOH의 PERMANGANATE TIME은 15도씨에서 방치했을때 기준색이 되는데 2시간도 넘게걸림 보통은 WTR만 보고.. 가끔씩 Distillation을 보는데 Distillation Range는 MAX 1.0이다.",
     "C3 LPG (#2)": "1.GSC 보관 (CS2 호용), GSC는 RVP Psi(단저)로 입력",
     "Mixed C4 (#2)": "1.수입남사 중 한건의 PIANO_GS 를 선택해서 답아와서 PIANO_GS 를 선택해서",
     "C4 LPG (#1,#2)": "1.#1 C4 LPG 분석에는 답나지 모니지 않은 항유가 있다",
