@@ -34,7 +34,7 @@
     "C3 LPG (#2)": "1. 설날,추석 같이 연휴가 긴 경우 C3 LPG,Mixed C4 샘플이 걸렸을 경우 그 전 데이터를 참고하여 입력한다.",
     "Mixed C4 (#2)": "1. 설날,추석 같이 연휴가 긴 경우 C3 LPG,Mixed C4 샘플이 걸렸을 경우 그 전 데이터를 참고하여 입력한다.\n2. BD에 FEED되는 MIXED-C4의 경우 #1,#3 에틸렌공정에서 나온걸 #1 U-110A탱크에 저장을 한다.",
     "C4 LPG (#1,#2)": "1. #1 C4 LPG (S-105)의 경우 Sol Cracking 용도로 사용될때 Butane 값이 95%이상이 되어야한다.",
-    "Steam(HS,LS)": "1.LS는 Low Pressure Steam, HS는 High Pressure Steam이고 주로 Steam을 사용한다.",
+    "Steam(HS,LS)": "1. LS는 Low Pressure Steam , HS는 High Pressure Steam 이라고 한다.\n2. 석유화학공정에서 FEED에 열전달을 해주기 위해 주로 Steam을 사용한다.",
     "폐수": "1. 노말헥산 추출법은 비휘발성 물질을 측정하는 방법이다. 물중 H/C을 측정했는데 BTX,Lighter 등이 많다면 노말헥산 추출법은 의미가 없다.(추출하고 80도씨 오븐중에 다 날라가버림)",
     "WTR": "1.C/W PO4 : 10-20, Ca Hardness : 0.2\n2.수돗물 PO4 : 0\n3.C.O.C (Cycle Of Concentrate)",
     "Gassing Up": "1. Gassing Up 과정 : 탱크를 N2로 퍼지한다. -> 싣고자 하는 샘플을 300ton 가량 싣고 외항으로 나가서 N2를 제거한다. (어떤식으로 제거 하는지는 잘 모름;;;) -> Rubber Bag에 샘플을 담아와서 N2가 제대로 제거 되었는지 확인한다. (매번 조금씩 다르긴 하지만 대부분 Max 0.5%) -> Spac에 맞는 경우 다시 부두로 들어와 제품을 싣는다.\n2. Gassing Up을 하지 않는 경우 보통 제품을 싣고 가면서 바다위에서 N2를 제거한다. 그런데 이때 N2를 제거하면서 제품이 조금이지만 같이 날라가게 되어서 2000ton 싣고 오기로 했는데 도착해보니 1995ton?..이런식으로 제품 손실이 발생해 선주들이 책임을 지는 경우들이 있다고 한다. 이러한 이유로 Gassing Up의 경우 선주들이 요구하거나, 고객사에서 요구하여 실행하며 특정 제품은 Gassing Up을 해야한다는 매뉴얼은 없으나 보통 C2~C4의 제품의 경우 많이 요구하는 편이다.\n3. Gassing Up 샘플이 오게되면 Comp' 하나 찌르고 O2,N2는 2개 다 찌르면 된다.\n4. Gassing Up 이란 N2 Purge 후 샘플을 넣어서 N2를 제거하는 과정을 말한다. (보통 5000ppm 이하면 OK)\n5. Gassing UP 데이터는 철해놓고 파일 보관\n6. Gassing Up의 경우 특수검사->#4 사업장 특수 -> #1 선박 및 기타 SPECIAL에 올리면 됨\n7. G/UP SPL' 입력시 -> 출하검사 시험의뢰로 입력 (채취장소 : 선박)",
