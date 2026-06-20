@@ -41,6 +41,8 @@
   .task input[type=checkbox] { width:20px; height:20px; margin-top:1px; flex-shrink:0; cursor:pointer; }
   .t-body { flex:1; min-width:0; }
   .t-title { font-size:13px; font-weight:600; word-break:break-all; }
+  .name-edit { cursor:pointer; border-bottom:1px dashed #9bc3e0; }
+  .name-edit:hover { color:#1967d2; }
   .t-note { font-size:11px; color:#c0392b; margin-top:3px; }
   .t-anal { margin-top:4px; }
   .t-anal span { display:inline-block; font-size:10px; background:#eaf2f8; color:#21618c; border:1px solid #aed6f1; border-radius:4px; padding:1px 5px; margin-right:3px; margin-bottom:2px; }
@@ -142,14 +144,217 @@
   @media (max-width:600px) {
     .slot-cols { flex-direction:column; }
   }
+  /* GitHub 설정 */
+  .gh-settings-toggle { text-align:center; font-size:12px; color:#aaa; padding:14px 0; cursor:pointer; }
+  .gh-settings-toggle:hover { color:#555; }
+  .gh-settings { margin-top:10px; }
+  .gh-card { background:#fff; border-radius:12px; padding:16px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  .gh-status { font-size:13px; padding:9px 11px; border-radius:8px; margin-bottom:10px; text-align:center; }
+  .gh-status.ok { background:#e8f5e9; color:#2e7d32; }
+  .gh-status.none { background:#fff3e0; color:#e65100; }
+  .gh-input { width:100%; padding:9px 11px; font-size:13px; font-family:monospace; border:1.5px solid #b0b8c1; border-radius:8px; background:#f5f5f7; margin-bottom:10px; }
+  .gh-btn { width:100%; padding:11px; background:#2980b9; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+  .gh-sync-bar { display:flex; align-items:center; gap:8px; font-size:12px; color:#888; margin-bottom:10px; }
+  /* 잠금 화면 (PC 전용) */
+  #lock-screen { position:fixed; inset:0; background:#1d1d1f; z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; }
+  .lock-icon { font-size:52px; margin-bottom:14px; }
+  .lock-title { color:#fff; font-size:20px; font-weight:600; margin-bottom:6px; }
+  .lock-sub { color:#86868b; font-size:13px; margin-bottom:26px; }
+  #lock-input { width:100%; max-width:300px; padding:13px 15px; font-size:16px; border:1px solid #424245; border-radius:12px; background:#2c2c2e; color:#fff; margin-bottom:10px; text-align:center; }
+  #lock-btn { width:100%; max-width:300px; padding:13px; background:#2980b9; color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer; }
+  .lock-err { color:#ff453a; font-size:13px; margin-top:10px; min-height:18px; }
+  /* 표시이름(샘플명) 편집 */
+  .s-name-edit-btn { font-size:10px; opacity:.35; cursor:pointer; margin-left:3px; }
+  .s-name-edit-btn:hover { opacity:.8; }
 </style>
 </head>
 <body>
+<div id="lock-screen" style="display:none;">
+  <div class="lock-icon">🔒</div>
+  <div class="lock-title">분석 Schedule</div>
+  <div class="lock-sub">PC에서는 비밀번호가 필요해요</div>
+  <input type="password" id="lock-input" placeholder="비밀번호" autocomplete="off" />
+  <button id="lock-btn" onclick="checkLockPassword()">잠금 해제</button>
+  <div class="lock-err" id="lock-err"></div>
+</div>
 <div class="wrap" id="app"></div>
 <script>
 var APP_VERSION = 'v7.0';
 var SCHEDULE_DEFAULT = {"1":[{"proc":"SM","slot":"d2","title":"S-20","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"SM","slot":"d2","title":"S-20A","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"SM","slot":"d2","title":"E-10","note":"","weeks":null,"cond":null,"analysis":["GC #3"]},{"proc":"SM","slot":"d2","title":"E-11","note":"","weeks":null,"cond":null,"analysis":["GC #3"]},{"proc":"SM","slot":"d2","title":"E-13","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"d2","title":"S-28","note":"","weeks":[1],"cond":null,"analysis":["WTR"]},{"proc":"SM","slot":"d2","title":"S-404","note":"","weeks":null,"cond":"PAR운전","analysis":["GC #2"]},{"proc":"T/Y","slot":"ty","title":"MT-303","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR"]},{"proc":"MTBE","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"MTBE","slot":"d2","title":"S-107","note":"","weeks":null,"cond":null,"analysis":["GC #15","WTR"]},{"proc":"MTBE","slot":"d2","title":"S-119","note":"","weeks":null,"cond":"200가동","analysis":["GC #15","WTR"]},{"proc":"C5","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"C5","slot":"d1","title":"D/W Sampling","note":"Bacteria","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"C5","slot":"d1","title":"S-001, S-024","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #21","GC #19","T-S","WTR"],"sub":[{"sample":"S-001","analysis":["GC #17","GC #21","T-S","WTR"]},{"sample":"S-024","analysis":["GC #19"]}]},{"proc":"T/Y","slot":"ty","title":"C3H6 (U-108)","note":"","weeks":null,"cond":null,"analysis":["GC #4","GC #16","GC #14","WTR(Dew Point)","GC #27"]},{"proc":"T/Y","slot":"ty","title":"HSC LOP","note":"","weeks":null,"cond":null,"analysis":["비중","GC #25","B·N","WTR","GC #27","Gum Test","Cl⁻"]},{"proc":"T/Y","slot":"ty","title":"#3 PG (S-101 GUM)","note":"","weeks":null,"cond":null,"analysis":["Gum Test"]},{"proc":"성적서발행","slot":"ship","title":"SM (MT-303) LGC 성적서 발행","note":"매주 · LGC로 발송","weeks":null,"cond":null,"analysis":["성적서"]},{"proc":"성적서발행","slot":"ship","title":"C3H6 (U-108) 금호P&B 성적서 발행","note":"매주 · 분석 후 금호P&B로 발송","weeks":null,"cond":null,"analysis":["성적서"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"SM","slot":"n1","title":"E-6","note":"","weeks":null,"cond":null,"analysis":["GC #9","GC #13"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-2800","note":"","weeks":null,"cond":null,"analysis":["GC #3","DNPC"]},{"proc":"SM","slot":"n1","title":"S-2802","note":"","weeks":null,"cond":null,"analysis":["GC #3","DNPC"]},{"proc":"MTBE","slot":"n1","title":"S-309","note":"","weeks":null,"cond":null,"analysis":["GC #16","GC #12","GC #08","WTR(Gas)"]},{"proc":"MTBE","slot":"n1","title":"S-306","note":"","weeks":null,"cond":null,"analysis":["GC #11","GC #10"]},{"proc":"C5","slot":"n1","title":"S-005","note":"","weeks":null,"cond":null,"analysis":["GC #18","T-S"]},{"proc":"C5","slot":"n1","title":"S-009","note":"","weeks":null,"cond":null,"analysis":["GC #20","T-S"]},{"proc":"C5","slot":"n1","title":"S-011","note":"","weeks":null,"cond":null,"analysis":["GC #19","T-S"]},{"proc":"SM","slot":"n2","title":"S-15","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n2","title":"S-2801","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n2","title":"S-10B","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"MTBE","slot":"n2","title":"S-201","note":"","weeks":null,"cond":"200가동","analysis":["GC #12"]},{"proc":"MTBE","slot":"n2","title":"S-207","note":"","weeks":null,"cond":"200가동","analysis":["GC #11","GC #15","GC #08","WTR(Gas)"]}],"2":[{"proc":"C5","slot":"d1","title":"S-001","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #21","TBC","T-S","WTR"]},{"proc":"C5","slot":"d1","title":"S-030","note":"","weeks":null,"cond":null,"analysis":["GC #21"]},{"proc":"C5","slot":"d1","title":"S-031","note":"","weeks":null,"cond":null,"analysis":["GC #20","T-S","WTR","Apha Color"]},{"proc":"MTBE","slot":"d2","title":"S-103","note":"","weeks":null,"cond":null,"analysis":["GC #16","GC #22"]},{"proc":"SM","slot":"d2","title":"E-4","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"d2","title":"EO-02","note":"","weeks":null,"cond":null,"analysis":["GC #2","T-S"]},{"proc":"C5","slot":"d1","title":"Q-FB-770B","note":"","weeks":null,"cond":null,"analysis":["GC #20","비중","Apha Color","TBC","T-S","WTR"]},{"proc":"T/Y","slot":"ty","title":"U-FB-111","note":"","weeks":null,"cond":null,"analysis":["GC #18"]},{"proc":"T/Y","slot":"ty","title":"T-306","note":"","weeks":null,"cond":null,"analysis":["GC #8","GC #15","GC #14","T-S","Carbonyl","phenol","WTR(Gas)"]},{"proc":"SM","slot":"n2","title":"S-14","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"C5","slot":"n1","title":"S-014","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #18"]},{"proc":"C5","slot":"n1","title":"S-015","note":"T-S as CS₂","weeks":null,"cond":null,"analysis":["GC #20","GC #19","GC #21","T-S"]},{"proc":"MTBE","slot":"n1","title":"S-304","note":"","weeks":null,"cond":null,"analysis":["GC #10","GC #11"]},{"proc":"MTBE","slot":"n1","title":"S-113","note":"","weeks":null,"cond":null,"analysis":["GC #10","GC #11","GC #12","WTR"]},{"proc":"SM","slot":"n1","title":"E-2","note":"","weeks":null,"cond":null,"analysis":["GC #1","T-N","WTR"]},{"proc":"SM","slot":"n1","title":"E-5","note":"","weeks":null,"cond":null,"analysis":["GC #1","T-N","WTR"]},{"proc":"SM","slot":"n1","title":"EC-205-A","note":"","weeks":null,"cond":null,"analysis":["WTR","T-N"]},{"proc":"SM","slot":"n1","title":"EC-205-B","note":"","weeks":null,"cond":null,"analysis":["WTR","T-N"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-17","note":"","weeks":null,"cond":null,"analysis":["DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-18","note":"","weeks":null,"cond":null,"analysis":["DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-19","note":"","weeks":null,"cond":null,"analysis":["DNPC","동점도(cSt)"]}],"3":[{"proc":"C5","slot":"d1","title":"S-001","note":"","weeks":null,"cond":null,"analysis":["GC #17","T-S","WTR"]},{"proc":"C5","slot":"d1","title":"S-024","note":"","weeks":null,"cond":null,"analysis":["GC #19","T-S"]},{"proc":"SM","slot":"d2","title":"E-12","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"d2","title":"EC-204","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"d2","title":"EO-01","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"d2","title":"S-20","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"SM","slot":"d2","title":"S-20A","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"T/Y","slot":"ty","title":"U-118","note":"","weeks":null,"cond":null,"analysis":["비중","GC #23","Distillation","B.I","NVM","T-S","Cu Corrosion","Aniline Point"]},{"proc":"T/Y","slot":"ty","title":"U-FB-108","note":"","weeks":null,"cond":null,"analysis":["GC #4","GC #14","GC #16","GC #27","WTR(Gas)"]},{"proc":"T/Y","slot":"ty","title":"MT-302B","note":"","weeks":null,"cond":null,"analysis":["비중","Apha Color","Cl⁻","Cu Corrosion","Acidity","GC #2","T-S"]},{"proc":"T/Y","slot":"ty","title":"C4-R4","note":"","weeks":null,"cond":null,"analysis":["GC #15","F⁻","Cl⁻"]},{"proc":"T/Y","slot":"ty","title":"C4-R4-1","note":"","weeks":null,"cond":null,"analysis":["GC #11","F⁻","Cl⁻","Residue on Evaporation"]},{"proc":"SM","slot":"d1","title":"S-6","note":"","weeks":null,"cond":null,"analysis":["pH","Conductivity","Fe","TOC","GC #13"]},{"proc":"T/Y","slot":"ty","title":"U-109","note":"","weeks":[2,4],"cond":null,"analysis":["RVP","Residue on Evaporation","T-S","GC #15"]},{"proc":"MTBE","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"C5","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"성적서발행","slot":"ship","title":"C3H6 (U-108) 금호P&B 성적서 발행","note":"매주 · 분석 후 금호P&B로 발송","weeks":null,"cond":null,"analysis":["성적서"]},{"proc":"MTBE","slot":"n2","title":"S-201","note":"","weeks":null,"cond":"200가동","analysis":["GC #12"]},{"proc":"MTBE","slot":"n2","title":"S-207","note":"","weeks":null,"cond":"200가동","analysis":["GC #11","GC #15","GC #8","WTR(Gas)"]},{"proc":"SM","slot":"n2","title":"S-10B","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"C5","slot":"n1","title":"S-005","note":"","weeks":null,"cond":null,"analysis":["GC #18","T-S"]},{"proc":"C5","slot":"n1","title":"S-009","note":"","weeks":null,"cond":null,"analysis":["GC #20"]},{"proc":"C5","slot":"n1","title":"S-011","note":"","weeks":null,"cond":null,"analysis":["GC #19"]},{"proc":"C5","slot":"n1","title":"S-020","note":"","weeks":null,"cond":null,"analysis":["GC #19","NaNO₂","WTR","pH"]},{"proc":"MTBE","slot":"n1","title":"S-309","note":"","weeks":null,"cond":null,"analysis":["GC #15","GC #12","GC #8","WTR(Gas)"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-11B","note":"","weeks":null,"cond":null,"analysis":["GC #9","GC #13"]}],"4":[{"proc":"SM","slot":"d2","title":"E-9","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"d2","title":"EC-203","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"MTBE","slot":"d2","title":"S-116","note":"","weeks":null,"cond":null,"analysis":["pH","Fe","GC #19"]},{"proc":"MTBE","slot":"d2","title":"S-121","note":"","weeks":null,"cond":null,"analysis":["pH","Turbidity","SO₃²⁻","Fe"]},{"proc":"MTBE","slot":"d2","title":"S-122","note":"","weeks":null,"cond":null,"analysis":["GC #19"]},{"proc":"MTBE","slot":"d2","title":"S-310","note":"","weeks":null,"cond":null,"analysis":["pH","Turbidity","SO₃²⁻","Fe"]},{"proc":"C5","slot":"d1","title":"S-001","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #21","TBC","WTR","T-S"]},{"proc":"C5","slot":"d1","title":"S-003","note":"","weeks":null,"cond":null,"analysis":["GC #18"]},{"proc":"C5","slot":"d1","title":"S-030","note":"","weeks":null,"cond":null,"analysis":["GC #21"]},{"proc":"T/Y","slot":"ty","title":"C4-R-1 (U-127A)","note":"","weeks":null,"cond":null,"analysis":["GC #15","GC #12","GC #8"]},{"proc":"T/Y","slot":"ty","title":"1-Butene (C-602C/603)","note":"","weeks":[1,3],"cond":null,"analysis":["GC #8","GC #11","GC #14","Carbonyl","T-S","Cl⁻","Peroxide","WTR(Gas)"]},{"proc":"출하정기","slot":"ship","title":"B-1 (C-602)","note":"","weeks":[1,3],"cond":null,"analysis":["성적서"]},{"proc":"출하정기","slot":"ship","title":"#3 R-118","note":"","weeks":[2,4],"cond":null,"analysis":["Aniline Point"]},{"proc":"출하정기","slot":"ship","title":"LP C2- (U-104)","note":"","weeks":[4],"cond":null,"analysis":["GC #5","GC #6","GC #14","GC #16","GC #27","WTR(Gas)"]},{"proc":"성적서발행","slot":"ship","title":"C4-R-1 (U-127A) 대림 #2 PB","note":"매주 · FAX 688-6829 · 전화 688-6826","weeks":null,"cond":null,"analysis":["성적서"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"SM","slot":"n2","title":"S-13","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n2","title":"S-15","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n2","title":"S-2801","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n2","title":"S-10B","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"C5","slot":"n1","title":"S-012","note":"","weeks":null,"cond":null,"analysis":["GC #19","GC #20"]},{"proc":"C5","slot":"n1","title":"S-014","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #18"]},{"proc":"C5","slot":"n1","title":"S-015","note":"T-S as CS₂","weeks":null,"cond":null,"analysis":["GC #19","GC #20","GC #21","T-S"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-17","note":"","weeks":null,"cond":null,"analysis":["GC #26","DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-18","note":"","weeks":null,"cond":null,"analysis":["GC #26","DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-19","note":"","weeks":null,"cond":null,"analysis":["GC #26","DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-2800","note":"","weeks":null,"cond":null,"analysis":["GC #3","DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-2802","note":"","weeks":null,"cond":null,"analysis":["GC #3","DNPC","동점도(cSt)"]}],"5":[{"proc":"SM","slot":"d2","title":"S-20","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"SM","slot":"d2","title":"S-20A","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"SM","slot":"d2","title":"E-10","note":"","weeks":null,"cond":null,"analysis":["GC #3"]},{"proc":"SM","slot":"d2","title":"E-11","note":"","weeks":null,"cond":null,"analysis":["GC #3"]},{"proc":"SM","slot":"d2","title":"E-13","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"d1","title":"S-34B","note":"","weeks":[2],"cond":null,"analysis":["GC #2"]},{"proc":"SM","slot":"d1","title":"S-34B-Vapor","note":"","weeks":[2],"cond":null,"analysis":["GC #9","GC #13","GC #10"]},{"proc":"SM","slot":"d2","title":"S-36B","note":"","weeks":[2],"cond":null,"analysis":["GC #2"]},{"proc":"SM","slot":"d2","title":"S-36B-Vapor","note":"","weeks":[2],"cond":null,"analysis":["GC #9","GC #13","GC #10"]},{"proc":"SM","slot":"d2","title":"S-501","note":"","weeks":[4],"cond":null,"analysis":["GC #13"]},{"proc":"SM","slot":"d2","title":"S-Mt 327","note":"비정기","weeks":null,"cond":"SMT327","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR"]},{"proc":"MTBE","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"MTBE","slot":"d2","title":"S-103","note":"","weeks":null,"cond":null,"analysis":["GC #16","GC #22"]},{"proc":"C5","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"C5","slot":"d1","title":"S-001, S-024, S-031","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #21","GC #19","GC #20","T-S","WTR","Apha Color"],"sub":[{"sample":"S-001","analysis":["GC #17","GC #21","T-S","WTR"]},{"sample":"S-024","analysis":["GC #19"]},{"sample":"S-031","analysis":["GC #20","T-S","WTR","Apha Color"]}]},{"proc":"T/Y","slot":"ty","title":"MTBE (C-601A/B)","note":"","weeks":null,"cond":null,"analysis":["비중","GC #12","WTR"]},{"proc":"T/Y","slot":"ty","title":"C3H6 (U-108)","note":"","weeks":null,"cond":null,"analysis":["GC #4","GC #14","GC #16","GC #27","WTR(Dew Point)"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"SM","slot":"n1","title":"E-6","note":"","weeks":null,"cond":null,"analysis":["GC #9","GC #13"]},{"proc":"SM","slot":"n1","title":"S-11","note":"","weeks":null,"cond":null,"analysis":["GC #9","GC #10","GC #13"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-292-1","note":"O₂ 분석","weeks":[1,3],"cond":null,"analysis":["GC #14"]},{"proc":"SM","slot":"n2","title":"S-10","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"SM","slot":"n2","title":"S-14","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"MTBE","slot":"n1","title":"S-309","note":"","weeks":null,"cond":null,"analysis":["GC #12","GC #15","GC #08","WTR(Gas)"]},{"proc":"MTBE","slot":"n1","title":"S-113","note":"","weeks":null,"cond":null,"analysis":["GC #10","GC #11","GC #12","WTR(Gas)"]},{"proc":"MTBE","slot":"n1","title":"S-304","note":"","weeks":null,"cond":null,"analysis":["GC #10","GC #11"]},{"proc":"MTBE","slot":"n2","title":"S-201","note":"","weeks":null,"cond":"200가동","analysis":["GC #12"]},{"proc":"MTBE","slot":"n2","title":"S-207","note":"","weeks":null,"cond":"200가동","analysis":["GC #11","GC #15","GC #08","WTR(Gas)"]},{"proc":"C5","slot":"n1","title":"S-005","note":"T-S: CS₂ 환산","weeks":null,"cond":null,"analysis":["GC #18","T-S"]},{"proc":"C5","slot":"n1","title":"S-009","note":"","weeks":null,"cond":null,"analysis":["GC #20"]},{"proc":"C5","slot":"n1","title":"S-011","note":"","weeks":null,"cond":null,"analysis":["GC #19"]},{"proc":"성적서발행","slot":"ship","title":"C3H6 (U-108) 금호P&B 성적서 발행","note":"매주 · 분석 후 금호P&B로 발송","weeks":null,"cond":null,"analysis":["성적서"]}],"6":[{"proc":"T/Y","slot":"ty","title":"U-FB-120/125","note":"","weeks":[1,3],"cond":null,"analysis":["비중","Apha Color","Distillation","AWC","Acidity","WTR","GC #24","T-S"]},{"proc":"T/Y","slot":"ty","title":"U-126","note":"","weeks":[2,4],"cond":null,"analysis":["비중","Apha Color","Distillation","AWC","Acidity","GC #24","T-S"]},{"proc":"T/Y","slot":"ty","title":"U-117","note":"","weeks":[2,4],"cond":null,"analysis":["비중","Apha Color","Distillation","AWC","Acidity","GC #24","T-S"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"SM","slot":"n2","title":"S-20","note":"","weeks":null,"cond":null,"analysis":["TBC"]},{"proc":"SM","slot":"n2","title":"S-20A","note":"","weeks":null,"cond":null,"analysis":["TBC"]},{"proc":"SM","slot":"n2","title":"S-10B","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"C5","slot":"n1","title":"S-015","note":"T-S as CS₂","weeks":null,"cond":null,"analysis":["GC #19","GC #20","T-S"]},{"proc":"C5","slot":"n1","title":"S-001","note":"","weeks":null,"cond":null,"analysis":["GC #17","TBC","T-S","WTR"]},{"proc":"SM","slot":"n1","title":"E-12","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"n1","title":"EC-204","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"n1","title":"EO-01","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-11B","note":"","weeks":null,"cond":null,"analysis":["GC #9","GC #13","GC #10"]}],"0":[{"proc":"SM","slot":"d2","title":"S-11B","note":"Teledyne 분석 추가","weeks":[1,3],"cond":null,"analysis":["GC #9","GC #10","GC #13","Teledyne"]},{"proc":"SM","slot":"d2","title":"S-11","note":"Teledyne 분석 추가","weeks":[1,3],"cond":null,"analysis":["GC #9","GC #10","GC #13","Teledyne"]},{"proc":"T/Y","slot":"ty","title":"U-FB-108","note":"","weeks":null,"cond":null,"analysis":["GC #4","GC #14","GC #16","GC #27","WTR(Gas)"]},{"proc":"T/Y","slot":"ty","title":"C-602A/B","note":"","weeks":[1,3],"cond":null,"analysis":["GC #11","GC #8","T-S","WTR(Gas)"]},{"proc":"T/Y","slot":"ty","title":"U-FB-103A","note":"","weeks":[2,4],"cond":null,"analysis":["GC #5","GC #6","GC #14","GC #16","GC #27","WTR(Gas)"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"성적서발행","slot":"ship","title":"C3H6 (U-108) 금호P&B 성적서 발행","note":"매주 · 분석 후 금호P&B로 발송","weeks":null,"cond":null,"analysis":["성적서"]},{"proc":"SM","slot":"n2","title":"S-10B","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"C5","slot":"n1","title":"S-001","note":"","weeks":null,"cond":null,"analysis":["GC #17","T-S","WTR"]},{"proc":"C5","slot":"n1","title":"S-031","note":"","weeks":null,"cond":null,"analysis":["GC #20","Apha Color"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-8D","note":"1주","weeks":[1],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-8E","note":"1주","weeks":[1],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-8F","note":"1주","weeks":[1],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-8G","note":"1주","weeks":[1],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-2B","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n1","title":"S-8B","note":"2주","weeks":[2],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-8C","note":"2주","weeks":[2],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-9","note":"2주","weeks":[2],"cond":null,"analysis":["pH","Fe","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"S-9B","note":"2주","weeks":[2],"cond":null,"analysis":["pH","Fe","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"SO-005","note":"2주","weeks":[2],"cond":null,"analysis":["pH","Fe"]},{"proc":"SM","slot":"n1","title":"S-3","note":"3주","weeks":[3],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"S-3A","note":"3주","weeks":[3],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"S-205","note":"3주","weeks":[3],"cond":null,"analysis":["pH","Fe","E-OX","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"S-205B","note":"3주","weeks":[3],"cond":null,"analysis":["pH","Fe","E-OX","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"S-32","note":"4주","weeks":[4],"cond":null,"analysis":["pH","Conductivity","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-33","note":"4주","weeks":[4],"cond":null,"analysis":["pH","Conductivity","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"EC-140","note":"4주","weeks":[4],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"SC-201","note":"4주","weeks":[4],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"SC-202","note":"4주","weeks":[4],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n2","title":"S-10","note":"","weeks":null,"cond":null,"analysis":["GC #2"]}]};
 var DAY_NAMES = ['일','월','화','수','목','금','토'];
+
+// ══════════════════════════════════════════════════════════════════
+// GitHub 동기화 (참고자료/연결/메모/표시이름을 모든 기기에서 공유)
+// ══════════════════════════════════════════════════════════════════
+var GH_REPO_OWNER = 'SHIN-3889';
+var GH_REPO_NAME  = 'lab-daily';
+var GH_FILE_PATH  = 'data.json';
+var GH_BRANCH     = 'main';
+var GH_TOKEN_KEY  = 'ncc_gh_token';
+var CLOUD_DATA = { refData:{}, links:{}, warnings:{}, displayNames:{} };
+var _ghFileSha = null;
+var _ghSyncing = false;
+
+function getGhToken(){ return localStorage.getItem(GH_TOKEN_KEY) || ''; }
+function setGhToken(v){ localStorage.setItem(GH_TOKEN_KEY, v); }
+function clearGhToken(){ localStorage.removeItem(GH_TOKEN_KEY); }
+
+// 페이지 로드 시 GitHub에서 data.json 불러오기 (토큰 있으면 API, 없으면 raw로 읽기 전용)
+async function loadCloudData(){
+  var token = getGhToken();
+  try {
+    if (token) {
+      var url = 'https://api.github.com/repos/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/contents/'+GH_FILE_PATH+'?ref='+GH_BRANCH+'&t='+Date.now();
+      var res = await fetch(url, { headers: { 'Authorization':'Bearer '+token, 'Accept':'application/vnd.github+json' } });
+      if (res.ok) {
+        var data = await res.json();
+        _ghFileSha = data.sha;
+        var decoded = decodeURIComponent(escape(atob(data.content.replace(/\\n/g,''))));
+        var parsed = JSON.parse(decoded);
+        CLOUD_DATA = Object.assign({refData:{},links:{},warnings:{},displayNames:{}}, parsed);
+        return true;
+      } else if (res.status === 404) {
+        // 파일이 아직 없음 — 기본값으로 시작
+        CLOUD_DATA = { refData: JSON.parse(JSON.stringify(REF_DEFAULT)), links:{}, warnings:{}, displayNames:{} };
+        return true;
+      }
+    } else {
+      // 토큰 없으면 raw.githubusercontent로 읽기 전용 시도
+      var rawUrl = 'https://raw.githubusercontent.com/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/'+GH_BRANCH+'/'+GH_FILE_PATH+'?t='+Date.now();
+      var r2 = await fetch(rawUrl);
+      if (r2.ok) {
+        var parsed2 = await r2.json();
+        CLOUD_DATA = Object.assign({refData:{},links:{},warnings:{},displayNames:{}}, parsed2);
+        return true;
+      }
+    }
+  } catch(e){ console.warn('GitHub 로드 실패:', e); }
+  // 실패 시: 기본 참고자료라도 채워서 진행
+  CLOUD_DATA = { refData: JSON.parse(JSON.stringify(REF_DEFAULT)), links:{}, warnings:{}, displayNames:{} };
+  return false;
+}
+
+// CLOUD_DATA 변경 시 자동으로 GitHub에 저장 (디바운스: 800ms 뒤 1번만)
+var _syncTimer = null;
+function syncToGitHub(){
+  if (_syncTimer) clearTimeout(_syncTimer);
+  _syncTimer = setTimeout(doSyncToGitHub, 800);
+}
+async function doSyncToGitHub(){
+  var token = getGhToken();
+  if (!token) { showSyncStatus('⚠️ 토큰이 없어 이 기기에만 저장돼요'); return; }
+  if (_ghSyncing) return;
+  _ghSyncing = true;
+  showSyncStatus('☁️ 저장 중...');
+  try {
+    var url = 'https://api.github.com/repos/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/contents/'+GH_FILE_PATH;
+    var content = btoa(unescape(encodeURIComponent(JSON.stringify(CLOUD_DATA, null, 2))));
+    var body = { message:'Update data.json from app', content: content, branch: GH_BRANCH };
+    if (_ghFileSha) body.sha = _ghFileSha;
+    var res = await fetch(url, {
+      method:'PUT',
+      headers:{ 'Authorization':'Bearer '+token, 'Accept':'application/vnd.github+json', 'Content-Type':'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      var result = await res.json();
+      _ghFileSha = result.content.sha;
+      showSyncStatus('✓ 저장됨 (모든 기기에 반영)');
+    } else {
+      var err = await res.json().catch(function(){return {};});
+      showSyncStatus('⚠️ 저장 실패: '+(err.message||res.status));
+    }
+  } catch(e) {
+    showSyncStatus('⚠️ 저장 실패: '+e.message);
+  } finally {
+    _ghSyncing = false;
+  }
+}
+function showSyncStatus(msg){
+  var el = document.getElementById('syncStatus');
+  if (el) el.textContent = msg;
+}
+
+// ── GitHub 설정 패널 ──────────────────────────────────────────────
+function ghSettingsHtml(){
+  var token = getGhToken();
+  var statusCls = token ? 'ok' : 'none';
+  var statusTxt = token ? ('✓ GitHub 토큰 저장됨 ('+token.slice(0,11)+'...'+token.slice(-4)+')') : 'GitHub 토큰이 없어요 — 이 기기에만 저장돼요';
+  var h = '';
+  h += '<div class="gh-settings-toggle" onclick="toggleGhSettings()" id="ghSettingsToggle">⚙️ 동기화 설정 보기</div>';
+  h += '<div class="gh-settings" id="ghSettingsBody" style="display:none;">';
+  h += '<div class="gh-card">';
+  h += '<div class="gh-status '+statusCls+'">'+statusTxt+'</div>';
+  h += '<div style="font-size:12px;color:#888;margin-bottom:8px;">토큰을 저장하면 참고자료·연결·메모·샘플명 수정이 모든 컴퓨터/휴대폰에서 똑같이 보여요.</div>';
+  h += '<input type="password" id="ghTokenInput" class="gh-input" placeholder="github_pat_... 으로 시작하는 토큰" />';
+  h += '<button class="gh-btn" onclick="onSaveGhToken()">기억하기</button>';
+  if (token) h += '<button class="gh-btn" style="background:transparent;color:#c0392b;border:1px solid #c0392b;margin-top:8px;" onclick="onClearGhToken()">토큰 지우기</button>';
+  h += '<div id="syncStatus" style="font-size:12px;color:#888;margin-top:10px;text-align:center;"></div>';
+  h += '</div>';
+  h += '</div>';
+  return h;
+}
+function toggleGhSettings(){
+  var body = document.getElementById('ghSettingsBody');
+  var toggle = document.getElementById('ghSettingsToggle');
+  if (!body) return;
+  var show = body.style.display === 'none';
+  body.style.display = show ? 'block' : 'none';
+  toggle.textContent = show ? '⚙️ 동기화 설정 닫기' : '⚙️ 동기화 설정 보기';
+}
+function onSaveGhToken(){
+  var v = document.getElementById('ghTokenInput').value.trim();
+  if (!v) { alert('토큰을 입력해주세요'); return; }
+  if (!v.startsWith('github_pat_')) { alert('올바른 토큰이 아니에요 (github_pat_로 시작해야 해요)'); return; }
+  setGhToken(v);
+  loadCloudData().then(function(){ render(); });
+  alert('토큰이 저장됐어요! 데이터를 다시 불러올게요.');
+}
+function onClearGhToken(){
+  if (!confirm('저장된 토큰을 지울까요? (이 기기에서는 더 이상 자동저장이 안 돼요)')) return;
+  clearGhToken();
+  render();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// PC 전용 비밀번호 잠금 (모바일은 잠금 없음, 주식대시보드와 동일 패턴)
+// ══════════════════════════════════════════════════════════════════
+var LOCK_PASSWORD_HASH = 'be3a0200cadbc7519c69077a3855d83f7c58469ee1fd7a3524587b297a658f88'; // 주식대시보드와 동일 비번
+var LOCK_SESSION_KEY = 'ncc_lab_unlocked';
+function isPcDevice(){
+  // 화면 너비 + 터치 지원 여부로 PC/모바일 구분
+  var isTouchOnly = ('ontouchstart' in window) && !window.matchMedia('(pointer:fine)').matches;
+  return window.innerWidth >= 900 && !isTouchOnly;
+}
+async function sha256Hex(text){
+  var buf = new TextEncoder().encode(text);
+  var hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+}
+async function checkLockPassword(){
+  var input = document.getElementById('lock-input');
+  var err = document.getElementById('lock-err');
+  if (!input.value) { err.textContent = '비밀번호를 입력하세요'; return; }
+  var hash = await sha256Hex(input.value);
+  if (hash === LOCK_PASSWORD_HASH) {
+    sessionStorage.setItem(LOCK_SESSION_KEY, '1');
+    document.getElementById('lock-screen').style.display = 'none';
+    err.textContent = '';
+  } else {
+    err.textContent = '비밀번호가 틀렸어요';
+    input.value = '';
+    input.focus();
+  }
+}
+function checkLockOnLoad(){
+  if (!isPcDevice()) return; // 모바일은 잠금 없음
+  if (sessionStorage.getItem(LOCK_SESSION_KEY) === '1') return; // 이미 해제됨
+  document.getElementById('lock-screen').style.display = 'flex';
+  var inp = document.getElementById('lock-input');
+  inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') checkLockPassword(); });
+  inp.focus();
+}
+
 var SLOT_INFO = { d1:'주간 전반 (07:00)', d2:'주간 후반 (13:00)', n1:'야간 전반 (19:00)', n2:'야간 후반 (23:00)', ty:'T/Y (주간)', ship:'출하' };
 var PROC_CLS = { 'SM':'p-SM', 'MTBE':'p-MTBE', 'C5':'p-C5', 'T/Y':'p-TY', '출하정기':'p-SHIP', '성적서발행':'p-CERT' };
 var PROC_ORDER = ['SM','MTBE','C5','T/Y','출하정기'];
@@ -183,15 +388,9 @@ function loadDaily(k){
 function saveDaily(k,d){ localStorage.setItem('ncc_daily-'+k, JSON.stringify(d)); }
 function taskId(t){ return (t.proc+'|'+t.slot+'|'+t.title).replace(/\s+/g,''); }
 
-// ── 샘플 주의사항 (샘플명 기준, localStorage 저장) ──────────────────
-var WARN_KEY = 'ncc_sample_warnings';
-function loadWarnings(){
-  try { return JSON.parse(localStorage.getItem(WARN_KEY)) || {}; }
-  catch(e){ return {}; }
-}
-function saveWarnings(obj){
-  try { localStorage.setItem(WARN_KEY, JSON.stringify(obj)); } catch(e){}
-}
+// ── 샘플 주의사항 (GitHub data.json에 저장 — 모든 기기에서 공유) ────
+function loadWarnings(){ return CLOUD_DATA.warnings || {}; }
+function saveWarnings(obj){ CLOUD_DATA.warnings = obj; syncToGitHub(); }
 function getWarning(sample){
   var w = loadWarnings();
   return w[sample] || '';
@@ -304,24 +503,55 @@ function openWarnEdit(sample){
 // ── 참고자료 (공정/제품별 주의사항) ──────────────────────────────────
 var REF_KEY = 'ncc_ref_data';
 var REF_DEFAULT = {"H2": "1.E-S-302라가 벽에 굵게쓰기, 장기분석에는 분석후를 분석하고 나머지는 H2로 보낸다.\n2.#3에 C1-C3 Method를 이용해 Impurity를 분석한다.", "C2": "1.O2를 체크하는 GC는 가장 나중에 체크하고 10분이상은 분석시키고 START를 누르다\n2.U-FB-102는 항상 보표 잡혀있고 U-FB-104는 선반으로만 점도배되어 빠르게 대응하기 위해 104,102번들이 검결정과 104를 먼저 씨도록 한다.\n3.19.8min C2H2가 있는경기 쉽다. 주의해서 처도록 한다.\n4.#2 C2H4의 정상 HP Ethylene에 생물이 들어가서 조성변이 별로 없으로 처임지지 않고 나오기되는 경우\n5.O2,N2,CO2를 분석할 SETting에 Flow를 너무 세게 하면 CO2가 인노이즈 있으니 경우가 작이는데\n6.에틸렌 공정 중 설팅에 일딸의 수문이 들어가면 Chilling 인효수온의 수분이 형성하여 결정, 파이프, 조절 VALVE 입부의 재명에 발수의 문제이 나오기 케 됨\n이 심각한 공정이 있음", "C3": "1.O2를 체크하는 GC는 기간 10분이상은 분석시키고 START를 누르다\n2.CO2를 분석할때 평등을 맞웠는데 보내는 #에서 나오는 경우이 있음\n3.메틸렌 공정 중설팅에 항화수요가 함께 수확분을 형성하여 주십에 자원에 일부의 문제이\n아 심각한 시고를 일으킨다. 그래서 수분을 없게하기 위해 수분을 없게하기 위해 노력한다.\n4.프로필렌을 GC에 Injection처리는 호 평정과 일조 상상에서 압을 맞추 처리해야 한다.\n는 경향이 있음", "C4": "1.#7 와 #14의 O2의 자치를 의미함의 기준 10분이상은 START를 보누다\n에 O2는 #에서 분추다.\n2.Mol%를 사용하는것 : C4 RAFFINATE 1 (선박) 입고 / C4 RAFFINATE 1(분광) 입고 / C4 LPG PROD' (S-105)\n3.나미지는 연갑하면 다 W7%를 사용한다.", "Mixed C4": "1.저온에서 MIXED C4를 절별적으로는데 일반 성적에서는 빨한 안갑고 보냈음\nUK-1,2를 인업갔었는데... 그 후 GS MS등을 이용해서 분석해 결과를 확인했고 M-Cyclo C3, Neo-Pentane인것을 확인했고 그 후\nM-Cyclo,Neo-Pentane로 잡고...시작했는데, Neo-Pentane이 좋은 Mixed C4가 들어가면 성정시에서는 CS's가\n적게 나오므로, 우리가 어떤것 잡오니까 CS's나 작은 그 윗부분 향유의 데이타를 시작했고 그래서 이체\n현장에서 요구로 가는 M-Cyclo C3, Neo-Pentane를 잡는니 절판을 결정이 답", "1,3-BD": "1.금호분에 아민을 처리하는 공정이 있었으나 이의공급요청보 추가됨\n2.아민 데이터는 1,3-BD 수정분량.\n3.1,3-BD 대표비중 : 0.615\n4.상온이 중요점.", "R-1": "1.대립PB로 가는 R1의 O와 R-354) UK-1,2를 M-Cyclo C3, Neo-Pentane으로 보내야한다.(고객사 보내야하지만), \n2.YNCC는 1,3-BD를 DMF로 녹이고, 금호는 NMP(N-메틸 피롤리돈)을 녹인다.\n에 각 공정서에서 측들도 추가됨", "R-4": "1.피크를 잡을때 UK를 잡주의해야한다.(고객사에서 원함)", "R-4-1": "1.R-4-1로 #2P에서 R-1을 원할 그래뉴이 보내라 했을때 #2P에서 PB를 만들고 제품가가 필요시가\n이때 안쪽 들째를 Polymer Grade에 따라 정정의 사용을 결정한 후 F,C1-,F가 함유되어있을수도 있다\nC1-를 정확하게 봐야한다.", "1-C4⁻ (C-602C/603)": "1.O2 체크할 분율을 부주의하야한다.\n2.1-Butene 대표비중 : 0.588", "i-C4⁰ (T-306)": "1.O2 체크할 분율을 부주의하야한다.\n2.iso Butane 대표비중 : 0.62", "C3 LPG (C5⁴)": "1.TBC분석은 단지지지 나오는데 분석을 분류하기 (인하인)\n2.C5공장의 보온데서 IP0.68 PIP's0.69 DCPD0.98 을 쓰지된 출하에서는 비중을 봐야한다.\n3.C5는 며정데이터로 ... CAN생물이 알맞표를 답이히도 당연히..분석가 담아야한다.\n4.봉배의 정확분의 Circulating시키주어야한다.(5분)\n5.C5 DOPA(X)의 DRAIN으로 생물을 미리하기 위해서의 드림이 저장되었다가 다시 FEED로 들어간다.\n6.ISO-TANK로 출하 발했다면 오일에 제품을 채워 넣어다. 그렇게 되면 ISO-TANK에서 생물링을 하지 못하기 때문에\nC5당당에서 집어넣었다고 하는것을 알고 사정서에 입력한다. 물량은 위가 작이서 틀리기 싫지 않음", "IP (Q-760)": "1.Bottle 2개 듣고기 (별증는 오염이 심함)\n2.Sampling함전 Bottle을 어세토를 깨끗이 씻고 짚으로 다 만신상태로 가져가기\n3.ACN,CPD분석", "PIP's (Q-780)": "1.알멍으로 1 / carbonyl 5 / carbonyl 5\n2.IPM peroxide 1 ----> MAX peroxide 5", "DCPD (Q-770)": "1.비중,WTR,TBC,T/S,Color 분석\n1.TBC분석은 단지지자 나오는데 다로 분석후기 (예민함)\n2.C5분광에서 오만 IP0.68 PIP's0.69 DCPD0.98 을 쓰지된 출하에서는 비중을 봐야한다.\n3.C5는 며정데이터로 ... CAN생물이 알맞표를 답이히도 당연히...분석가 담아야한다.\n4.봉배의 정확분의 Circulating시키주어야한다.(5분)\n5.C5 DOPA(X) DRAIN으로 생물을 미리하기 위해서의 드림이 저장되었다가 다시 FEED로 들어간다.\n6.ISO-TANK로 출하 발했다면 오일에 제품을 채워 넣어다. 그렇게 되면 ISO-TANK에서 생물링을 하지 못하기 때문에\nC5당당에서 집어넣었다고 하는것을 알고 사정서에 입력한다.\n1.DCPD Distillation이 필요한 경우 Raw C9+(분보관) Bottle1개(분보관)를 이용한다\n2.범프에서 경우가 아니면 경우는 분쇄1개(분보관) Bottle1개 가지고 한다\n3.범프에 따라 보는경우 #20에 불러오기하면 분석시간 길어짐\n4.정화율분에서 가는 경우인 DCPD의 분석후 후 정확측정 보관하여 한다.", "Benzene (U-119,123)": "1.Distillation 50% 기준은 80.1, 만약 50%가 80.2이라면 (80.2-80.1=0.1)를 IBP,EP에 빼준다.\n2.T/S 별별 LTI이 아니라 소수점 2제자리까지 알겨주기", "Toluene (U-125,120)": "1.Distillation 50% 기준은 110.6, 만약 50%가 111.1이라면 (111.1-110.6=0.5)를 IBP,EP에 빼준다.\n2.T/S 별별 LTI이 아니라 소수점 2제자리까지 알겨주기", "Xylene (U-117,126)": "1.iso-xylene(EB 15%+Xylene 85%) 대표비중 0.8700, Mixed-Xylene(EB 55%+Xylene 45%) 대표비중 0.8710\n2.1공장 M-Xylene(U-117)의 경우 AWC가 높다.(No.4)\n3.isomer Xylene의 경우 1일에 1번 반환 분리에서 확인된다.", "LOP": "1.비중,8.N,WTR,Gum분석\n1.분실으기하면 Method7가 분석되지는데 Method7 PG Diene(DCPD)로 분석해야한다.\n2.3공장 PG실(S-101)에 출하점이 목요일에 보도시기는 경우가 있다.", "PG": "1.PG Peroxide는 재분석된다.\n2.분실으기하면 Method7가 분석되지는데 Method7 PG Diene(출하)으로 분석해야한다.\n3.PG Thiophene이 분석되면 의심해야한다. (대략 Sample 2g에 분석2개가 좀더 정밀자가 들어가서 안일도 50ml보다 더 Make Up하면 좋다)\n단 분류엔서 50ml Make Up되 경우는 너무 짙어서 안일가 더 시명된 적이 있다\n4.수입PG값고 탱크미널에 따는 PG(T-206)의 경우 Xylene생물포인트 바뀌어 영에 GA-206A,B 두개의 펌프가 있는데\n돌아가는 적이 펌프에서 발견된다.", "SM (MT-317,302,327)": "1.MT-3178 1일에 한번 PAR로 돌아온 PAR를 분배합를 이용해서 생물광간을 한다.\n2.평소에 35분되 피크가 크게나오고 검정이 있는 경우라면 이 피크는 검토해야한다.(평소에 농이 0.2,13)\n3.MT-303A/B는 SM정기샘플(Day Tank,평소 일요일) 끝나고 빛니 다 채워 후 생물 채취하고도 적도까지 아이스석시에 넣어놓기\nMT-317,327로 SM당당함\n4.SM 대표비중 : 0.9112\n5.창고에 자무 따우면 모아서 SM에 가져다주면 된다.\n6.얼델하드 미배오시아 분석에서 결리가있으면 데이타에 표기를 갱산하다.\n7.5m의 정상 공정에서는 분석시간 냈갈수가 EG는 사용을 받지않으면 EG는 Flow를 가성하여 (대략 25%)\n8.출하되는 SM의 경우 후 PAB도 다 10.1지리에 입력!!!!\n9.S-11,11B O2는 PARC VIEW에서 4강장->Sm->CONDENSATE/VENT GAS SYSTEM(MS-202B/2148)로 들어가서 분석\nAI5517A를 참고하여 본다.\n10.EO-02의 경우 산촉매에 RUNNING TIME이 너무 긴 경우가 있는데 이는 뒤에 DEB가 나오면 정말 곤나갑\n타입을 늘려 주는 것이고. 이상이면 EG는지여대도 하다.\n11.5m Load DOWN 시에 SHRO를 조절하기 위해서 나오는데 SHRO란 스팀/탄화수소 비율(SHRO)을 알려주는것이고\nSHRO를 줄이면 SHRO를 줄여서 분약하면 보통은 동에는 SHRO을 좋아지수 않으면\n는 경향이 있음", "EB": "1.EB의 대표비중 : 0.8715(는불변수)", "MTBE (C-601,T-202)": "1.C-601A/B/C는 서로 하나의 탱크의 형하다.\n2.메탄올 압부원 입구에 분여면 반응 변하데 의한 DIB 생성\n3.MTBE 함성 반응이 입구의 메탄올/이소부텐 과도하게 높으면 매탄올의 닿수 반응에 의한 DME양 의 생성\n4.선향 부텐을 압예로화 반응에 의한 2MeOC,의 생성\n5.대표비중을 입력하였는데... 다른잭으로 다른건스를 입혀가야 한다.\n6.LIMS에 MTBE를 입력할 때에는 MTBE+2ME를 입력한다.\n7.매탄올/이소부텐 항역에 가두지 나우면 나서아면 함부분 작입로 결정이", "Raw C9+ (R-125)": "1.정기분석에는 R-101 1공장 출하주이안한다.\n2.Distillation시에 따라 흡어있다.\n3.만약 Raw C9+(R-125)와 동시에 하는 경우 분석해서를 성적서를 먼저 분석한다.\n(Styrene 함량 Raw C9+(R-125)를 동시에 Raw C9+(R-126)을 < Raw C9+(R-126) > Raw C9+(R-125), CPD함을\n4.R-125(Raw C9+)는 정상 동도임을", "Raw C9+C (R-126,112 Tie)": "1.정기분석시 신조경쟁때 48분종에 신청에서 넘어가는데 일부 인텔이 인변되서 한안하게 입력한다.\n2.Distillation시 신정때 일정한 적올해야 인텔이 인변되서 안일하게 조정한다.\n3.만약 Raw C9+(R-125)와 동시에 하는 경우 분석해서를 성적서를 먼저 분석한다.\n(Styrene 함량 Raw C9+(R-125)를 동시에 Raw C9+(R-126)을 < Raw C9+(R-126) > Raw C9+(R-125), CPD함을\n4.Raw C9+C에 생산되서 48분점에 신청서 인텔이 인변되서 DCPD의 양이 많이 나오는 경우가 있음", "PHT C9": "1.정기분석 GC분석, 식부정확정에는 오결합되고하고,C,F,P분증의 정도, 동판부식/S를 보면 된다.", "FHT C9": "1.정기분석 GC분석, 식부정확정에는 오결합되고하고,C,F,P분증의 정도, 동판부식/S를 보면 된다.", "Non Aro-R (U-115)": "1.2주에 3공장 분석에서 식부정확정에서 오늘날에 오결합인진 1공장 셈플라인에서 오랑 콘로니인(Copper Corrosion)\n2.한달에 한번 부정확점에서 양건 정밀 위로 탱크리로 위로 탱크리로 위로 펌프대고 따고 위에 준비된다.\n3.생물을 따라 결합에 탱크리오리스템들이 적어요(보통 평소부, 5%)이상 차이가 나오는데 이는 정상보다 부족함이 잘잡고 있다 떨어진다.\n4.#1 NAR의 경우 시인부(어널라이즈)NAR로 정고도/적도, 0.72정도 됨\nC5-NAR 됨하지 NAR(U-118)이 보로 결합하나 부족함이 잡혀나오 #1NAR(U-118)도 쓰이다 끄러대\n매 #1 NAR이 적정심상에 검자가 나오는 경우가 있다. 이때 NAR 비중이 높게 나오는 경우가 있다. 비중이 정상보다 낮다면\n#1 NAR(U-118)이 탕정량에서 처리되는데 이때 검자가 나옴", "C5-NA-R": "1.CS-R 60%, NA-R 35%, M-Xylene 5%\n2.RVP kgf로 환산해서 입력\n3.비중이 보존 CS-R가 NA-R보다 낮으로 비중을 보고\n4.CS-R를 저장하는 기상의 탱크 R-111E\n4.5M 대표비중 : 0.9112\n5.냉장고에 채물을 모으면 갖다 분배두는곳에 가져다 놓으면 Bottle을 갖다가서\nSampling해 용\n6.CS NAR 검토 도려용 확인 (C5R 111C-> RGA128ABC / NAR 118->GA144ABC / XYL->GA137AB)\n7.CS-R,NA-R,Xylene 기상에서 N,A-R이 비싸므로 NA-R이 검사하기는 경향이 강함\n8.CS-R (R-111C) 비중검사를 줄하검사->C5->NA-Raffinate (신규) 입력\nNA-R (R-118) 비중검사를 가상에 줄하고 NA-R을 입력에 (신규)", "Naphtha": "1.GSC 보관 (CS2 호용), GSC는 RVP Psi(단저)로 입력\n2.수입남사는 보압점이 화학현대답화에 중확점을 부탁하고(6227), MTBE에는 데이타 나오지 못해 결대 됨(6193)\n3.Saybot Blank는 셈플 색깔도 넣었고 그냥 잡는다\n4.GS남사는 reformulyzer Method PIPNA,Na 수입남사는 행지하는 데이터 분광이 필요함\n5.수입남사 Bottle에서 갈아와서 셈플을 받아와서 Bottle을 가지고 Bottle을 갖다가서 모아놓다 모면데이터가 오토값이다 입력\n6.GS남사는 분석이 끝나고 갈아드기다 비비고 SAmple 갈아드기 모아놓다 오토 후성장이 보강수서 모데가\n7.GS남사는 S.G.B.Distillation,WTR 만 분석\n8.남사는 분석이 끝나지난 안나서 글나디고 분석이 있어도 항유가 주고있는 영진서 변선 놓치주아면", "NaOCl": "1.U/C에 데이터 들자지않고 글나디고 분목하고 MTBE에 (6227), MTBE는 데이터 나오지 못해 결대 됨(6193)\n2.저자검수신 조정에서 유효염소가 13이라면 분석에 결과 성적서에서 데이터를 불러주면 됨", "검수": "1.B0에서 오는 DMF가 사용된다.\n2.MEOH의 PERMANGANATE 두 입니다는 행지에서 답근하고 있도\n보호 WTR등 그 가정에 행자 답근아고, 그 가정에 행자 답근아고, 그 답근이 답하다", "C3 LPG (#2)": "1.GSC 보관 (CS2 호용), GSC는 RVP Psi(단저)로 입력", "Mixed C4 (#2)": "1.수입남사 중 한건의 PIANO_GS 를 선택해서 답아와서 PIANO_GS 를 선택해서", "C4 LPG (#1,#2)": "1.#1 C4 LPG 분석에는 답나지 모니지 않은 항유가 있다", "Steam(HS,LS)": "1.LS는 Low Pressure Steam, HS는 High Pressure Steam이고 주로 Steam을 사용한다.", "폐수": "1.노수화원 추출법은 비파괴성 결절을 측정하는 방법이고, H/C도 측정하는 BTX,Lighter 등을 사용한다.\n2.노압형 수단 추출법은 PO4 - 20, Ca Hardness : 300-400", "WTR": "1.C/W PO4 : 10-20, Ca Hardness : 0.2\n2.수돗물 PO4 : 0\n3.C.O.C (Cycle Of Concentrate)", "Gassing Up": "1.Gassing 과정 : 질소로 N2 퍼지한다. -> 신고자에 요구하나, 고객사에서 요청하기에 등의\n문제가 발생할 수 있다. 그리고 핸디미터에 따라야 한다.\n2.Gassing Up을 할 때는 Spec에 맞춰 적당한 시점에 N2 부어를 가져야 한다.\n3.Gassing Up이란 신규 사업을 시작하기 전에 N2를 제거하면서 가다리는 과정.\n지만 날아가지 않게 사이클 도착해야 한다.\n4.Gassing UP은 이란 N2 Purge 후 생산물을 요구하고, 고객사에서 요구가 없다 면\nN2 등을 제거하는 과정"};
-var LINK_KEY = 'ncc_sample_links'; // 샘플명 -> 분류명
-
-function loadRefData(){
-  try {
-    var saved = JSON.parse(localStorage.getItem(REF_KEY));
-    if (saved) return saved;
-  } catch(e){}
-  return JSON.parse(JSON.stringify(REF_DEFAULT));
+function loadRefData(){ return CLOUD_DATA.refData || JSON.parse(JSON.stringify(REF_DEFAULT)); }
+function saveRefData(obj){ CLOUD_DATA.refData = obj; syncToGitHub(); }
+function loadLinks(){ return CLOUD_DATA.links || {}; }
+function saveLinks(obj){ CLOUD_DATA.links = obj; syncToGitHub(); }
+function loadDisplayNames(){ return CLOUD_DATA.displayNames || {}; }
+function saveDisplayNames(obj){ CLOUD_DATA.displayNames = obj; syncToGitHub(); }
+function getDisplayName(origTitle){
+  var d = loadDisplayNames();
+  return d[origTitle] || origTitle;
 }
-function saveRefData(obj){
-  try { localStorage.setItem(REF_KEY, JSON.stringify(obj)); } catch(e){}
-}
-function loadLinks(){
-  try { return JSON.parse(localStorage.getItem(LINK_KEY)) || {}; }
-  catch(e){ return {}; }
-}
-function saveLinks(obj){
-  try { localStorage.setItem(LINK_KEY, JSON.stringify(obj)); } catch(e){}
+function editDisplayName(origTitle){
+  var cur = getDisplayName(origTitle);
+  var overlay = document.createElement('div');
+  overlay.className = 'warn-edit-overlay';
+  overlay.onclick = function(e){ if (e.target === overlay) overlay.remove(); };
+  var box = document.createElement('div');
+  box.className = 'warn-edit-box';
+  box.style.maxWidth = '360px';
+  box.innerHTML =
+    '<h3>✏️ 표시 이름 수정</h3>'+
+    '<div class="wsub">코드 내부 원래 이름("'+esc(origTitle)+'")은 그대로 유지되고, 화면에 보이는 이름만 바뀌어요. 모든 기기에 반영돼요.</div>'+
+    '<input type="text" id="dispNameInput" class="ns-input" style="width:100%;padding:10px 12px;border:1.5px solid #b0b8c1;border-radius:8px;font-size:15px;" value="'+esc(cur)+'" />'+
+    '<div class="warn-edit-btns">'+
+    '<button class="wb-cancel">취소</button>'+
+    '<button class="wb-save">저장</button>'+
+    (cur !== origTitle ? '<button class="wb-del">원래 이름으로 되돌리기</button>' : '')+
+    '</div>';
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  var inp = box.querySelector('#dispNameInput');
+  inp.focus();
+  inp.select();
+  box.querySelector('.wb-cancel').onclick = function(){ overlay.remove(); };
+  box.querySelector('.wb-save').onclick = function(){
+    var val = inp.value.trim();
+    var d = loadDisplayNames();
+    if (val && val !== origTitle) d[origTitle] = val; else delete d[origTitle];
+    saveDisplayNames(d);
+    overlay.remove();
+    render();
+  };
+  var delBtn = box.querySelector('.wb-del');
+  if (delBtn) delBtn.onclick = function(){
+    var d = loadDisplayNames();
+    delete d[origTitle];
+    saveDisplayNames(d);
+    overlay.remove();
+    render();
+  };
 }
 function getSampleCategory(sample){
   var links = loadLinks();
@@ -439,7 +669,10 @@ function taskHtml(t, daily){
   var ck = daily.checks[id] ? 'checked' : '';
   var dn = daily.checks[id] ? ' done' : '';
   var h = '<div class="task'+dn+'"><input type="checkbox" '+ck+' onchange="toggleTask(\''+id.replace(/'/g,"\\'")+'\')">';
-  h += '<div class="t-body"><div class="t-title">' + esc(t.title);
+  var dispName = getDisplayName(t.title);
+  var titleEsc = t.title.replace(/'/g,"\\'");
+  h += '<div class="t-body"><div class="t-title">'+
+       '<span class="name-edit" onclick="editDisplayName(\''+titleEsc+'\')" title="이름 수정">'+esc(dispName)+'</span>';
   if (t.weeks) h += '<span class="t-week">'+t.weeks.join(',')+'주</span>';
   if (t.cond) h += '<span class="t-cond">'+esc(t.cond==='SMT327'?'비정기':t.cond)+'</span>';
   h += warnIconHtml(t.title);
@@ -499,6 +732,7 @@ function render(){
 
   if (daily.view === 'ref') {
     html += renderRefView();
+    html += ghSettingsHtml();
     document.getElementById('app').innerHTML = html;
     return;
   }
@@ -536,6 +770,8 @@ function render(){
   });
   html += '<div class="row"><input class="adhoc-input" id="adhocInput" placeholder="예: S-22 재분석">';
   html += '<button class="btn btn-green" onclick="addAdhoc()">추가</button></div></div>';
+
+  html += ghSettingsHtml();
 
   app.innerHTML = html;
 }
@@ -762,7 +998,8 @@ function removeAdhoc(i){
   d.adhocChecks=nc; saveDaily(tk,d); render();
 }
 
-render();
+checkLockOnLoad();
+loadCloudData().then(function(){ render(); });
 </script>
 </body>
 </html>
