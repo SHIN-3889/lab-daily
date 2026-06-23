@@ -215,7 +215,7 @@
 </div>
 <div class="wrap" id="app"></div>
 <script>
-var APP_VERSION = 'v8.0';
+var APP_VERSION = 'v8.1';
 var NOTICE = null; // 📢 메일 요약 공지 (notice.json에서 로드, 배열)
 var SCHEDULE_DEFAULT = {"1":[{"proc":"SM","slot":"d2","title":"S-20","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"SM","slot":"d2","title":"S-20A","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"SM","slot":"d2","title":"E-10","note":"","weeks":null,"cond":null,"analysis":["GC #3"]},{"proc":"SM","slot":"d2","title":"E-11","note":"","weeks":null,"cond":null,"analysis":["GC #3"]},{"proc":"SM","slot":"d2","title":"E-13","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"d2","title":"S-28","note":"","weeks":[1],"cond":null,"analysis":["WTR"]},{"proc":"SM","slot":"d2","title":"S-404","note":"","weeks":null,"cond":"PAR운전","analysis":["GC #2"]},{"proc":"T/Y","slot":"ty","title":"MT-303","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR"]},{"proc":"MTBE","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"MTBE","slot":"d2","title":"S-107","note":"","weeks":null,"cond":null,"analysis":["GC #15","WTR"]},{"proc":"MTBE","slot":"d2","title":"S-119","note":"","weeks":null,"cond":"200가동","analysis":["GC #15","WTR"]},{"proc":"C5","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"C5","slot":"d1","title":"D/W Sampling","note":"Bacteria","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"C5","slot":"d1","title":"S-001, S-024","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #21","GC #19","T-S","WTR"],"sub":[{"sample":"S-001","analysis":["GC #17","GC #21","T-S","WTR"]},{"sample":"S-024","analysis":["GC #19"]}]},{"proc":"T/Y","slot":"ty","title":"C3H6 (U-108)","note":"","weeks":null,"cond":null,"analysis":["GC #4","GC #16","GC #14","WTR(Dew Point)","GC #27"]},{"proc":"T/Y","slot":"ty","title":"HSC LOP","note":"","weeks":null,"cond":null,"analysis":["비중","GC #25","B·N","WTR","GC #27","Gum Test","Cl⁻"]},{"proc":"T/Y","slot":"ty","title":"#3 PG (S-101 GUM)","note":"","weeks":null,"cond":null,"analysis":["Gum Test"]},{"proc":"성적서발행","slot":"ship","title":"SM (MT-303) LGC 성적서 발행","note":"매주 · LGC로 발송","weeks":null,"cond":null,"analysis":["성적서"]},{"proc":"성적서발행","slot":"ship","title":"C3H6 (U-108) 금호P&B 성적서 발행","note":"매주 · 분석 후 금호P&B로 발송","weeks":null,"cond":null,"analysis":["성적서"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"SM","slot":"n1","title":"E-6","note":"","weeks":null,"cond":null,"analysis":["GC #9","GC #13"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-2800","note":"","weeks":null,"cond":null,"analysis":["GC #3","DNPC"]},{"proc":"SM","slot":"n1","title":"S-2802","note":"","weeks":null,"cond":null,"analysis":["GC #3","DNPC"]},{"proc":"MTBE","slot":"n1","title":"S-309","note":"","weeks":null,"cond":null,"analysis":["GC #16","GC #12","GC #08","WTR(Gas)"]},{"proc":"MTBE","slot":"n1","title":"S-306","note":"","weeks":null,"cond":null,"analysis":["GC #11","GC #10"]},{"proc":"C5","slot":"n1","title":"S-005","note":"","weeks":null,"cond":null,"analysis":["GC #18","T-S"]},{"proc":"C5","slot":"n1","title":"S-009","note":"","weeks":null,"cond":null,"analysis":["GC #20","T-S"]},{"proc":"C5","slot":"n1","title":"S-011","note":"","weeks":null,"cond":null,"analysis":["GC #19","T-S"]},{"proc":"SM","slot":"n2","title":"S-15","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n2","title":"S-2801","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n2","title":"S-10B","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"MTBE","slot":"n2","title":"S-201","note":"","weeks":null,"cond":"200가동","analysis":["GC #12"]},{"proc":"MTBE","slot":"n2","title":"S-207","note":"","weeks":null,"cond":"200가동","analysis":["GC #11","GC #15","GC #08","WTR(Gas)"]}],"2":[{"proc":"C5","slot":"d1","title":"S-001","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #21","TBC","T-S","WTR"]},{"proc":"C5","slot":"d1","title":"S-030","note":"","weeks":null,"cond":null,"analysis":["GC #21"]},{"proc":"C5","slot":"d1","title":"S-031","note":"","weeks":null,"cond":null,"analysis":["GC #20","T-S","WTR","Apha Color"]},{"proc":"MTBE","slot":"d2","title":"S-103","note":"","weeks":null,"cond":null,"analysis":["GC #16","GC #22"]},{"proc":"SM","slot":"d2","title":"E-4","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"d2","title":"EO-02","note":"","weeks":null,"cond":null,"analysis":["GC #2","T-S"]},{"proc":"C5","slot":"d1","title":"Q-FB-770B","note":"","weeks":null,"cond":null,"analysis":["GC #20","비중","Apha Color","TBC","T-S","WTR"]},{"proc":"T/Y","slot":"ty","title":"U-FB-111","note":"","weeks":null,"cond":null,"analysis":["GC #18"]},{"proc":"T/Y","slot":"ty","title":"T-306","note":"","weeks":null,"cond":null,"analysis":["GC #8","GC #15","GC #14","T-S","Carbonyl","phenol","WTR(Gas)"]},{"proc":"SM","slot":"n2","title":"S-14","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"C5","slot":"n1","title":"S-014","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #18"]},{"proc":"C5","slot":"n1","title":"S-015","note":"T-S as CS₂","weeks":null,"cond":null,"analysis":["GC #20","GC #19","GC #21","T-S"]},{"proc":"MTBE","slot":"n1","title":"S-304","note":"","weeks":null,"cond":null,"analysis":["GC #10","GC #11"]},{"proc":"MTBE","slot":"n1","title":"S-113","note":"","weeks":null,"cond":null,"analysis":["GC #10","GC #11","GC #12","WTR"]},{"proc":"SM","slot":"n1","title":"E-2","note":"","weeks":null,"cond":null,"analysis":["GC #1","T-N","WTR"]},{"proc":"SM","slot":"n1","title":"E-5","note":"","weeks":null,"cond":null,"analysis":["GC #1","T-N","WTR"]},{"proc":"SM","slot":"n1","title":"EC-205-A","note":"","weeks":null,"cond":null,"analysis":["WTR","T-N"]},{"proc":"SM","slot":"n1","title":"EC-205-B","note":"","weeks":null,"cond":null,"analysis":["WTR","T-N"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-17","note":"","weeks":null,"cond":null,"analysis":["DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-18","note":"","weeks":null,"cond":null,"analysis":["DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-19","note":"","weeks":null,"cond":null,"analysis":["DNPC","동점도(cSt)"]}],"3":[{"proc":"C5","slot":"d1","title":"S-001","note":"","weeks":null,"cond":null,"analysis":["GC #17","T-S","WTR"]},{"proc":"C5","slot":"d1","title":"S-024","note":"","weeks":null,"cond":null,"analysis":["GC #19","T-S"]},{"proc":"SM","slot":"d2","title":"E-12","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"d2","title":"EC-204","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"d2","title":"EO-01","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"d2","title":"S-20","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"SM","slot":"d2","title":"S-20A","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"T/Y","slot":"ty","title":"U-118","note":"","weeks":null,"cond":null,"analysis":["비중","GC #23","Distillation","B.I","NVM","T-S","Cu Corrosion","Aniline Point"]},{"proc":"T/Y","slot":"ty","title":"U-FB-108","note":"","weeks":null,"cond":null,"analysis":["GC #4","GC #14","GC #16","GC #27","WTR(Gas)"]},{"proc":"T/Y","slot":"ty","title":"MT-302B","note":"","weeks":null,"cond":null,"analysis":["비중","Apha Color","Cl⁻","Cu Corrosion","Acidity","GC #2","T-S"]},{"proc":"T/Y","slot":"ty","title":"C4-R4","note":"","weeks":null,"cond":null,"analysis":["GC #15","F⁻","Cl⁻"]},{"proc":"T/Y","slot":"ty","title":"C4-R4-1","note":"","weeks":null,"cond":null,"analysis":["GC #11","F⁻","Cl⁻","Residue on Evaporation"]},{"proc":"SM","slot":"d1","title":"S-6","note":"","weeks":null,"cond":null,"analysis":["pH","Conductivity","Fe","TOC","GC #13"]},{"proc":"T/Y","slot":"ty","title":"U-109","note":"","weeks":[2,4],"cond":null,"analysis":["RVP","Residue on Evaporation","T-S","GC #15"]},{"proc":"MTBE","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"C5","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"성적서발행","slot":"ship","title":"C3H6 (U-108) 금호P&B 성적서 발행","note":"매주 · 분석 후 금호P&B로 발송","weeks":null,"cond":null,"analysis":["성적서"]},{"proc":"MTBE","slot":"n2","title":"S-201","note":"","weeks":null,"cond":"200가동","analysis":["GC #12"]},{"proc":"MTBE","slot":"n2","title":"S-207","note":"","weeks":null,"cond":"200가동","analysis":["GC #11","GC #15","GC #8","WTR(Gas)"]},{"proc":"SM","slot":"n2","title":"S-10B","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"C5","slot":"n1","title":"S-005","note":"","weeks":null,"cond":null,"analysis":["GC #18","T-S"]},{"proc":"C5","slot":"n1","title":"S-009","note":"","weeks":null,"cond":null,"analysis":["GC #20"]},{"proc":"C5","slot":"n1","title":"S-011","note":"","weeks":null,"cond":null,"analysis":["GC #19"]},{"proc":"C5","slot":"n1","title":"S-020","note":"","weeks":null,"cond":null,"analysis":["GC #19","NaNO₂","WTR","pH"]},{"proc":"MTBE","slot":"n1","title":"S-309","note":"","weeks":null,"cond":null,"analysis":["GC #15","GC #12","GC #8","WTR(Gas)"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-11B","note":"","weeks":null,"cond":null,"analysis":["GC #9","GC #13"]}],"4":[{"proc":"SM","slot":"d2","title":"E-9","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"d2","title":"EC-203","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"MTBE","slot":"d2","title":"S-116","note":"","weeks":null,"cond":null,"analysis":["pH","Fe","GC #19"]},{"proc":"MTBE","slot":"d2","title":"S-121","note":"","weeks":null,"cond":null,"analysis":["pH","Turbidity","SO₃²⁻","Fe"]},{"proc":"MTBE","slot":"d2","title":"S-122","note":"","weeks":null,"cond":null,"analysis":["GC #19"]},{"proc":"MTBE","slot":"d2","title":"S-310","note":"","weeks":null,"cond":null,"analysis":["pH","Turbidity","SO₃²⁻","Fe"]},{"proc":"C5","slot":"d1","title":"S-001","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #21","TBC","WTR","T-S"]},{"proc":"C5","slot":"d1","title":"S-003","note":"","weeks":null,"cond":null,"analysis":["GC #18"]},{"proc":"C5","slot":"d1","title":"S-030","note":"","weeks":null,"cond":null,"analysis":["GC #21"]},{"proc":"T/Y","slot":"ty","title":"C4-R-1 (U-127A)","note":"","weeks":null,"cond":null,"analysis":["GC #15","GC #12","GC #8"]},{"proc":"T/Y","slot":"ty","title":"1-Butene (C-602C/603)","note":"","weeks":[1,3],"cond":null,"analysis":["GC #8","GC #11","GC #14","Carbonyl","T-S","Cl⁻","Peroxide","WTR(Gas)"]},{"proc":"출하정기","slot":"ship","title":"B-1 (C-602)","note":"","weeks":[1,3],"cond":null,"analysis":["성적서"]},{"proc":"출하정기","slot":"ship","title":"#3 R-118","note":"","weeks":[2,4],"cond":null,"analysis":["Aniline Point"]},{"proc":"출하정기","slot":"ship","title":"LP C2- (U-104)","note":"","weeks":[4],"cond":null,"analysis":["GC #5","GC #6","GC #14","GC #16","GC #27","WTR(Gas)"]},{"proc":"성적서발행","slot":"ship","title":"C4-R-1 (U-127A) 대림 #2 PB","note":"매주 · FAX 688-6829 · 전화 688-6826","weeks":null,"cond":null,"analysis":["성적서"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"SM","slot":"n2","title":"S-13","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n2","title":"S-15","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n2","title":"S-2801","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n2","title":"S-10B","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"C5","slot":"n1","title":"S-012","note":"","weeks":null,"cond":null,"analysis":["GC #19","GC #20"]},{"proc":"C5","slot":"n1","title":"S-014","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #18"]},{"proc":"C5","slot":"n1","title":"S-015","note":"T-S as CS₂","weeks":null,"cond":null,"analysis":["GC #19","GC #20","GC #21","T-S"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-17","note":"","weeks":null,"cond":null,"analysis":["GC #26","DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-18","note":"","weeks":null,"cond":null,"analysis":["GC #26","DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-19","note":"","weeks":null,"cond":null,"analysis":["GC #26","DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-2800","note":"","weeks":null,"cond":null,"analysis":["GC #3","DNPC","동점도(cSt)"]},{"proc":"SM","slot":"n1","title":"S-2802","note":"","weeks":null,"cond":null,"analysis":["GC #3","DNPC","동점도(cSt)"]}],"5":[{"proc":"SM","slot":"d2","title":"S-20","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"SM","slot":"d2","title":"S-20A","note":"","weeks":null,"cond":null,"analysis":["GC #2","Apha Color","Polymer","WTR","TBC"]},{"proc":"SM","slot":"d2","title":"E-10","note":"","weeks":null,"cond":null,"analysis":["GC #3"]},{"proc":"SM","slot":"d2","title":"E-11","note":"","weeks":null,"cond":null,"analysis":["GC #3"]},{"proc":"SM","slot":"d2","title":"E-13","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"d1","title":"S-34B","note":"","weeks":[2],"cond":null,"analysis":["GC #2"]},{"proc":"SM","slot":"d1","title":"S-34B-Vapor","note":"","weeks":[2],"cond":null,"analysis":["GC #9","GC #13","GC #10"]},{"proc":"SM","slot":"d2","title":"S-36B","note":"","weeks":[2],"cond":null,"analysis":["GC #2"]},{"proc":"SM","slot":"d2","title":"S-36B-Vapor","note":"","weeks":[2],"cond":null,"analysis":["GC #9","GC #13","GC #10"]},{"proc":"SM","slot":"d2","title":"S-501","note":"","weeks":[4],"cond":null,"analysis":["GC #13"]},{"proc":"SM","slot":"d2","title":"S-Mt 327","note":"비정기","weeks":null,"cond":"SMT327","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR"]},{"proc":"MTBE","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"MTBE","slot":"d2","title":"S-103","note":"","weeks":null,"cond":null,"analysis":["GC #16","GC #22"]},{"proc":"C5","slot":"d1","title":"C/W Sampling","note":"","weeks":null,"cond":null,"analysis":["Sampling"]},{"proc":"C5","slot":"d1","title":"S-001, S-024, S-031","note":"","weeks":null,"cond":null,"analysis":["GC #17","GC #21","GC #19","GC #20","T-S","WTR","Apha Color"],"sub":[{"sample":"S-001","analysis":["GC #17","GC #21","T-S","WTR"]},{"sample":"S-024","analysis":["GC #19"]},{"sample":"S-031","analysis":["GC #20","T-S","WTR","Apha Color"]}]},{"proc":"T/Y","slot":"ty","title":"MTBE (C-601A/B)","note":"","weeks":null,"cond":null,"analysis":["비중","GC #12","WTR"]},{"proc":"T/Y","slot":"ty","title":"C3H6 (U-108)","note":"","weeks":null,"cond":null,"analysis":["GC #4","GC #14","GC #16","GC #27","WTR(Dew Point)"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"SM","slot":"n1","title":"E-6","note":"","weeks":null,"cond":null,"analysis":["GC #9","GC #13"]},{"proc":"SM","slot":"n1","title":"S-11","note":"","weeks":null,"cond":null,"analysis":["GC #9","GC #10","GC #13"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-292-1","note":"O₂ 분석","weeks":[1,3],"cond":null,"analysis":["GC #14"]},{"proc":"SM","slot":"n2","title":"S-10","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"SM","slot":"n2","title":"S-14","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"MTBE","slot":"n1","title":"S-309","note":"","weeks":null,"cond":null,"analysis":["GC #12","GC #15","GC #08","WTR(Gas)"]},{"proc":"MTBE","slot":"n1","title":"S-113","note":"","weeks":null,"cond":null,"analysis":["GC #10","GC #11","GC #12","WTR(Gas)"]},{"proc":"MTBE","slot":"n1","title":"S-304","note":"","weeks":null,"cond":null,"analysis":["GC #10","GC #11"]},{"proc":"MTBE","slot":"n2","title":"S-201","note":"","weeks":null,"cond":"200가동","analysis":["GC #12"]},{"proc":"MTBE","slot":"n2","title":"S-207","note":"","weeks":null,"cond":"200가동","analysis":["GC #11","GC #15","GC #08","WTR(Gas)"]},{"proc":"C5","slot":"n1","title":"S-005","note":"T-S: CS₂ 환산","weeks":null,"cond":null,"analysis":["GC #18","T-S"]},{"proc":"C5","slot":"n1","title":"S-009","note":"","weeks":null,"cond":null,"analysis":["GC #20"]},{"proc":"C5","slot":"n1","title":"S-011","note":"","weeks":null,"cond":null,"analysis":["GC #19"]},{"proc":"성적서발행","slot":"ship","title":"C3H6 (U-108) 금호P&B 성적서 발행","note":"매주 · 분석 후 금호P&B로 발송","weeks":null,"cond":null,"analysis":["성적서"]}],"6":[{"proc":"T/Y","slot":"ty","title":"U-FB-120/125","note":"","weeks":[1,3],"cond":null,"analysis":["비중","Apha Color","Distillation","AWC","Acidity","WTR","GC #24","T-S"]},{"proc":"T/Y","slot":"ty","title":"U-126","note":"","weeks":[2,4],"cond":null,"analysis":["비중","Apha Color","Distillation","AWC","Acidity","GC #24","T-S"]},{"proc":"T/Y","slot":"ty","title":"U-117","note":"","weeks":[2,4],"cond":null,"analysis":["비중","Apha Color","Distillation","AWC","Acidity","GC #24","T-S"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"SM","slot":"n2","title":"S-20","note":"","weeks":null,"cond":null,"analysis":["TBC"]},{"proc":"SM","slot":"n2","title":"S-20A","note":"","weeks":null,"cond":null,"analysis":["TBC"]},{"proc":"SM","slot":"n2","title":"S-10B","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"C5","slot":"n1","title":"S-015","note":"T-S as CS₂","weeks":null,"cond":null,"analysis":["GC #19","GC #20","T-S"]},{"proc":"C5","slot":"n1","title":"S-001","note":"","weeks":null,"cond":null,"analysis":["GC #17","TBC","T-S","WTR"]},{"proc":"SM","slot":"n1","title":"E-12","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"n1","title":"EC-204","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"n1","title":"EO-01","note":"","weeks":null,"cond":null,"analysis":["GC #1","WTR"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-11B","note":"","weeks":null,"cond":null,"analysis":["GC #9","GC #13","GC #10"]}],"0":[{"proc":"SM","slot":"d2","title":"S-11B","note":"Teledyne 분석 추가","weeks":[1,3],"cond":null,"analysis":["GC #9","GC #10","GC #13","Teledyne"]},{"proc":"SM","slot":"d2","title":"S-11","note":"Teledyne 분석 추가","weeks":[1,3],"cond":null,"analysis":["GC #9","GC #10","GC #13","Teledyne"]},{"proc":"T/Y","slot":"ty","title":"U-FB-108","note":"","weeks":null,"cond":null,"analysis":["GC #4","GC #14","GC #16","GC #27","WTR(Gas)"]},{"proc":"T/Y","slot":"ty","title":"C-602A/B","note":"","weeks":[1,3],"cond":null,"analysis":["GC #11","GC #8","T-S","WTR(Gas)"]},{"proc":"T/Y","slot":"ty","title":"U-FB-103A","note":"","weeks":[2,4],"cond":null,"analysis":["GC #5","GC #6","GC #14","GC #16","GC #27","WTR(Gas)"]},{"proc":"성적서발행","slot":"ship","title":"SM TK (MT-317B) 출하 분석","note":"분석 후 KRCC로 성적서 발행","weeks":null,"cond":"SMTK","analysis":["GC #2","Apha Color","Polymer","TBC","Aldehyde","Peroxide","T-S","WTR","성적서"]},{"proc":"성적서발행","slot":"ship","title":"C3H6 (U-108) 금호P&B 성적서 발행","note":"매주 · 분석 후 금호P&B로 발송","weeks":null,"cond":null,"analysis":["성적서"]},{"proc":"SM","slot":"n2","title":"S-10B","note":"","weeks":null,"cond":null,"analysis":["GC #2"]},{"proc":"C5","slot":"n1","title":"S-001","note":"","weeks":null,"cond":null,"analysis":["GC #17","T-S","WTR"]},{"proc":"C5","slot":"n1","title":"S-031","note":"","weeks":null,"cond":null,"analysis":["GC #20","Apha Color"]},{"proc":"SM","slot":"n1","title":"S-12","note":"DNPC","weeks":null,"cond":null,"analysis":["DNPC"]},{"proc":"SM","slot":"n1","title":"S-8D","note":"1주","weeks":[1],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-8E","note":"1주","weeks":[1],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-8F","note":"1주","weeks":[1],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-8G","note":"1주","weeks":[1],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-2B","note":"","weeks":null,"cond":null,"analysis":["GC #1"]},{"proc":"SM","slot":"n1","title":"S-8B","note":"2주","weeks":[2],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-8C","note":"2주","weeks":[2],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-9","note":"2주","weeks":[2],"cond":null,"analysis":["pH","Fe","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"S-9B","note":"2주","weeks":[2],"cond":null,"analysis":["pH","Fe","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"SO-005","note":"2주","weeks":[2],"cond":null,"analysis":["pH","Fe"]},{"proc":"SM","slot":"n1","title":"S-3","note":"3주","weeks":[3],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"S-3A","note":"3주","weeks":[3],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"S-205","note":"3주","weeks":[3],"cond":null,"analysis":["pH","Fe","E-OX","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"S-205B","note":"3주","weeks":[3],"cond":null,"analysis":["pH","Fe","E-OX","Ca-Hard"]},{"proc":"SM","slot":"n1","title":"S-32","note":"4주","weeks":[4],"cond":null,"analysis":["pH","Conductivity","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"S-33","note":"4주","weeks":[4],"cond":null,"analysis":["pH","Conductivity","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"EC-140","note":"4주","weeks":[4],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"SC-201","note":"4주","weeks":[4],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n1","title":"SC-202","note":"4주","weeks":[4],"cond":null,"analysis":["pH","Conductivity","PO₄³⁻","Fe","E-OX"]},{"proc":"SM","slot":"n2","title":"S-10","note":"","weeks":null,"cond":null,"analysis":["GC #2"]}]};
 var DAY_NAMES = ['일','월','화','수','목','금','토'];
@@ -1280,117 +1280,272 @@ function mdLiteNotice(t, nid){
   if(inUl)out.push('</ul>');
   return out.join('');
 }
-// ── 공지 줄 강조 (localStorage) ──
-var HL_COLORS = ['yellow','green','red']; // 순환: 없음→yellow→green→red→없음
-var NOTICE_HL_KEY = 'ncc_notice_hl';
-function getHlAll(){
-  try{ return JSON.parse(localStorage.getItem(NOTICE_HL_KEY)||'{}'); }catch(e){ return {}; }
-}
-function getHlMap(nid){ return getHlAll()[nid] || {}; }
-function toggleHl(nid, idx){
-  var all = getHlAll();
-  var map = all[nid] || {};
-  var cur = map[idx] || '';
-  var ci = HL_COLORS.indexOf(cur);
-  var next = ci < HL_COLORS.length-1 ? HL_COLORS[ci+1] : '';
-  if(next) map[idx] = next; else delete map[idx];
-  if(Object.keys(map).length) all[nid] = map; else delete all[nid];
-  localStorage.setItem(NOTICE_HL_KEY, JSON.stringify(all));
+// ══════════════════════════════════════════════════════════════════
+// 📢 공지 상태 (notice_state.json) — GitHub 동기화, 모든 기기 공유
+//   구조: { hidden:[id,...], hl:{nid:{idx:color}}, edits:{nid:{title,body}}, manual:[{...}] }
+//   notice.json (원본 AI요약)은 건드리지 않음
+// ══════════════════════════════════════════════════════════════════
+var NOTICE_STATE = { hidden:[], hl:{}, edits:{}, manual:[] }; // 로드 전 기본값
+var NS_SHA = null;   // notice_state.json 의 GitHub sha (PUT 에 필요)
+var NS_DIRTY = false; // 미저장 변경 있음
+var NS_SAVE_TIMER = null;
+
+function nsGet(){ return NOTICE_STATE; }
+function nsSet(fn){
+  fn(NOTICE_STATE);
+  NS_DIRTY = true;
+  if(NS_SAVE_TIMER) clearTimeout(NS_SAVE_TIMER);
+  NS_SAVE_TIMER = setTimeout(saveNoticeState, 1200); // 1.2초 디바운스
   render();
 }
 
-var NOTICE_HIDDEN_KEY = 'ncc_notice_hidden';
-function getHiddenIds(){
-  try{ return JSON.parse(localStorage.getItem(NOTICE_HIDDEN_KEY)||'[]'); }catch(e){ return []; }
+// ── GitHub 읽기/쓰기 ──
+async function loadNoticeState(){
+  var token = getGhToken();
+  try {
+    var data = null, sha = null;
+    if(token){
+      var r = await fetch('https://api.github.com/repos/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/contents/notice_state.json?ref='+GH_BRANCH+'&t='+Date.now(),
+        {headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}});
+      if(r.ok){ var j=await r.json(); sha=j.sha; data=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))))); }
+      else if(r.status!==404){ console.warn('notice_state 로드 실패:', r.status); }
+    }
+    if(!data){
+      var r2=await fetch('https://raw.githubusercontent.com/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/'+GH_BRANCH+'/notice_state.json?t='+Date.now());
+      if(r2.ok) data=await r2.json();
+    }
+    if(data){
+      NOTICE_STATE = { hidden:data.hidden||[], hl:data.hl||{}, edits:data.edits||{}, manual:data.manual||[] };
+      NS_SHA = sha;
+    }
+    render();
+  } catch(e){ console.warn('notice_state 로드 오류:', e); }
 }
-function saveHiddenIds(arr){ localStorage.setItem(NOTICE_HIDDEN_KEY, JSON.stringify(arr)); }
-// 공지 고유 ID: 제목+날짜 조합
+async function saveNoticeState(){
+  var token = getGhToken();
+  if(!token){ console.warn('토큰 없음 — notice_state 저장 불가'); return; }
+  NS_DIRTY = false;
+  try {
+    var payload = { message:'update notice_state.json', branch:GH_BRANCH,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(NOTICE_STATE, null, 2)))) };
+    if(NS_SHA) payload.sha = NS_SHA;
+    var r = await fetch('https://api.github.com/repos/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/contents/notice_state.json',
+      {method:'PUT', headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
+       body:JSON.stringify(payload)});
+    if(r.ok){ var j=await r.json(); NS_SHA=j.content.sha; }
+    else console.warn('notice_state 저장 실패:', r.status, await r.text());
+  } catch(e){ console.warn('notice_state 저장 오류:', e); }
+}
+
+// ── 공지 고유 ID ──
 function noticeId(n){ return (n.date||'')+'||'+(n.title||''); }
 
+// ── 숨기기 (최대 15개, 초과 시 가장 오래된 것 삭제) ──
+var HIDDEN_MAX = 15;
 function hideNotice(id){
-  var arr = getHiddenIds();
-  if(arr.indexOf(id)===-1){ arr.push(id); saveHiddenIds(arr); }
-  render();
+  nsSet(function(st){
+    if(st.hidden.indexOf(id)===-1){
+      st.hidden.push(id);
+      if(st.hidden.length > HIDDEN_MAX) st.hidden = st.hidden.slice(st.hidden.length - HIDDEN_MAX);
+    }
+  });
 }
+function restoreNotice(id, overlay){
+  nsSet(function(st){ st.hidden = st.hidden.filter(function(x){return x!==id;}); });
+  if(overlay) overlay.remove();
+}
+
+// ── 줄 강조 ──
+var HL_COLORS = ['yellow','green','red'];
+function getHlMap(nid){ return (NOTICE_STATE.hl||{})[nid] || {}; }
+function toggleHl(nid, idx){
+  nsSet(function(st){
+    var map = st.hl[nid] || {};
+    var cur = map[idx] || '';
+    var ci = HL_COLORS.indexOf(cur);
+    var next = ci < HL_COLORS.length-1 ? HL_COLORS[ci+1] : '';
+    if(next) map[idx]=next; else delete map[idx];
+    if(Object.keys(map).length) st.hl[nid]=map; else delete st.hl[nid];
+  });
+}
+
+// ── 요약 내용 수정 팝업 ──
+function openNoticeEdit(nid){
+  var all = allNotices();
+  var n = all.filter(function(x){ return noticeId(x)===nid; })[0];
+  if(!n) return;
+  var st = nsGet();
+  var edit = (st.edits||{})[nid] || {};
+  var curTitle = edit.title !== undefined ? edit.title : (n.title||'');
+  var curBody  = edit.body  !== undefined ? edit.body  : (n.body||'');
+  openNoticeEditPopup(nid, curTitle, curBody, false);
+}
+
+// ── 직접 공지 작성/수정 팝업 ──
+function openManualWrite(idx){
+  var st = nsGet();
+  if(idx === undefined || idx === null){
+    // 새 공지 작성
+    openNoticeEditPopup(null, '', '', true, null);
+  } else {
+    var m = (st.manual||[])[idx];
+    if(!m) return;
+    openNoticeEditPopup(null, m.title||'', m.body||'', true, idx);
+  }
+}
+
+function openNoticeEditPopup(nid, curTitle, curBody, isManual, manualIdx){
+  var overlay = document.createElement('div');
+  overlay.className = 'hidden-notice-overlay';
+  overlay.onclick = function(e){ if(e.target===overlay) overlay.remove(); };
+  var box = document.createElement('div');
+  box.className = 'hidden-notice-box';
+  var label = isManual ? (manualIdx!=null?'✏️ 공지 수정':'✏️ 공지 직접 작성') : '✏️ 요약 내용 수정';
+  box.innerHTML =
+    '<h3>'+label+'</h3>'+
+    (isManual ? '' : '<div style="font-size:11px;color:#a0813a;margin-bottom:10px;">AI 요약 원본은 유지되며, 수정본이 표시돼요.</div>')+
+    '<div style="font-size:12px;font-weight:600;color:#555;margin-bottom:4px;">제목</div>'+
+    '<input id="neTitle" value="'+esc(curTitle)+'" style="width:100%;padding:8px 10px;border:1.5px solid #b0b8c1;border-radius:8px;font-size:13px;margin-bottom:10px;">'+
+    '<div style="font-size:12px;font-weight:600;color:#555;margin-bottom:4px;">내용 <span style="font-size:11px;color:#999;">(- 로 시작하면 불릿)</span></div>'+
+    '<textarea id="neBody" style="width:100%;height:160px;padding:8px 10px;border:1.5px solid #b0b8c1;border-radius:8px;font-size:13px;resize:vertical;">'+esc(curBody)+'</textarea>'+
+    '<div style="display:flex;gap:8px;margin-top:10px;">'+
+    '<button id="neBtnSave" style="flex:1;background:#f39c12;color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;">저장</button>'+
+    ((!isManual || manualIdx!=null) ? '<button id="neBtnDel" style="flex:0 0 auto;background:#e74c3c;color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;">삭제</button>' : '')+
+    '<button id="neBtnCan" style="flex:0 0 auto;background:#ddd;border:none;border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;">취소</button>'+
+    '</div>';
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  box.querySelector('#neTitle').focus();
+  box.querySelector('#neBtnCan').onclick = function(){ overlay.remove(); };
+  box.querySelector('#neBtnSave').onclick = function(){
+    var t = box.querySelector('#neTitle').value.trim();
+    var b = box.querySelector('#neBody').value.trim();
+    if(!t){ alert('제목을 입력하세요.'); return; }
+    nsSet(function(st){
+      if(isManual){
+        st.manual = st.manual||[];
+        if(manualIdx!=null) st.manual[manualIdx]={title:t,body:b,date:st.manual[manualIdx].date,from:'직접 작성'};
+        else st.manual.unshift({title:t,body:b,date:new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).replace(/\. /g,'-').replace('.',':').replace('. ',''),from:'직접 작성'});
+      } else {
+        st.edits = st.edits||{};
+        st.edits[nid] = {title:t, body:b};
+      }
+    });
+    overlay.remove();
+  };
+  var delBtn = box.querySelector('#neBtnDel');
+  if(delBtn) delBtn.onclick = function(){
+    if(!confirm('삭제할까요?')) return;
+    nsSet(function(st){
+      if(isManual && manualIdx!=null){ st.manual.splice(manualIdx,1); }
+      else if(!isManual){ delete (st.edits||{})[nid]; }
+    });
+    overlay.remove();
+  };
+}
+
+// ── 전체 공지 목록 (직접작성 + AI요약, 날짜 내림차순) ──
+function allNotices(){
+  var st = nsGet();
+  var ai = (NOTICE||[]).map(function(n){
+    var nid = noticeId(n);
+    var edit = (st.edits||{})[nid];
+    if(edit) return Object.assign({}, n, {title:edit.title, body:edit.body, _nid:nid, _edited:true, _manual:false});
+    return Object.assign({}, n, {_nid:nid, _edited:false, _manual:false});
+  });
+  var manual = (st.manual||[]).map(function(m,i){ return Object.assign({},m,{_nid:'manual||'+i, _manual:true, _midx:i}); });
+  var merged = manual.concat(ai);
+  merged.sort(function(a,b){ return (b.date||'') > (a.date||'') ? 1 : -1; });
+  return merged;
+}
+
+// ── 숨긴 공지 보관함 팝업 ──
 function openHiddenNotices(){
-  if(!NOTICE) return;
-  var hidden = getHiddenIds();
-  var hiddenItems = NOTICE.filter(function(n){ return hidden.indexOf(noticeId(n))!==-1; });
+  var st = nsGet();
+  var all = allNotices();
+  var hiddenItems = all.filter(function(n){ return st.hidden.indexOf(noticeId(n))!==-1 || (n._manual && st.hidden.indexOf(n._nid)!==-1); });
   if(!hiddenItems.length){ alert('숨긴 공지가 없어요.'); return; }
   var overlay = document.createElement('div');
   overlay.className = 'hidden-notice-overlay';
   overlay.onclick = function(e){ if(e.target===overlay) overlay.remove(); };
   var box = document.createElement('div');
   box.className = 'hidden-notice-box';
-  var h = '<h3>🗂 숨긴 공지 보관함 ('+hiddenItems.length+'건)</h3>';
+  var h='<h3>🗂 숨긴 공지 보관함 ('+hiddenItems.length+'건)</h3>';
   hiddenItems.forEach(function(n){
-    var id = noticeId(n);
-    var meta = [n.date, n.from].filter(Boolean).join(' · ');
-    h += '<div class="hidden-notice-item">';
-    h += '<div class="hn-title">'+esc(n.title||'(제목없음)')+'</div>';
-    if(meta) h += '<div class="hn-meta">'+esc(meta)+'</div>';
-    h += '<button onclick="restoreNotice(\''+id.replace(/'/g,"\\'")+'\',' +
-         'this.closest(\'.hidden-notice-overlay\'))">↩ 되돌리기</button>';
-    h += '</div>';
+    var id = n._manual ? n._nid : noticeId(n);
+    var meta=[n.date,n.from].filter(Boolean).join(' · ');
+    h+='<div class="hidden-notice-item">';
+    h+='<div class="hn-title">'+esc(n.title||'(제목없음)')+'</div>';
+    if(meta) h+='<div class="hn-meta">'+esc(meta)+'</div>';
+    h+='<button onclick="restoreNotice(\''+id.replace(/'/g,"\\'")+'\',this.closest(\'.hidden-notice-overlay\'))">↩ 되돌리기</button>';
+    h+='</div>';
   });
-  box.innerHTML = h;
+  box.innerHTML=h;
   overlay.appendChild(box);
   document.body.appendChild(overlay);
 }
-function restoreNotice(id, overlay){
-  var arr = getHiddenIds().filter(function(x){ return x!==id; });
-  saveHiddenIds(arr);
-  if(overlay) overlay.remove();
-  render();
-}
 
+// ── 공지 배너 렌더링 ──
 function renderNoticeBanner(){
-  if(!NOTICE || !NOTICE.length) return '';
-  var hidden = getHiddenIds();
-  var visible = NOTICE.filter(function(n){ return hidden.indexOf(noticeId(n))===-1; });
-  var hiddenCount = NOTICE.length - visible.length;
-  // 모두 숨겨진 경우에도 되돌리기 버튼 표시
-  if(!visible.length){
-    return '<div class="notice-box">'
-      +'<div class="notice-head"><span>📢 공지사항</span>'
-      +'<span class="notice-count">0 / '+NOTICE.length+'건</span></div>'
-      +'<button class="notice-restore-btn" onclick="openHiddenNotices()">🗂 숨긴 공지 '+hiddenCount+'건 보기 / 되돌리기</button>'
-      +'</div>';
+  var st = nsGet();
+  var all = allNotices();
+  if(!all.length && !(st.manual&&st.manual.length)){
+    // 직접 작성 버튼만 표시
+    return '<div class="notice-box"><div class="notice-head"><span>📢 공지사항</span></div>'
+      +'<button class="notice-restore-btn" onclick="openManualWrite()">✏️ 공지 직접 작성</button></div>';
   }
-  var h='<div class="notice-box"><div class="notice-head"><span>📢 공지사항</span>'
-      +'<span class="notice-count">'+visible.length+(hiddenCount?' / '+NOTICE.length:'')+'건</span></div>';
+  var hidden = st.hidden||[];
+  var visible = all.filter(function(n){
+    var id = n._manual ? n._nid : noticeId(n);
+    return hidden.indexOf(id)===-1;
+  });
+  var hiddenCount = all.length - visible.length;
+  var headRight = '<span class="notice-count">'+visible.length+(hiddenCount?' / '+all.length:'')+'건</span>';
+  if(!visible.length){
+    return '<div class="notice-box"><div class="notice-head"><span>📢 공지사항</span>'+headRight+'</div>'
+      +'<button class="notice-restore-btn" onclick="openHiddenNotices()">🗂 숨긴 공지 '+hiddenCount+'건 보기 / 되돌리기</button>'
+      +'<button class="notice-restore-btn" style="margin-left:8px;" onclick="openManualWrite()">✏️ 직접 작성</button></div>';
+  }
+  var h='<div class="notice-box"><div class="notice-head"><span>📢 공지사항</span>'+headRight+'</div>';
   visible.forEach(function(n){
-    var id = noticeId(n).replace(/'/g,"\\'");
+    var nid = n._manual ? n._nid : noticeId(n);
+    var hideId = nid.replace(/'/g,"\\'");
     h+='<div class="notice-item">';
-    h+='<button class="notice-del" onclick="hideNotice(\''+id+'\')" title="이 공지 숨기기">✕</button>';
-    if(n.title) h+='<div class="notice-title">'+esc(n.title)+'</div>';
+    // 버튼 묶음 (숨기기 + 수정)
+    h+='<div style="position:absolute;top:10px;right:0;display:flex;gap:2px;">';
+    if(n._manual){
+      h+='<button class="notice-del" style="font-size:13px;" onclick="openManualWrite('+n._midx+')" title="수정">✏️</button>';
+    } else {
+      h+='<button class="notice-del" style="font-size:13px;" onclick="openNoticeEdit(\''+nid.replace(/'/g,"\\'")+'\''+')" title="내용 수정">✏️</button>';
+    }
+    h+='<button class="notice-del" onclick="hideNotice(\''+hideId+'\')" title="숨기기">✕</button>';
+    h+='</div>';
+    if(n._edited) h+='<div style="font-size:10px;color:#a0813a;margin-bottom:2px;">✏️ 수정됨</div>';
+    h+='<div class="notice-title">'+esc(n.title||'(제목없음)')+'</div>';
     var meta=[]; if(n.date) meta.push(esc(n.date)); if(n.from) meta.push(esc(n.from));
     if(meta.length) h+='<div class="notice-meta">'+meta.join(' · ')+'</div>';
-    if(n.body) h+='<div class="notice-body">'+mdLiteNotice(n.body, noticeId(n))+'</div>';
+    if(n.body) h+='<div class="notice-body">'+mdLiteNotice(n.body, nid)+'</div>';
     h+='</div>';
   });
-  if(hiddenCount){
-    h+='<button class="notice-restore-btn" onclick="openHiddenNotices()">🗂 숨긴 공지 '+hiddenCount+'건 보기 / 되돌리기</button>';
-  }
+  if(hiddenCount) h+='<button class="notice-restore-btn" onclick="openHiddenNotices()">🗂 숨긴 공지 '+hiddenCount+'건 보기 / 되돌리기</button>';
+  h+='<button class="notice-restore-btn" style="margin-left:8px;" onclick="openManualWrite()">✏️ 공지 직접 작성</button>';
   h+='</div>';
   return h;
 }
+
 async function loadNotice(){
   var token = getGhToken();
   try{
     var data = null;
-    if (token) {
-      // 토큰 있으면 API로 즉시(캐시 없음) 읽기
-      var apiUrl='https://api.github.com/repos/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/contents/notice.json?ref='+GH_BRANCH+'&t='+Date.now();
-      var r=await fetch(apiUrl,{ headers:{ 'Authorization':'Bearer '+token, 'Accept':'application/vnd.github+json' } });
-      if (r.ok){ var j=await r.json(); data=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))))); }
-      else if (r.status===404){ NOTICE=null; return; } // 공지 파일 아직 없음
+    if(token){
+      var r=await fetch('https://api.github.com/repos/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/contents/notice.json?ref='+GH_BRANCH+'&t='+Date.now(),
+        {headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}});
+      if(r.ok){ var j=await r.json(); data=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))))); }
+      else if(r.status===404){ NOTICE=null; return; }
     }
-    if (!data) {
-      // 토큰 없거나 실패 시 raw로 읽기 전용 (CDN 캐시 최대 몇 분)
-      var rawUrl='https://raw.githubusercontent.com/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/'+GH_BRANCH+'/notice.json?t='+Date.now();
-      var r2=await fetch(rawUrl);
-      if (!r2.ok){ NOTICE=null; return; }
+    if(!data){
+      var r2=await fetch('https://raw.githubusercontent.com/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/'+GH_BRANCH+'/notice.json?t='+Date.now());
+      if(!r2.ok){ NOTICE=null; return; }
       data=await r2.json();
     }
     NOTICE = Array.isArray(data) ? data : (data ? [data] : null);
@@ -1399,7 +1554,7 @@ async function loadNotice(){
 }
 
 checkLockOnLoad();
-loadCloudData().then(function(){ render(); loadNotice(); });
+loadCloudData().then(function(){ render(); loadNotice(); loadNoticeState(); });
 </script>
 </body>
 </html>
