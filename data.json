@@ -50,7 +50,8 @@
     "S-17": "샘플 0.1ml 채취 TBAH 0.2ml 소모",
     "S-18": "샘플 0.1ml 채취 TBAH 0.5ml 소모",
     "S-19": "샘플 0.1ml 채취 TBAH 0.5ml 소모",
-    "S-17|DNPC": "샘플 100㎕ 취하면 TBAH 0.2ml 소모"
+    "S-17|DNPC": "샘플 100㎕ 취하면 TBAH 0.2ml 소모",
+    "S-17|동점도(cSt)": "샘플 100㎕ 취하면 TBAH 0.2ml 소모"
   },
   "displayNames": {},
   "condStates": {
