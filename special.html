@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Special Sample 기록</title>
+<style>
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','맑은 고딕',sans-serif; background:#eef1f5; color:#222; padding-bottom:80px; }
+  .wrap { max-width:760px; margin:0 auto; padding:12px; }
+
+  .header { background:linear-gradient(135deg,#5b2c6f,#8e44ad); color:#fff; border-radius:14px; padding:16px 18px; margin-bottom:12px; }
+  .header h1 { margin:0; font-size:19px; }
+  .header .sub { font-size:12px; opacity:.85; margin-top:3px; }
+
+  /* 공정 탭 */
+  .proc-tabs { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+  .proc-tab { flex:1 1 auto; min-width:60px; text-align:center; padding:9px 6px; border-radius:9px; background:#fff; border:1.5px solid #d8dde3; font-size:13px; font-weight:700; color:#555; cursor:pointer; transition:.12s; }
+  .proc-tab.active { background:#8e44ad; border-color:#8e44ad; color:#fff; }
+  .proc-tab.add { flex:0 0 auto; min-width:40px; background:#f0e8f5; border-color:#cdb4dd; color:#8e44ad; }
+
+  /* 검색 */
+  .search-row { display:flex; gap:6px; margin-bottom:12px; }
+  .search-row input { flex:1; padding:10px 12px; border:1.5px solid #c8d0d8; border-radius:9px; font-size:14px; }
+  .search-row button { border:none; background:#5b2c6f; color:#fff; border-radius:9px; padding:0 14px; font-size:13px; cursor:pointer; }
+
+  .toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .toolbar .count { font-size:12px; color:#777; }
+  .btn-add { border:none; background:#8e44ad; color:#fff; border-radius:9px; padding:9px 14px; font-size:13px; font-weight:700; cursor:pointer; }
+
+  /* 기록 카드 */
+  .rec { background:#fff; border:1px solid #e3e6ea; border-radius:11px; margin-bottom:9px; overflow:hidden; }
+  .rec-head { display:flex; align-items:center; gap:8px; padding:11px 13px; cursor:pointer; }
+  .rec-head .twist { font-size:11px; color:#aaa; transition:transform .15s; flex-shrink:0; }
+  .rec.open .rec-head .twist { transform:rotate(90deg); }
+  .rec-name { font-weight:700; font-size:14px; color:#5b2c6f; flex:1; min-width:0; word-break:break-all; }
+  .rec-date { font-size:11px; color:#999; flex-shrink:0; }
+  .rec-status { font-size:10px; font-weight:700; border-radius:5px; padding:2px 6px; flex-shrink:0; }
+  .rec-status.done { background:#d4f4dd; color:#1e7e44; }
+  .rec-status.wait { background:#ffeaa7; color:#9a6700; }
+
+  .rec-body { display:none; padding:0 13px 13px; border-top:1px dashed #eee; }
+  .rec.open .rec-body { display:block; }
+  .field { margin-top:10px; }
+  .field-label { font-size:11px; font-weight:700; color:#888; margin-bottom:3px; }
+  .field-val { font-size:13px; line-height:1.6; color:#333; white-space:pre-wrap; word-break:break-word; }
+  .field-val.empty { color:#bbb; font-style:italic; }
+  .anal-tags span { display:inline-block; font-size:11px; background:#f0e8f5; color:#6c3483; border:1px solid #d7bde2; border-radius:5px; padding:2px 7px; margin:2px 3px 0 0; }
+  .rec-actions { display:flex; gap:6px; margin-top:12px; }
+  .rec-actions button { flex:1; border:none; border-radius:8px; padding:8px; font-size:12px; font-weight:700; cursor:pointer; }
+  .b-edit { background:#eaf0f6; color:#21618c; }
+  .b-result { background:#8e44ad; color:#fff; }
+  .b-del { background:#fdecea; color:#c0392b; flex:0 0 auto !important; padding:8px 12px !important; }
+
+  .empty-msg { text-align:center; color:#999; font-size:13px; padding:40px 20px; background:#fff; border-radius:11px; }
+  mark { background:#ffe066; padding:0 1px; border-radius:2px; }
+
+  /* 팝업 */
+  .overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1000; display:flex; align-items:center; justify-content:center; padding:14px; }
+  .modal { background:#fff; border-radius:14px; padding:18px; width:100%; max-width:440px; max-height:88vh; overflow-y:auto; }
+  .modal h3 { margin:0 0 14px; font-size:16px; color:#5b2c6f; }
+  .modal label { display:block; font-size:12px; font-weight:700; color:#666; margin:10px 0 4px; }
+  .modal input, .modal textarea { width:100%; padding:9px 11px; border:1.5px solid #c8d0d8; border-radius:8px; font-size:13px; font-family:inherit; }
+  .modal textarea { resize:vertical; min-height:60px; }
+  .modal .hint { font-size:11px; color:#999; margin-top:2px; }
+  .modal-btns { display:flex; gap:8px; margin-top:16px; }
+  .modal-btns button { flex:1; border:none; border-radius:9px; padding:11px; font-size:14px; font-weight:700; cursor:pointer; }
+  .mb-save { background:#8e44ad; color:#fff; }
+  .mb-cancel { background:#e0e0e0; color:#555; flex:0 0 auto; padding:11px 18px; }
+
+  /* 토큰/동기화 */
+  .sync-status { position:fixed; bottom:14px; left:50%; transform:translateX(-50%); background:rgba(40,40,50,.92); color:#fff; font-size:12px; padding:8px 16px; border-radius:20px; z-index:1500; opacity:0; transition:opacity .25s; pointer-events:none; white-space:nowrap; }
+  .sync-status.show { opacity:1; }
+  .gh-bar { display:flex; gap:6px; align-items:center; margin-bottom:12px; font-size:12px; color:#666; }
+  .gh-bar input { flex:1; min-width:100px; padding:7px 9px; border:1px solid #ccd; border-radius:6px; font-size:12px; font-family:monospace; }
+  .gh-bar button { border:none; background:#5b2c6f; color:#fff; border-radius:6px; padding:7px 10px; font-size:12px; cursor:pointer; }
+  .gh-status { font-size:11px; }
+  .nav-link { display:inline-block; margin-top:4px; font-size:12px; color:#fff; opacity:.9; text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="sync-status" id="syncStatus"></div>
+
+<script>
+var APP_VERSION = 'v1.0';
+
+// ── GitHub 설정 (분석 스케줄과 동일 저장소, 토큰 공유) ──
+var GH_OWNER='SHIN-3889', GH_REPO='lab-daily', GH_BRANCH='main', GH_FILE='special_data.json';
+var GH_TOKEN_KEY='ncc_gh_token'; // 분석 스케줄과 같은 토큰 키 공유
+function getGhToken(){ return localStorage.getItem(GH_TOKEN_KEY)||''; }
+function saveGhToken(t){ localStorage.setItem(GH_TOKEN_KEY,t); }
+
+// ── 공정 목록 (나중에 추가 가능) ──
+var DEFAULT_PROCS = ['C5','SM','MTBE','T/Y'];
+
+// ── 데이터 구조: { procs:[...], records:{ 공정명:[{id,name,reason,anals:[],result,date,resultDate}] } } ──
+var DATA = { procs: DEFAULT_PROCS.slice(), records:{} };
+var CUR_PROC = null;
+var SEARCH = '';
+var OPEN_IDS = {}; // 펼쳐진 카드 id
+var _sha = null, _syncing=false, _syncTimer=null;
+
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function nowStr(){ return new Date().toLocaleString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).replace(/\. /g,'-').replace(/\.$/,'').replace(/-(\d{2}:)/,' $1'); }
+
+// ── GitHub 로드/저장 ──
+async function loadData(){
+  var token = getGhToken();
+  try {
+    var data=null, sha=null;
+    if(token){
+      var r=await fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+GH_FILE+'?ref='+GH_BRANCH+'&t='+Date.now(),
+        {headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}});
+      if(r.ok){ var j=await r.json(); sha=j.sha; data=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))))); }
+      else if(r.status!==404){ console.warn('로드 실패',r.status); }
+    }
+    if(!data){
+      var r2=await fetch('https://raw.githubusercontent.com/'+GH_OWNER+'/'+GH_REPO+'/'+GH_BRANCH+'/'+GH_FILE+'?t='+Date.now());
+      if(r2.ok) data=await r2.json();
+    }
+    if(data){
+      DATA = { procs: data.procs&&data.procs.length?data.procs:DEFAULT_PROCS.slice(), records:data.records||{} };
+      _sha = sha;
+    }
+  } catch(e){ console.warn('로드 오류',e); }
+  if(!CUR_PROC) CUR_PROC = DATA.procs[0];
+  render();
+}
+function scheduleSync(){
+  if(_syncTimer) clearTimeout(_syncTimer);
+  _syncTimer = setTimeout(syncNow, 900);
+}
+async function syncNow(){
+  if(_syncTimer){ clearTimeout(_syncTimer); _syncTimer=null; }
+  var token=getGhToken();
+  if(!token){ showSync('⚠️ 토큰 없음 — 이 기기에만 임시 저장'); try{localStorage.setItem('ncc_special_backup',JSON.stringify(DATA));}catch(e){} return; }
+  if(_syncing) return;
+  _syncing=true; showSync('☁️ 저장 중...');
+  try {
+    var content=btoa(unescape(encodeURIComponent(JSON.stringify(DATA,null,2))));
+    var body={message:'update special_data.json',content:content,branch:GH_BRANCH};
+    if(_sha) body.sha=_sha;
+    var r=await fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+GH_FILE,
+      {method:'PUT',headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(r.ok){ var j=await r.json(); _sha=j.content.sha; showSync('✓ 저장됨 (모든 기기 반영)'); }
+    else { showSync('✕ 저장 실패 '+r.status); console.warn(await r.text()); }
+  } catch(e){ showSync('✕ 저장 오류'); console.warn(e); }
+  finally { _syncing=false; }
+}
+var _ssTimer=null;
+function showSync(msg){
+  var el=document.getElementById('syncStatus');
+  el.textContent=msg; el.classList.add('show');
+  if(_ssTimer) clearTimeout(_ssTimer);
+  _ssTimer=setTimeout(function(){ el.classList.remove('show'); }, 2500);
+}
+
+// ── 데이터 조작 ──
+function curRecords(){ return DATA.records[CUR_PROC] || []; }
+function setRecords(arr){ DATA.records[CUR_PROC]=arr; scheduleSync(); }
+
+function addRecord(rec){
+  var arr=curRecords().slice();
+  arr.unshift(rec);
+  setRecords(arr);
+}
+function updateRecord(id, patch){
+  var arr=curRecords().map(function(r){ return r.id===id ? Object.assign({},r,patch) : r; });
+  setRecords(arr);
+}
+function deleteRecord(id){
+  setRecords(curRecords().filter(function(r){ return r.id!==id; }));
+}
+
+// ── 검색 필터 + 하이라이트 ──
+function matchSearch(r, q){
+  if(!q) return true;
+  var hay=[r.name, r.reason, (r.anals||[]).join(' '), r.result].join(' ').toLowerCase();
+  return hay.indexOf(q.toLowerCase()) !== -1;
+}
+function hl(text, q){
+  var e=esc(text);
+  if(!q) return e;
+  try {
+    var re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    return e.replace(re,'<mark>$1</mark>');
+  } catch(x){ return e; }
+}
+
+// ── 렌더 ──
+function render(){
+  var app=document.getElementById('app');
+  var h='';
+  h+='<div class="header"><h1>🧪 Special Sample 기록</h1>'+
+     '<div class="sub">각 공정 비정기 샘플 기록 · <span style="opacity:.7;">'+APP_VERSION+'</span></div>'+
+     '<a class="nav-link" href="index.html">← 분석 스케줄로</a></div>';
+
+  // GitHub 토큰 바
+  var tokSet = !!getGhToken();
+  h+='<div class="gh-bar"><span>GitHub 토큰:</span>'+
+     '<input type="password" id="ghTok" placeholder="'+(tokSet?'등록됨 (변경 시 입력)':'토큰 입력')+'">'+
+     '<button onclick="onSaveTok()">저장</button>'+
+     '<span class="gh-status" style="color:'+(tokSet?'#1e7e44':'#c0392b')+'">'+(tokSet?'✔':'✖')+'</span></div>';
+
+  // 공정 탭
+  h+='<div class="proc-tabs">';
+  DATA.procs.forEach(function(p){
+    h+='<div class="proc-tab'+(p===CUR_PROC?' active':'')+'" onclick="selProc(\''+esc(p).replace(/'/g,"\\'")+'\')">'+esc(p)+'</div>';
+  });
+  h+='<div class="proc-tab add" onclick="addProc()" title="공정 추가">＋</div>';
+  h+='</div>';
+
+  // 검색
+  h+='<div class="search-row"><input id="searchInp" placeholder="샘플명·이유·항목·결과 검색" value="'+esc(SEARCH)+'" oninput="onSearch(this.value)">';
+  if(SEARCH) h+='<button onclick="onSearch(\'\')">✕</button>';
+  h+='</div>';
+
+  // 툴바
+  var recs=curRecords().filter(function(r){ return matchSearch(r,SEARCH); });
+  h+='<div class="toolbar"><span class="count">'+CUR_PROC+' · '+recs.length+'건'+(SEARCH?' (검색결과)':'')+'</span>'+
+     '<button class="btn-add" onclick="openAdd()">＋ 새 기록</button></div>';
+
+  // 기록 목록
+  if(recs.length===0){
+    h+='<div class="empty-msg">'+(SEARCH?'검색 결과가 없어요.':'아직 기록이 없어요.<br>＋ 새 기록으로 추가하세요.')+'</div>';
+  } else {
+    recs.forEach(function(r){
+      var open=OPEN_IDS[r.id];
+      var hasResult=r.result&&r.result.trim();
+      h+='<div class="rec'+(open?' open':'')+'">';
+      h+='<div class="rec-head" onclick="toggleRec(\''+r.id+'\')">';
+      h+='<span class="twist">▶</span>';
+      h+='<span class="rec-name">'+hl(r.name,SEARCH)+'</span>';
+      h+='<span class="rec-status '+(hasResult?'done':'wait')+'">'+(hasResult?'결과有':'대기')+'</span>';
+      h+='<span class="rec-date">'+esc((r.date||'').split(' ')[0])+'</span>';
+      h+='</div>';
+      h+='<div class="rec-body">';
+      h+='<div class="field"><div class="field-label">분석 이유</div><div class="field-val'+(r.reason?'':' empty')+'">'+(r.reason?hl(r.reason,SEARCH):'(없음)')+'</div></div>';
+      h+='<div class="field"><div class="field-label">분석 항목</div>';
+      if(r.anals&&r.anals.length){ h+='<div class="anal-tags">'; r.anals.forEach(function(a){ h+='<span>'+hl(a,SEARCH)+'</span>'; }); h+='</div>'; }
+      else h+='<div class="field-val empty">(없음)</div>';
+      h+='</div>';
+      h+='<div class="field"><div class="field-label">분석 결과'+(r.resultDate?' · '+esc(r.resultDate):'')+'</div><div class="field-val'+(hasResult?'':' empty')+'">'+(hasResult?hl(r.result,SEARCH):'(아직 없음)')+'</div></div>';
+      h+='<div class="field" style="font-size:11px;color:#aaa;margin-top:8px;">등록: '+esc(r.date||'')+'</div>';
+      h+='<div class="rec-actions">';
+      h+='<button class="b-edit" onclick="openEdit(\''+r.id+'\')">✏️ 수정</button>';
+      h+='<button class="b-result" onclick="openResult(\''+r.id+'\')">'+(hasResult?'결과 수정':'＋ 결과 입력')+'</button>';
+      h+='<button class="b-del" onclick="onDel(\''+r.id+'\')">🗑</button>';
+      h+='</div>';
+      h+='</div></div>';
+    });
+  }
+  app.innerHTML=h;
+}
+
+// ── 이벤트 ──
+function selProc(p){ CUR_PROC=p; SEARCH=''; render(); }
+function onSearch(v){ SEARCH=v; render(); var i=document.getElementById('searchInp'); if(i){ i.focus(); var L=i.value.length; i.setSelectionRange(L,L); } }
+function toggleRec(id){ OPEN_IDS[id]=!OPEN_IDS[id]; render(); }
+function onSaveTok(){
+  var v=document.getElementById('ghTok').value.trim();
+  if(!v){ alert('토큰을 입력하세요.'); return; }
+  saveGhToken(v); alert('토큰 저장됨. (분석 스케줄과 공유됩니다)'); loadData();
+}
+function addProc(){
+  var name=prompt('추가할 공정 이름을 입력하세요 (예: BD)');
+  if(!name) return;
+  name=name.trim();
+  if(!name) return;
+  if(DATA.procs.indexOf(name)!==-1){ alert('이미 있는 공정이에요.'); CUR_PROC=name; render(); return; }
+  DATA.procs.push(name);
+  CUR_PROC=name;
+  scheduleSync();
+  render();
+}
+function onDel(id){
+  if(!confirm('이 기록을 삭제할까요?')) return;
+  deleteRecord(id); render();
+}
+
+// ── 추가/수정 팝업 ──
+function openModal(html){
+  var ov=document.createElement('div');
+  ov.className='overlay';
+  ov._md=null;
+  ov.addEventListener('mousedown',function(e){ ov._md=e.target; });
+  ov.addEventListener('click',function(e){ if(e.target===ov && ov._md===ov) ov.remove(); });
+  var m=document.createElement('div');
+  m.className='modal';
+  m.innerHTML=html;
+  ov.appendChild(m);
+  document.body.appendChild(ov);
+  return ov;
+}
+function openAdd(){ openRecForm(null); }
+function openEdit(id){ openRecForm(curRecords().filter(function(r){return r.id===id;})[0]); }
+
+function openRecForm(rec){
+  var isEdit=!!rec;
+  var ov=openModal(
+    '<h3>'+(isEdit?'✏️ 기록 수정':'＋ 새 Special Sample')+' <span style="font-size:12px;color:#999;">('+esc(CUR_PROC)+')</span></h3>'+
+    '<label>샘플명 *</label>'+
+    '<input id="fName" value="'+esc(rec?rec.name:'')+'" placeholder="예: S-770B">'+
+    '<label>분석 이유</label>'+
+    '<textarea id="fReason" placeholder="왜 분석하는지">'+esc(rec?rec.reason:'')+'</textarea>'+
+    '<label>분석 항목</label>'+
+    '<input id="fAnals" value="'+esc(rec&&rec.anals?rec.anals.join(', '):'')+'" placeholder="쉼표로 구분 (예: GC #9, WTR, T-S)">'+
+    '<div class="hint">쉼표(,)로 여러 개 입력</div>'+
+    '<label>분석 결과 (선택)</label>'+
+    '<textarea id="fResult" placeholder="나중에 입력해도 됩니다">'+esc(rec?rec.result:'')+'</textarea>'+
+    '<div class="modal-btns"><button class="mb-cancel" onclick="this.closest(\'.overlay\').remove()">취소</button>'+
+    '<button class="mb-save" id="fSave">저장</button></div>'
+  );
+  ov.querySelector('#fName').focus();
+  ov.querySelector('#fSave').onclick=function(){
+    var name=ov.querySelector('#fName').value.trim();
+    if(!name){ alert('샘플명을 입력하세요.'); return; }
+    var reason=ov.querySelector('#fReason').value.trim();
+    var anals=ov.querySelector('#fAnals').value.split(',').map(function(s){return s.trim();}).filter(Boolean);
+    var result=ov.querySelector('#fResult').value.trim();
+    if(isEdit){
+      var patch={name:name,reason:reason,anals:anals,result:result};
+      if(result && !rec.result) patch.resultDate=nowStr(); // 결과 새로 생기면 결과일자
+      if(!result) patch.resultDate='';
+      updateRecord(rec.id, patch);
+    } else {
+      addRecord({ id:uid(), name:name, reason:reason, anals:anals, result:result, date:nowStr(), resultDate: result?nowStr():'' });
+    }
+    ov.remove(); render();
+  };
+}
+
+// 결과만 빠르게 입력/수정
+function openResult(id){
+  var rec=curRecords().filter(function(r){return r.id===id;})[0];
+  if(!rec) return;
+  var ov=openModal(
+    '<h3>🧾 분석 결과 — '+esc(rec.name)+'</h3>'+
+    (rec.reason?'<div style="font-size:12px;color:#777;margin-bottom:4px;">이유: '+esc(rec.reason)+'</div>':'')+
+    (rec.anals&&rec.anals.length?'<div style="font-size:12px;color:#777;margin-bottom:8px;">항목: '+esc(rec.anals.join(', '))+'</div>':'')+
+    '<label>분석 결과</label>'+
+    '<textarea id="rResult" style="min-height:120px;" placeholder="측정값·판정 등">'+esc(rec.result||'')+'</textarea>'+
+    '<div class="modal-btns"><button class="mb-cancel" onclick="this.closest(\'.overlay\').remove()">취소</button>'+
+    '<button class="mb-save" id="rSave">저장</button></div>'
+  );
+  ov.querySelector('#rResult').focus();
+  ov.querySelector('#rSave').onclick=function(){
+    var result=ov.querySelector('#rResult').value.trim();
+    var patch={result:result};
+    patch.resultDate = result ? nowStr() : '';
+    updateRecord(id, patch);
+    ov.remove(); render();
+  };
+}
+
+// ── 시작 ──
+loadData();
+</script>
+</body>
+</html>
