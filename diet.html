@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>식단 기록</title>
+<style>
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','맑은 고딕',sans-serif; background:#f0f4f8; color:#222; padding-bottom:80px; }
+  .wrap { max-width:480px; margin:0 auto; padding:12px; }
+
+  /* 헤더 */
+  .header { background:linear-gradient(135deg,#1a6b3c,#27ae60); color:#fff; border-radius:16px; padding:18px; margin-bottom:12px; }
+  .header h1 { font-size:20px; margin-bottom:2px; }
+  .header .sub { font-size:12px; opacity:.8; }
+  .nav-link { display:inline-block; margin-top:6px; font-size:12px; color:#fff; opacity:.85; text-decoration:underline; }
+
+  /* 목표 링 */
+  .goal-card { background:#fff; border-radius:14px; padding:16px; margin-bottom:12px; display:flex; align-items:center; gap:16px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+  .ring-wrap { flex-shrink:0; position:relative; width:80px; height:80px; }
+  .ring-wrap svg { transform:rotate(-90deg); }
+  .ring-bg { fill:none; stroke:#e8f5e9; stroke-width:8; }
+  .ring-fill { fill:none; stroke:#27ae60; stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .5s; }
+  .ring-fill.over { stroke:#e74c3c; }
+  .ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .ring-kcal { font-size:17px; font-weight:800; color:#1a6b3c; line-height:1; }
+  .ring-unit { font-size:9px; color:#888; }
+  .goal-info { flex:1; }
+  .goal-title { font-size:13px; color:#888; margin-bottom:2px; }
+  .goal-remain { font-size:18px; font-weight:700; color:#1a6b3c; }
+  .goal-remain.over { color:#e74c3c; }
+  .goal-bar-wrap { margin-top:8px; background:#e8f5e9; border-radius:99px; height:7px; overflow:hidden; }
+  .goal-bar { height:100%; background:#27ae60; border-radius:99px; transition:width .4s; }
+  .goal-bar.over { background:#e74c3c; }
+  .goal-target { font-size:11px; color:#999; margin-top:4px; }
+
+  /* 날짜 탭 */
+  .date-row { display:flex; gap:6px; align-items:center; margin-bottom:12px; }
+  .date-row input[type=date] { flex:1; padding:9px 11px; border:1.5px solid #c8d0d8; border-radius:9px; font-size:14px; font-family:inherit; }
+  .date-btn { border:none; background:#27ae60; color:#fff; border-radius:9px; padding:9px 14px; font-size:13px; font-weight:700; cursor:pointer; }
+  .date-btn.gray { background:#e0e6ea; color:#555; }
+
+  /* 음식 입력 */
+  .input-card { background:#fff; border-radius:14px; padding:14px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+  .input-card h2 { font-size:14px; font-weight:700; color:#1a6b3c; margin-bottom:10px; }
+  .food-input { width:100%; padding:11px 13px; border:1.5px solid #c8d0d8; border-radius:10px; font-size:14px; font-family:inherit; resize:none; min-height:70px; }
+  .food-input:focus { outline:none; border-color:#27ae60; }
+  .hint { font-size:11px; color:#aaa; margin:5px 0 10px; }
+  .analyze-btn { width:100%; padding:13px; border:none; background:#27ae60; color:#fff; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; transition:.15s; }
+  .analyze-btn:disabled { background:#b2dfdb; cursor:not-allowed; }
+  .spin { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:sp .7s linear infinite; vertical-align:middle; margin-right:6px; }
+  @keyframes sp { to { transform:rotate(360deg); } }
+
+  /* API 키 */
+  .key-row { display:flex; gap:6px; align-items:center; margin-bottom:10px; font-size:12px; color:#666; }
+  .key-row input { flex:1; padding:8px 10px; border:1px solid #ccd; border-radius:7px; font-size:12px; font-family:monospace; }
+  .key-row button { border:none; background:#1a6b3c; color:#fff; border-radius:7px; padding:8px 11px; font-size:12px; cursor:pointer; }
+  .key-status { font-size:11px; }
+  .key-ok { color:#1e7e44; }
+  .key-no { color:#c0392b; }
+
+  /* 기록 목록 */
+  .records-card { background:#fff; border-radius:14px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+  .records-card h2 { font-size:14px; font-weight:700; color:#1a6b3c; margin-bottom:10px; }
+  .rec-item { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid #f0f0f0; }
+  .rec-item:last-child { border-bottom:none; }
+  .rec-time { font-size:11px; color:#aaa; flex-shrink:0; padding-top:2px; min-width:36px; }
+  .rec-body { flex:1; min-width:0; }
+  .rec-food { font-size:13px; color:#333; line-height:1.4; word-break:break-word; }
+  .rec-kcal { font-size:16px; font-weight:800; color:#1a6b3c; margin-top:2px; }
+  .rec-detail { font-size:11px; color:#999; margin-top:1px; }
+  .rec-del { border:none; background:transparent; color:#ddd; font-size:16px; cursor:pointer; padding:2px 4px; flex-shrink:0; }
+  .rec-del:hover { color:#e74c3c; }
+  .empty-msg { text-align:center; color:#bbb; font-size:13px; padding:24px 0; }
+
+  /* 목표 설정 */
+  .setting-row { display:flex; gap:6px; align-items:center; font-size:12px; color:#666; margin-top:10px; padding-top:10px; border-top:1px dashed #eee; }
+  .setting-row input[type=number] { width:80px; padding:6px 9px; border:1px solid #ccd; border-radius:7px; font-size:13px; font-family:inherit; }
+  .setting-row button { border:none; background:#e8f5e9; color:#1a6b3c; border-radius:7px; padding:7px 11px; font-size:12px; font-weight:700; cursor:pointer; }
+
+  /* 토스트 */
+  .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:rgba(30,40,50,.92); color:#fff; padding:10px 18px; border-radius:20px; font-size:13px; z-index:999; opacity:0; transition:opacity .2s; pointer-events:none; white-space:nowrap; }
+  .toast.show { opacity:1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>🥗 식단 기록</h1>
+    <div class="sub">제미나이가 칼로리를 분석해드려요</div>
+    <a class="nav-link" href="index.html">← 분석 스케줄로</a>
+  </div>
+  <div id="app"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var APP_VERSION = 'v1.0';
+var GOAL_KEY = 'diet_goal_kcal';
+var GEMINI_KEY_NAME = 'geminiApiKey'; // berth.html과 동일 키 공유
+var GEMINI_MODEL = 'gemini-2.5-flash';
+var GH_OWNER = 'SHIN-3889', GH_REPO = 'lab-daily', GH_BRANCH = 'main', GH_FILE = 'diet_data.json';
+var GH_TOKEN_KEY = 'ncc_gh_token'; // 분석 스케줄과 동일 토큰 공유
+
+// ── 상태 ──
+var SEL_DATE = todayStr();
+var DATA = {}; // { 'YYYY-MM-DD': [{id,food,kcal,detail,time}] }
+var SHA = null;
+var _syncTimer = null, _syncing = false;
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function nowTime(){ return new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false}); }
+function getGoal(){ return parseInt(localStorage.getItem(GOAL_KEY)||'1800'); }
+function setGoal(v){ localStorage.setItem(GOAL_KEY,String(v)); }
+function getGeminiKey(){ return localStorage.getItem(GEMINI_KEY_NAME)||''; }
+function saveGeminiKey(k){ localStorage.setItem(GEMINI_KEY_NAME,k); }
+function getGhToken(){ return localStorage.getItem(GH_TOKEN_KEY)||''; }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function dayRecords(d){ return DATA[d||SEL_DATE]||[]; }
+function dayTotal(d){ return dayRecords(d).reduce(function(s,r){ return s+(r.kcal||0); },0); }
+
+// ── GitHub ──
+async function loadData(){
+  var token=getGhToken();
+  try {
+    var data=null, sha=null;
+    if(token){
+      var r=await fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+GH_FILE+'?ref='+GH_BRANCH+'&t='+Date.now(),
+        {headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}});
+      if(r.ok){ var j=await r.json(); sha=j.sha; data=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))))); }
+      else if(r.status!==404) console.warn('로드 실패',r.status);
+    }
+    if(!data){
+      var r2=await fetch('https://raw.githubusercontent.com/'+GH_OWNER+'/'+GH_REPO+'/'+GH_BRANCH+'/'+GH_FILE+'?t='+Date.now());
+      if(r2.ok) data=await r2.json();
+    }
+    if(data){ DATA=data; SHA=sha; }
+  } catch(e){ console.warn('로드 오류',e); }
+  render();
+}
+function scheduleSync(){
+  if(_syncTimer) clearTimeout(_syncTimer);
+  _syncTimer=setTimeout(syncNow,1000);
+}
+async function syncNow(){
+  if(_syncTimer){clearTimeout(_syncTimer);_syncTimer=null;}
+  var token=getGhToken();
+  if(!token){showToast('⚠️ 토큰 없음 — 기기에만 임시 저장');return;}
+  if(_syncing)return; _syncing=true; showToast('☁️ 저장 중...');
+  try {
+    var content=btoa(unescape(encodeURIComponent(JSON.stringify(DATA,null,2))));
+    var body={message:'update '+GH_FILE,content:content,branch:GH_BRANCH};
+    if(SHA) body.sha=SHA;
+    var r=await fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+GH_FILE,
+      {method:'PUT',headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(r.ok){var j=await r.json();SHA=j.content.sha;showToast('✓ 저장됨');}
+    else showToast('✕ 저장 실패 '+r.status);
+  } catch(e){showToast('✕ 저장 오류');console.warn(e);}
+  finally{_syncing=false;}
+}
+
+// ── 제미나이 분석 ──
+async function analyzeFood(text){
+  var key=getGeminiKey();
+  if(!key) throw new Error('제미나이 API 키를 먼저 저장해주세요.');
+  var prompt=
+    '다음 음식의 칼로리를 분석해줘. 반드시 아래 JSON 형식으로만 출력 (코드블록·설명 금지):\n'+
+    '{"kcal":숫자,"detail":"간단한 근거 (예: 흰쌀밥 200g 약 260kcal + 김치찌개 350g 약 180kcal)"}\n\n'+
+    '규칙:\n'+
+    '- kcal는 정수 (소수점 없음)\n'+
+    '- 양이 명시 안 됐으면 일반적인 1인분 기준으로 추정\n'+
+    '- 여러 음식이면 합산해서 총 kcal 하나로\n'+
+    '- detail은 한 줄로, 각 항목별 kcal 근거 포함\n'+
+    '- 한국어로\n\n'+
+    '음식: '+text;
+  var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+GEMINI_MODEL+':generateContent',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-goog-api-key':key},
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+  });
+  var data=await res.json();
+  if(!res.ok) throw new Error((data.error&&data.error.message)||'API 오류 '+res.status);
+  var raw='';
+  try{ raw=data.candidates[0].content.parts.map(function(p){return p.text||'';}).join(''); }catch(e){}
+  raw=raw.replace(/```json|```/g,'').trim();
+  var obj=JSON.parse(raw);
+  if(typeof obj.kcal!=='number') throw new Error('응답 형식 오류');
+  return obj;
+}
+
+// ── 데이터 조작 ──
+function addRecord(food, kcal, detail){
+  if(!DATA[SEL_DATE]) DATA[SEL_DATE]=[];
+  DATA[SEL_DATE].unshift({id:uid(),food:food,kcal:kcal,detail:detail,time:nowTime()});
+  scheduleSync();
+}
+function deleteRecord(date,id){
+  if(!DATA[date]) return;
+  DATA[date]=DATA[date].filter(function(r){return r.id!==id;});
+  if(!DATA[date].length) delete DATA[date];
+  scheduleSync();
+}
+
+// ── 렌더 ──
+function render(){
+  var goal=getGoal();
+  var total=dayTotal(SEL_DATE);
+  var pct=Math.min(100,Math.round(total/goal*100));
+  var remain=goal-total;
+  var over=total>goal;
+  var r=36, circ=2*Math.PI*r;
+  var dash=circ*(pct/100);
+
+  var h='';
+
+  // 목표 링
+  h+='<div class="goal-card">';
+  h+='<div class="ring-wrap">';
+  h+='<svg width="80" height="80" viewBox="0 0 80 80">';
+  h+='<circle class="ring-bg" cx="40" cy="40" r="'+r+'"/>';
+  h+='<circle class="ring-fill'+(over?' over':'')+'" cx="40" cy="40" r="'+r+'"'
+    +' stroke-dasharray="'+circ+'" stroke-dashoffset="'+(circ-dash)+'"/>';
+  h+='</svg>';
+  h+='<div class="ring-center"><div class="ring-kcal">'+total+'</div><div class="ring-unit">kcal</div></div>';
+  h+='</div>';
+  h+='<div class="goal-info">';
+  h+='<div class="goal-title">오늘 섭취량</div>';
+  if(over){
+    h+='<div class="goal-remain over">+'+(-remain)+'kcal 초과</div>';
+  } else {
+    h+='<div class="goal-remain">남은 '+remain+'kcal</div>';
+  }
+  h+='<div class="goal-bar-wrap"><div class="goal-bar'+(over?' over':'')+'" style="width:'+pct+'%"></div></div>';
+  h+='<div class="goal-target">목표 '+goal+'kcal · '+pct+'% 달성</div>';
+  h+='</div></div>';
+
+  // 날짜 선택
+  h+='<div class="date-row">';
+  h+='<input type="date" value="'+esc(SEL_DATE)+'" onchange="selDate(this.value)">';
+  if(SEL_DATE!==todayStr()) h+='<button class="date-btn" onclick="selDate(\''+todayStr()+'\')">오늘</button>';
+  h+='</div>';
+
+  // 음식 입력 카드
+  h+='<div class="input-card">';
+  h+='<h2>🍽 먹은 음식 입력</h2>';
+  // API 키
+  var keySet=!!getGeminiKey();
+  h+='<div class="key-row"><span>제미나이 키:</span>';
+  h+='<input type="password" id="gemKey" placeholder="'+(keySet?'등록됨':'API 키 입력 (최초 1회)')+'">';
+  h+='<button onclick="saveKey()">저장</button>';
+  h+='<span class="key-status '+(keySet?'key-ok':'key-no')+'">'+(keySet?'✔':'✖')+'</span>';
+  h+='</div>';
+  h+='<textarea class="food-input" id="foodInput" placeholder="예: 흰쌀밥 한 공기, 된장찌개, 삼겹살 200g"></textarea>';
+  h+='<div class="hint">음식명과 양을 같이 적으면 더 정확해요. 양이 없으면 1인분으로 계산해요.</div>';
+  h+='<button class="analyze-btn" id="analyzeBtn" onclick="onAnalyze()">🤖 칼로리 분석하기</button>';
+  // 목표 설정
+  h+='<div class="setting-row"><span>목표 칼로리:</span>';
+  h+='<input type="number" id="goalInp" value="'+goal+'" min="500" max="5000" step="100">';
+  h+='<span>kcal</span>';
+  h+='<button onclick="saveGoal()">저장</button>';
+  h+='</div>';
+  h+='</div>';
+
+  // 기록 목록
+  var recs=dayRecords(SEL_DATE);
+  h+='<div class="records-card">';
+  h+='<h2>📋 '+esc(SEL_DATE)+' 식단 기록'+(recs.length?' ('+recs.length+'건)':'')+'</h2>';
+  if(!recs.length){
+    h+='<div class="empty-msg">아직 기록이 없어요.<br>위에서 음식을 입력해보세요!</div>';
+  } else {
+    recs.forEach(function(r){
+      h+='<div class="rec-item">';
+      h+='<div class="rec-time">'+esc(r.time||'')+'</div>';
+      h+='<div class="rec-body">';
+      h+='<div class="rec-food">'+esc(r.food)+'</div>';
+      h+='<div class="rec-kcal">'+r.kcal+'kcal</div>';
+      if(r.detail) h+='<div class="rec-detail">'+esc(r.detail)+'</div>';
+      h+='</div>';
+      h+='<button class="rec-del" onclick="onDel(\''+esc(SEL_DATE)+'\',\''+r.id+'\')" title="삭제">🗑</button>';
+      h+='</div>';
+    });
+  }
+  h+='</div>';
+
+  document.getElementById('app').innerHTML=h;
+}
+
+// ── 이벤트 ──
+function selDate(d){ SEL_DATE=d; render(); }
+function saveKey(){
+  var v=document.getElementById('gemKey').value.trim();
+  if(!v){alert('키를 입력하세요.');return;}
+  saveGeminiKey(v);
+  showToast('제미나이 키 저장됨');
+  render();
+}
+function saveGoal(){
+  var v=parseInt(document.getElementById('goalInp').value)||1800;
+  v=Math.max(500,Math.min(5000,v));
+  setGoal(v);
+  render();
+}
+function onDel(date,id){
+  if(!confirm('이 기록을 삭제할까요?')) return;
+  deleteRecord(date,id); render();
+}
+async function onAnalyze(){
+  var food=document.getElementById('foodInput').value.trim();
+  if(!food){alert('음식을 입력하세요.');return;}
+  var btn=document.getElementById('analyzeBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span>분석 중...';
+  try {
+    var result=await analyzeFood(food);
+    addRecord(food,result.kcal,result.detail||'');
+    document.getElementById('foodInput').value='';
+    render();
+    showToast('✓ '+result.kcal+'kcal 추가됨');
+  } catch(e){
+    alert('분석 실패: '+e.message);
+    btn.disabled=false;
+    btn.innerHTML='🤖 칼로리 분석하기';
+  }
+}
+
+var _toastTimer=null;
+function showToast(msg){
+  var el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  if(_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(function(){el.classList.remove('show');},2200);
+}
+
+// ── 시작 ──
+loadData();
+</script>
+</body>
+</html>
