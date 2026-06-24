@@ -104,7 +104,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','맑은 고�
 <div class="wrap">
   <div class="header">
     <h1>🥗 식단 기록</h1>
-    <div class="sub">제미나이 칼로리 분석 · 체중·섭취 그래프</div>
+    <div class="sub">제미나이 칼로리 분석 · 체중·섭취 그래프 · <span id="dietVer" style="opacity:.7;"></span></div>
     <a class="nav-link" href="index.html">← 분석 스케줄로</a>
   </div>
   <div class="tabs">
@@ -117,6 +117,10 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','맑은 고�
 <div class="toast" id="toast"></div>
 <script>
 var APP_VERSION = 'v2.0';
+document.addEventListener('DOMContentLoaded', function(){
+  var el = document.getElementById('dietVer');
+  if(el) el.textContent = APP_VERSION;
+});
 var GOAL_KEY = 'diet_goal_kcal';
 var GEMINI_KEY_NAME = 'geminiApiKey';
 var GEMINI_MODEL = 'gemini-2.5-flash';
@@ -327,10 +331,16 @@ function renderToday(){
   h+='<div class="card">';
   h+='<h2>🍽 먹은 음식 입력</h2>';
   var keySet=!!getGeminiKey();
-  h+='<div class="key-row"><span>제미나이 키:</span>';
-  h+='<input type="password" id="gemKey" placeholder="'+(keySet?'등록됨':'API 키 입력')+'">';
-  h+='<button onclick="saveKey()">저장</button>';
-  h+='<span class="'+(keySet?'key-ok':'key-no')+'">'+(keySet?'✔':'✖')+'</span></div>';
+  if(!keySet){
+    h+='<div class="key-row"><span>제미나이 키:</span>';
+    h+='<input type="password" id="gemKey" placeholder="API 키 입력 (최초 1회)">';
+    h+='<button onclick="saveKey()">저장</button>';
+    h+='<span class="key-no">✖ 미등록</span></div>';
+  } else {
+    h+='<div style="display:flex;justify-content:flex-end;margin-bottom:8px;">';
+    h+='<button onclick="resetKey()" style="border:none;background:transparent;font-size:11px;color:#bbb;cursor:pointer;text-decoration:underline;">🔑 API 키 재등록</button>';
+    h+='</div>';
+  }
 
   // 날짜 선택
   h+='<div class="date-row"><input type="date" value="'+esc(SEL_DATE)+'" onchange="selDate(this.value)">';
@@ -539,9 +549,15 @@ function renderAchieve(){
 // ── 이벤트 ──
 function selDate(d){ SEL_DATE=d; render(); }
 function saveKey(){
-  var v=document.getElementById('gemKey').value.trim();
+  var inp=document.getElementById('gemKey');
+  if(!inp){ return; }
+  var v=inp.value.trim();
   if(!v){alert('키를 입력하세요.');return;}
   saveGeminiKey(v); showToast('제미나이 키 저장됨'); render();
+}
+function resetKey(){
+  if(!confirm('API 키를 재등록할까요?\n현재 키가 삭제됩니다.')) return;
+  localStorage.removeItem(GEMINI_KEY_NAME); render();
 }
 function saveGoal(){
   var v=parseInt(document.getElementById('goalInp').value)||1800;
