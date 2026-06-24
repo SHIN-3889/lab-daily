@@ -116,7 +116,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','맑은 고�
 </div>
 <div class="toast" id="toast"></div>
 <script>
-var APP_VERSION = 'v2.0';
+var APP_VERSION = 'v2.1';
 document.addEventListener('DOMContentLoaded', function(){
   var el = document.getElementById('dietVer');
   if(el) el.textContent = APP_VERSION;
@@ -137,7 +137,8 @@ var SHA = null;
 var _syncTimer=null, _syncing=false;
 var _charts = {};
 
-function todayStr(){ return new Date().toISOString().slice(0,10); }
+function todayStr(){ return ymd(new Date()); }
+function ymd(d){ var y=d.getFullYear(), m=('0'+(d.getMonth()+1)).slice(-2), dd=('0'+d.getDate()).slice(-2); return y+'-'+m+'-'+dd; }
 function nowTime(){ return new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false}); }
 function getGoal(){ return parseInt(localStorage.getItem(GOAL_KEY)||'1800'); }
 function setGoal(v){ localStorage.setItem(GOAL_KEY,String(v)); }
@@ -239,7 +240,7 @@ function dateRange(days){
   var arr=[];
   for(var i=days-1;i>=0;i--){
     var d=new Date(); d.setDate(d.getDate()-i);
-    arr.push(d.toISOString().slice(0,10));
+    arr.push(ymd(d));
   }
   return arr;
 }
@@ -248,7 +249,7 @@ function weekOf(dateStr){
   var d=new Date(dateStr+'T00:00:00');
   var day=d.getDay()||7;
   d.setDate(d.getDate()-day+1);
-  return d.toISOString().slice(0,10);
+  return ymd(d);
 }
 function formatMD(dateStr){
   var p=dateStr.split('-'); return p[1]+'/'+p[2];
@@ -496,12 +497,12 @@ function renderAchieve(){
     var wEnd=new Date(); wEnd.setDate(wEnd.getDate()-i*7);
     var wDates=[];
     for(var dd=new Date(wStart);dd<=wEnd;dd.setDate(dd.getDate()+1)){
-      var ds=dd.toISOString().slice(0,10);
+      var ds=ymd(dd);
       if((DATA.records||{})[ds]) wDates.push(ds);
     }
     var wOk=wDates.filter(function(d){return dayKcal(d)<=goal;}).length;
     var wRate=wDates.length?Math.round(wOk/wDates.length*100):null;
-    var label=(i===0?'이번 주':(i===1?'지난 주':'~'+wEnd.toISOString().slice(5,10)));
+    var label=(i===0?'이번 주':(i===1?'지난 주':'~'+ymd(wEnd).slice(5,10)));
     weeks.push({label:label,rate:wRate,ok:wOk,total:wDates.length});
   }
 
