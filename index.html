@@ -17,6 +17,21 @@
   .view-tabs, .shift-tabs { display:flex; gap:8px; margin-bottom:10px; }
   .view-tabs button, .shift-tabs button { flex:1; padding:11px; border-radius:10px; border:2px solid #ccd6e0; background:#fff; font-size:14px; font-weight:700; cursor:pointer; }
   .view-tabs button.active { background:#2980b9; border-color:#2980b9; color:#fff; }
+  /* 샘플 검색 */
+  .sample-search-wrap { position:relative; margin-bottom:10px; }
+  .sample-search-wrap input { width:100%; padding:10px 38px 10px 14px; border:1.5px solid #c8d0d8; border-radius:10px; font-size:14px; background:#fff; }
+  .sample-search-wrap .s-clear { position:absolute; right:10px; top:50%; transform:translateY(-50%); border:none; background:transparent; font-size:16px; color:#aaa; cursor:pointer; padding:0 4px; }
+  .sample-search-result { background:#fff; border:1.5px solid #b0c4de; border-radius:12px; padding:14px 15px; margin-top:6px; }
+  .sample-search-result .sr-none { color:#aaa; font-size:13px; text-align:center; padding:8px 0; }
+  .sr-item { border-bottom:1px solid #f0f0f0; padding:10px 0; }
+  .sr-item:last-child { border-bottom:none; }
+  .sr-name { font-size:15px; font-weight:700; color:#1a5276; margin-bottom:6px; }
+  .sr-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:4px; font-size:12px; }
+  .sr-label { color:#888; font-weight:600; flex-shrink:0; }
+  .sr-val { color:#333; }
+  .sr-cycle { display:inline-block; background:#eaf2f8; color:#1a5276; border-radius:5px; padding:1px 7px; margin:2px 3px 0 0; font-size:11px; }
+  .sr-anal span { display:inline-block; background:#eaf2f8; color:#21618c; border:1px solid #aed6f1; border-radius:4px; padding:1px 6px; margin:2px 3px 0 0; font-size:11px; }
+  .sr-reason { background:#fffde7; border-left:3px solid #f39c12; padding:5px 9px; border-radius:4px; font-size:12px; color:#555; margin-top:4px; }
   .shift-tabs button.active-day { background:#fff8e1; border-color:#f39c12; color:#9a6700; }
   .shift-tabs button.active-night { background:#1a2c47; border-color:#1a2c47; color:#fff; }
   .toggles { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
@@ -223,7 +238,7 @@
 </div>
 <div class="wrap" id="app"></div>
 <script>
-var APP_VERSION = 'v8.12';
+var APP_VERSION = 'v8.14';
 var NOTICE = null; // 📢 메일 요약 공지 (notice.json에서 로드, 배열)
 var SCHEDULE_DEFAULT = {"1": [{"proc": "SM", "slot": "d2", "title": "S-20", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2", "Apha Color", "Polymer", "WTR", "TBC"]}, {"proc": "SM", "slot": "d2", "title": "S-20A", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2", "Apha Color", "Polymer", "WTR", "TBC"]}, {"proc": "SM", "slot": "d2", "title": "E-10", "note": "", "weeks": null, "cond": null, "analysis": ["GC #3"]}, {"proc": "SM", "slot": "d2", "title": "E-11", "note": "", "weeks": null, "cond": null, "analysis": ["GC #3"]}, {"proc": "SM", "slot": "d2", "title": "E-13", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1"]}, {"proc": "SM", "slot": "d2", "title": "S-28", "note": "", "weeks": [1], "cond": null, "analysis": ["WTR"]}, {"proc": "SM", "slot": "d2", "title": "S-404", "note": "", "weeks": null, "cond": "PAR운전", "analysis": ["GC #2"]}, {"proc": "T/Y", "slot": "ty", "title": "MT-303", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2", "Apha Color", "Polymer", "TBC", "Aldehyde", "Peroxide", "T-S", "WTR"]}, {"proc": "MTBE", "slot": "d1", "title": "C/W Sampling", "note": "", "weeks": null, "cond": null, "analysis": ["Sampling"]}, {"proc": "MTBE", "slot": "d2", "title": "S-107", "note": "", "weeks": null, "cond": null, "analysis": ["GC #15", "WTR"]}, {"proc": "MTBE", "slot": "d2", "title": "S-119", "note": "", "weeks": null, "cond": "200가동", "analysis": ["GC #15", "WTR"]}, {"proc": "C5", "slot": "d1", "title": "C/W Sampling", "note": "", "weeks": null, "cond": null, "analysis": ["Sampling"]}, {"proc": "C5", "slot": "d1", "title": "D/W Sampling", "note": "Bacteria", "weeks": null, "cond": null, "analysis": ["Sampling"]}, {"proc": "C5", "slot": "d1", "title": "S-001, S-024", "note": "", "weeks": null, "cond": null, "analysis": ["GC #17", "GC #21", "GC #19", "T-S", "WTR"], "sub": [{"sample": "S-001", "analysis": ["GC #17", "GC #21", "T-S", "WTR"]}, {"sample": "S-024", "analysis": ["GC #19"]}]}, {"proc": "T/Y", "slot": "ty", "title": "C3H6 (U-108)", "note": "", "weeks": null, "cond": null, "analysis": ["GC #4", "GC #16", "GC #14", "WTR(Dew Point)", "GC #27"]}, {"proc": "T/Y", "slot": "ty", "title": "HSC LOP", "note": "", "weeks": null, "cond": null, "analysis": ["비중", "GC #25", "B·N", "WTR", "GC #27", "Gum Test", "Cl⁻"]}, {"proc": "T/Y", "slot": "ty", "title": "#3 PG (S-101 GUM)", "note": "", "weeks": null, "cond": null, "analysis": ["Gum Test"]}, {"proc": "성적서발행", "slot": "ship", "title": "SM (MT-303) LGC 성적서 발행", "note": "매주 · LGC로 발송", "weeks": null, "cond": null, "analysis": ["성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "C3H6 (U-108) 금호P&B 성적서 발행", "note": "매주 · 분석 후 금호P&B로 발송", "weeks": null, "cond": null, "analysis": ["성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "SM TK (MT-317B) 출하 분석", "note": "분석 후 KRCC로 성적서 발행", "weeks": null, "cond": "SMTK", "analysis": ["GC #2", "Apha Color", "Polymer", "TBC", "Aldehyde", "Peroxide", "T-S", "WTR", "성적서"]}, {"proc": "SM", "slot": "n1", "title": "E-6", "note": "", "weeks": null, "cond": null, "analysis": ["GC #9", "GC #13"]}, {"proc": "SM", "slot": "n1", "title": "S-12", "note": "DNPC", "weeks": null, "cond": null, "analysis": ["DNPC"]}, {"proc": "SM", "slot": "n1", "title": "S-2800", "note": "", "weeks": null, "cond": null, "analysis": ["GC #3", "DNPC"]}, {"proc": "SM", "slot": "n1", "title": "S-2802", "note": "", "weeks": null, "cond": null, "analysis": ["GC #3", "DNPC"]}, {"proc": "MTBE", "slot": "n1", "title": "S-309", "note": "", "weeks": null, "cond": null, "analysis": ["GC #16", "GC #12", "GC #08", "WTR(Gas)"]}, {"proc": "MTBE", "slot": "n1", "title": "S-306", "note": "", "weeks": null, "cond": null, "analysis": ["GC #11", "GC #10"]}, {"proc": "C5", "slot": "n1", "title": "S-005", "note": "", "weeks": null, "cond": null, "analysis": ["GC #18", "T-S"]}, {"proc": "C5", "slot": "n1", "title": "S-009", "note": "", "weeks": null, "cond": null, "analysis": ["GC #20", "T-S"]}, {"proc": "C5", "slot": "n1", "title": "S-011", "note": "", "weeks": null, "cond": null, "analysis": ["GC #19", "T-S"]}, {"proc": "SM", "slot": "n2", "title": "S-15", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1"]}, {"proc": "SM", "slot": "n2", "title": "S-2801", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1"]}, {"proc": "SM", "slot": "n2", "title": "S-10B", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2"]}, {"proc": "MTBE", "slot": "n2", "title": "S-201", "note": "", "weeks": null, "cond": "200가동", "analysis": ["GC #12"]}, {"proc": "MTBE", "slot": "n2", "title": "S-207", "note": "", "weeks": null, "cond": "200가동", "analysis": ["GC #11", "GC #15", "GC #08", "WTR(Gas)"]}], "2": [{"proc": "C5", "slot": "d1", "title": "S-001", "note": "", "weeks": null, "cond": null, "analysis": ["GC #17", "GC #21", "TBC", "T-S", "WTR"]}, {"proc": "C5", "slot": "d1", "title": "S-030", "note": "", "weeks": null, "cond": null, "analysis": ["GC #21"]}, {"proc": "C5", "slot": "d1", "title": "S-031", "note": "", "weeks": null, "cond": null, "analysis": ["GC #20", "T-S", "WTR", "Apha Color"]}, {"proc": "MTBE", "slot": "d2", "title": "S-103", "note": "", "weeks": null, "cond": null, "analysis": ["GC #16", "GC #22"]}, {"proc": "SM", "slot": "d2", "title": "E-4", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1"]}, {"proc": "SM", "slot": "d2", "title": "EO-02", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2", "T-S"]}, {"proc": "C5", "slot": "d1", "title": "Q-FB-770B", "note": "", "weeks": null, "cond": null, "analysis": ["GC #20", "비중", "Apha Color", "TBC", "T-S", "WTR"]}, {"proc": "T/Y", "slot": "ty", "title": "U-FB-111", "note": "", "weeks": null, "cond": null, "analysis": ["GC #18"]}, {"proc": "T/Y", "slot": "ty", "title": "T-306", "note": "", "weeks": null, "cond": null, "analysis": ["GC #8", "GC #15", "GC #14", "T-S", "Carbonyl", "phenol", "WTR(Gas)"]}, {"proc": "SM", "slot": "n2", "title": "S-14", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1", "WTR"]}, {"proc": "C5", "slot": "n1", "title": "S-014", "note": "", "weeks": null, "cond": null, "analysis": ["GC #17", "GC #18"]}, {"proc": "C5", "slot": "n1", "title": "S-015", "note": "T-S as CS₂", "weeks": null, "cond": null, "analysis": ["GC #20", "GC #19", "GC #21", "T-S"]}, {"proc": "MTBE", "slot": "n1", "title": "S-304", "note": "", "weeks": null, "cond": null, "analysis": ["GC #10", "GC #11"]}, {"proc": "MTBE", "slot": "n1", "title": "S-113", "note": "", "weeks": null, "cond": null, "analysis": ["GC #10", "GC #11", "GC #12", "WTR"]}, {"proc": "SM", "slot": "n1", "title": "E-2", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1", "T-N", "WTR"]}, {"proc": "SM", "slot": "n1", "title": "E-5", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1", "T-N", "WTR"]}, {"proc": "SM", "slot": "n1", "title": "EC-205-A", "note": "", "weeks": null, "cond": null, "analysis": ["WTR", "T-N"]}, {"proc": "SM", "slot": "n1", "title": "EC-205-B", "note": "", "weeks": null, "cond": null, "analysis": ["WTR", "T-N"]}, {"proc": "SM", "slot": "n1", "title": "S-12", "note": "DNPC", "weeks": null, "cond": null, "analysis": ["DNPC"]}, {"proc": "SM", "slot": "n1", "title": "S-17", "note": "", "weeks": null, "cond": null, "analysis": ["DNPC", "동점도(cSt)"]}, {"proc": "SM", "slot": "n1", "title": "S-18", "note": "", "weeks": null, "cond": null, "analysis": ["DNPC", "동점도(cSt)"]}, {"proc": "SM", "slot": "n1", "title": "S-19", "note": "", "weeks": null, "cond": null, "analysis": ["DNPC", "동점도(cSt)"]}, {"proc": "성적서발행", "slot": "ship", "title": "DCPD (Q-FB-770B) 한화솔루션 성적서 발행", "note": "분석 후 한화솔루션으로 발송", "weeks": null, "cond": null, "analysis": ["성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "H2 (S-3201-1) GSC 성적서 발행", "note": "GSC로 발송", "weeks": [2, 4], "cond": null, "analysis": ["성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "H2 (S-3201-1) 에코원에너지 성적서 발행", "note": "에코원에너지로 발송", "weeks": [4], "cond": null, "analysis": ["성적서"]}], "3": [{"proc": "C5", "slot": "d1", "title": "S-001", "note": "", "weeks": null, "cond": null, "analysis": ["GC #17", "T-S", "WTR"]}, {"proc": "C5", "slot": "d1", "title": "S-024", "note": "", "weeks": null, "cond": null, "analysis": ["GC #19", "T-S"]}, {"proc": "SM", "slot": "d2", "title": "E-12", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1", "WTR"]}, {"proc": "SM", "slot": "d2", "title": "EC-204", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1", "WTR"]}, {"proc": "SM", "slot": "d2", "title": "EO-01", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1", "WTR"]}, {"proc": "SM", "slot": "d2", "title": "S-20", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2", "Apha Color", "Polymer", "WTR", "TBC"]}, {"proc": "SM", "slot": "d2", "title": "S-20A", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2", "Apha Color", "Polymer", "WTR", "TBC"]}, {"proc": "T/Y", "slot": "ty", "title": "U-118", "note": "", "weeks": null, "cond": null, "analysis": ["비중", "GC #23", "Distillation", "B.I", "NVM", "T-S", "Cu Corrosion", "Aniline Point"]}, {"proc": "T/Y", "slot": "ty", "title": "U-FB-108", "note": "", "weeks": null, "cond": null, "analysis": ["GC #4", "GC #14", "GC #16", "GC #27", "WTR(Gas)"]}, {"proc": "T/Y", "slot": "ty", "title": "MT-302B", "note": "", "weeks": null, "cond": null, "analysis": ["비중", "Apha Color", "Cl⁻", "Cu Corrosion", "Acidity", "GC #2", "T-S"]}, {"proc": "T/Y", "slot": "ty", "title": "C4-R4", "note": "", "weeks": null, "cond": null, "analysis": ["GC #15", "F⁻", "Cl⁻"]}, {"proc": "T/Y", "slot": "ty", "title": "C4-R4-1", "note": "", "weeks": null, "cond": null, "analysis": ["GC #11", "F⁻", "Cl⁻", "Residue on Evaporation"]}, {"proc": "SM", "slot": "d1", "title": "S-6", "note": "", "weeks": null, "cond": null, "analysis": ["pH", "Conductivity", "Fe", "TOC", "GC #13"]}, {"proc": "T/Y", "slot": "ty", "title": "U-109", "note": "", "weeks": [2, 4], "cond": null, "analysis": ["RVP", "Residue on Evaporation", "T-S", "GC #15"]}, {"proc": "MTBE", "slot": "d1", "title": "C/W Sampling", "note": "", "weeks": null, "cond": null, "analysis": ["Sampling"]}, {"proc": "C5", "slot": "d1", "title": "C/W Sampling", "note": "", "weeks": null, "cond": null, "analysis": ["Sampling"]}, {"proc": "성적서발행", "slot": "ship", "title": "SM TK (MT-317B) 출하 분석", "note": "분석 후 KRCC로 성적서 발행", "weeks": null, "cond": "SMTK", "analysis": ["GC #2", "Apha Color", "Polymer", "TBC", "Aldehyde", "Peroxide", "T-S", "WTR", "성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "C3H6 (U-108) 금호P&B 성적서 발행", "note": "매주 · 분석 후 금호P&B로 발송", "weeks": null, "cond": null, "analysis": ["성적서"]}, {"proc": "MTBE", "slot": "n2", "title": "S-201", "note": "", "weeks": null, "cond": "200가동", "analysis": ["GC #12"]}, {"proc": "MTBE", "slot": "n2", "title": "S-207", "note": "", "weeks": null, "cond": "200가동", "analysis": ["GC #11", "GC #15", "GC #8", "WTR(Gas)"]}, {"proc": "SM", "slot": "n2", "title": "S-10B", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2"]}, {"proc": "C5", "slot": "n1", "title": "S-005", "note": "", "weeks": null, "cond": null, "analysis": ["GC #18", "T-S"]}, {"proc": "C5", "slot": "n1", "title": "S-009", "note": "", "weeks": null, "cond": null, "analysis": ["GC #20"]}, {"proc": "C5", "slot": "n1", "title": "S-011", "note": "", "weeks": null, "cond": null, "analysis": ["GC #19"]}, {"proc": "C5", "slot": "n1", "title": "S-020", "note": "", "weeks": null, "cond": null, "analysis": ["GC #19", "NaNO₂", "WTR", "pH"]}, {"proc": "MTBE", "slot": "n1", "title": "S-309", "note": "", "weeks": null, "cond": null, "analysis": ["GC #15", "GC #12", "GC #8", "WTR(Gas)"]}, {"proc": "SM", "slot": "n1", "title": "S-12", "note": "DNPC", "weeks": null, "cond": null, "analysis": ["DNPC"]}, {"proc": "SM", "slot": "n1", "title": "S-11B", "note": "", "weeks": null, "cond": null, "analysis": ["GC #9", "GC #13", "GC #10"]}, {"proc": "성적서발행", "slot": "ship", "title": "BD (S-309-1) KRCC 성적서 발행", "note": "KRCC로 발송", "weeks": [2, 4], "cond": null, "analysis": ["성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "H2 (S-3201-1) 디렉스폴리머 성적서 발행", "note": "디렉스폴리머로 발송", "weeks": [2, 4], "cond": null, "analysis": ["성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "C2H4 (S-411-1) 디렉스폴리머 성적서 발행", "note": "디렉스폴리머로 발송", "weeks": [2, 4], "cond": null, "analysis": ["성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "C3H6 (S-430-1) 디렉스폴리머 성적서 발행", "note": "디렉스폴리머로 발송", "weeks": [2, 4], "cond": null, "analysis": ["성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "B-1 (S-309-1) 디렉스폴리머 성적서 발행", "note": "디렉스폴리머로 발송", "weeks": [2, 4], "cond": null, "analysis": ["성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "C3 LPG (U-109) 한화솔루션·DL케미칼 성적서 발행", "note": "한화솔루션·DL케미칼로 발송", "weeks": [2, 4], "cond": null, "analysis": ["성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "PG C3- (U-FB-108) 성적서 발행", "note": "매주 발송", "weeks": null, "cond": null, "analysis": ["성적서"]}], "4": [{"proc": "SM", "slot": "d2", "title": "E-9", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1"]}, {"proc": "SM", "slot": "d2", "title": "EC-203", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1", "WTR"]}, {"proc": "MTBE", "slot": "d2", "title": "S-116", "note": "", "weeks": null, "cond": null, "analysis": ["pH", "Fe", "GC #19"]}, {"proc": "MTBE", "slot": "d2", "title": "S-121", "note": "", "weeks": null, "cond": null, "analysis": ["pH", "Turbidity", "SO₃²⁻", "Fe"]}, {"proc": "MTBE", "slot": "d2", "title": "S-122", "note": "", "weeks": null, "cond": null, "analysis": ["GC #19"]}, {"proc": "MTBE", "slot": "d2", "title": "S-310", "note": "", "weeks": null, "cond": null, "analysis": ["pH", "Turbidity", "SO₃²⁻", "Fe"]}, {"proc": "C5", "slot": "d1", "title": "S-001", "note": "", "weeks": null, "cond": null, "analysis": ["GC #17", "GC #21", "TBC", "WTR", "T-S"]}, {"proc": "C5", "slot": "d1", "title": "S-003", "note": "", "weeks": null, "cond": null, "analysis": ["GC #18"]}, {"proc": "C5", "slot": "d1", "title": "S-030", "note": "", "weeks": null, "cond": null, "analysis": ["GC #21"]}, {"proc": "T/Y", "slot": "ty", "title": "C4-R-1 (U-127A)", "note": "", "weeks": null, "cond": null, "analysis": ["GC #15", "GC #12", "GC #8"]}, {"proc": "T/Y", "slot": "ty", "title": "1-Butene (C-602C/603)", "note": "", "weeks": [1, 3], "cond": null, "analysis": ["GC #8", "GC #11", "GC #14", "Carbonyl", "T-S", "Cl⁻", "Peroxide", "WTR(Gas)"]}, {"proc": "성적서발행", "slot": "ship", "title": "C4-R-1 (U-FB-127A) 대림 #2 PB", "note": "매주 · FAX 061-688-6829 · 전화 061-688-6826", "weeks": null, "cond": null, "analysis": ["성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "SM TK (MT-317B) 출하 분석", "note": "분석 후 KRCC로 성적서 발행", "weeks": null, "cond": "SMTK", "analysis": ["GC #2", "Apha Color", "Polymer", "TBC", "Aldehyde", "Peroxide", "T-S", "WTR", "성적서"]}, {"proc": "SM", "slot": "n2", "title": "S-13", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1"]}, {"proc": "SM", "slot": "n2", "title": "S-15", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1"]}, {"proc": "SM", "slot": "n2", "title": "S-2801", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1"]}, {"proc": "SM", "slot": "n2", "title": "S-10B", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2"]}, {"proc": "C5", "slot": "n1", "title": "S-012", "note": "", "weeks": null, "cond": null, "analysis": ["GC #19", "GC #20"]}, {"proc": "C5", "slot": "n1", "title": "S-014", "note": "", "weeks": null, "cond": null, "analysis": ["GC #17", "GC #18"]}, {"proc": "C5", "slot": "n1", "title": "S-015", "note": "T-S as CS₂", "weeks": null, "cond": null, "analysis": ["GC #19", "GC #20", "GC #21", "T-S"]}, {"proc": "SM", "slot": "n1", "title": "S-12", "note": "DNPC", "weeks": null, "cond": null, "analysis": ["DNPC"]}, {"proc": "SM", "slot": "n1", "title": "S-17", "note": "", "weeks": null, "cond": null, "analysis": ["GC #26", "DNPC", "동점도(cSt)"]}, {"proc": "SM", "slot": "n1", "title": "S-18", "note": "", "weeks": null, "cond": null, "analysis": ["GC #26", "DNPC", "동점도(cSt)"]}, {"proc": "SM", "slot": "n1", "title": "S-19", "note": "", "weeks": null, "cond": null, "analysis": ["GC #26", "DNPC", "동점도(cSt)"]}, {"proc": "SM", "slot": "n1", "title": "S-2800", "note": "", "weeks": null, "cond": null, "analysis": ["GC #3", "DNPC", "동점도(cSt)"]}, {"proc": "SM", "slot": "n1", "title": "S-2802", "note": "", "weeks": null, "cond": null, "analysis": ["GC #3", "DNPC", "동점도(cSt)"]}], "5": [{"proc": "SM", "slot": "d2", "title": "S-20", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2", "Apha Color", "Polymer", "WTR", "TBC"]}, {"proc": "SM", "slot": "d2", "title": "S-20A", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2", "Apha Color", "Polymer", "WTR", "TBC"]}, {"proc": "SM", "slot": "d2", "title": "E-10", "note": "", "weeks": null, "cond": null, "analysis": ["GC #3"]}, {"proc": "SM", "slot": "d2", "title": "E-11", "note": "", "weeks": null, "cond": null, "analysis": ["GC #3"]}, {"proc": "SM", "slot": "d2", "title": "E-13", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1"]}, {"proc": "SM", "slot": "d1", "title": "S-34B", "note": "", "weeks": [2], "cond": null, "analysis": ["GC #2"]}, {"proc": "SM", "slot": "d1", "title": "S-34B-Vapor", "note": "", "weeks": [2], "cond": null, "analysis": ["GC #9", "GC #13", "GC #10"]}, {"proc": "SM", "slot": "d2", "title": "S-36B", "note": "", "weeks": [2], "cond": null, "analysis": ["GC #2"]}, {"proc": "SM", "slot": "d2", "title": "S-36B-Vapor", "note": "", "weeks": [2], "cond": null, "analysis": ["GC #9", "GC #13", "GC #10"]}, {"proc": "SM", "slot": "d2", "title": "S-501", "note": "", "weeks": [4], "cond": null, "analysis": ["GC #13"]}, {"proc": "SM", "slot": "d2", "title": "S-Mt 327", "note": "비정기", "weeks": null, "cond": "SMT327", "analysis": ["GC #2", "Apha Color", "Polymer", "TBC", "Aldehyde", "Peroxide", "T-S", "WTR"]}, {"proc": "MTBE", "slot": "d1", "title": "C/W Sampling", "note": "", "weeks": null, "cond": null, "analysis": ["Sampling"]}, {"proc": "MTBE", "slot": "d2", "title": "S-103", "note": "", "weeks": null, "cond": null, "analysis": ["GC #16", "GC #22"]}, {"proc": "C5", "slot": "d1", "title": "C/W Sampling", "note": "", "weeks": null, "cond": null, "analysis": ["Sampling"]}, {"proc": "C5", "slot": "d1", "title": "S-001, S-024, S-031", "note": "", "weeks": null, "cond": null, "analysis": ["GC #17", "GC #21", "GC #19", "GC #20", "T-S", "WTR", "Apha Color"], "sub": [{"sample": "S-001", "analysis": ["GC #17", "GC #21", "T-S", "WTR"]}, {"sample": "S-024", "analysis": ["GC #19"]}, {"sample": "S-031", "analysis": ["GC #20", "T-S", "WTR", "Apha Color"]}]}, {"proc": "T/Y", "slot": "ty", "title": "MTBE (C-601A/B)", "note": "", "weeks": null, "cond": null, "analysis": ["비중", "GC #12", "WTR"]}, {"proc": "T/Y", "slot": "ty", "title": "C3H6 (U-108)", "note": "", "weeks": null, "cond": null, "analysis": ["GC #4", "GC #14", "GC #16", "GC #27", "WTR(Dew Point)"]}, {"proc": "성적서발행", "slot": "ship", "title": "SM TK (MT-317B) 출하 분석", "note": "분석 후 KRCC로 성적서 발행", "weeks": null, "cond": "SMTK", "analysis": ["GC #2", "Apha Color", "Polymer", "TBC", "Aldehyde", "Peroxide", "T-S", "WTR", "성적서"]}, {"proc": "SM", "slot": "n1", "title": "E-6", "note": "", "weeks": null, "cond": null, "analysis": ["GC #9", "GC #13"]}, {"proc": "SM", "slot": "n1", "title": "S-11", "note": "", "weeks": null, "cond": null, "analysis": ["GC #9", "GC #10", "GC #13"]}, {"proc": "SM", "slot": "n1", "title": "S-12", "note": "DNPC", "weeks": null, "cond": null, "analysis": ["DNPC"]}, {"proc": "SM", "slot": "n1", "title": "S-292-1", "note": "O₂ 분석", "weeks": [1, 3], "cond": null, "analysis": ["GC #14"]}, {"proc": "SM", "slot": "n2", "title": "S-10", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2"]}, {"proc": "SM", "slot": "n2", "title": "S-14", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1", "WTR"]}, {"proc": "MTBE", "slot": "n1", "title": "S-309", "note": "", "weeks": null, "cond": null, "analysis": ["GC #12", "GC #15", "GC #08", "WTR(Gas)"]}, {"proc": "MTBE", "slot": "n1", "title": "S-113", "note": "", "weeks": null, "cond": null, "analysis": ["GC #10", "GC #11", "GC #12", "WTR(Gas)"]}, {"proc": "MTBE", "slot": "n1", "title": "S-304", "note": "", "weeks": null, "cond": null, "analysis": ["GC #10", "GC #11"]}, {"proc": "MTBE", "slot": "n2", "title": "S-201", "note": "", "weeks": null, "cond": "200가동", "analysis": ["GC #12"]}, {"proc": "MTBE", "slot": "n2", "title": "S-207", "note": "", "weeks": null, "cond": "200가동", "analysis": ["GC #11", "GC #15", "GC #08", "WTR(Gas)"]}, {"proc": "C5", "slot": "n1", "title": "S-005", "note": "T-S: CS₂ 환산", "weeks": null, "cond": null, "analysis": ["GC #18", "T-S"]}, {"proc": "C5", "slot": "n1", "title": "S-009", "note": "", "weeks": null, "cond": null, "analysis": ["GC #20"]}, {"proc": "C5", "slot": "n1", "title": "S-011", "note": "", "weeks": null, "cond": null, "analysis": ["GC #19"]}, {"proc": "성적서발행", "slot": "ship", "title": "C3H6 (U-108) 금호P&B 성적서 발행", "note": "매주 · 분석 후 금호P&B로 발송", "weeks": null, "cond": null, "analysis": ["성적서"]}], "6": [{"proc": "T/Y", "slot": "ty", "title": "U-FB-120/125", "note": "", "weeks": [1, 3], "cond": null, "analysis": ["비중", "Apha Color", "Distillation", "AWC", "Acidity", "WTR", "GC #24", "T-S"]}, {"proc": "T/Y", "slot": "ty", "title": "U-126", "note": "", "weeks": [2, 4], "cond": null, "analysis": ["비중", "Apha Color", "Distillation", "AWC", "Acidity", "GC #24", "T-S"]}, {"proc": "T/Y", "slot": "ty", "title": "U-117", "note": "", "weeks": [2, 4], "cond": null, "analysis": ["비중", "Apha Color", "Distillation", "AWC", "Acidity", "GC #24", "T-S"]}, {"proc": "성적서발행", "slot": "ship", "title": "SM TK (MT-317B) 출하 분석", "note": "분석 후 KRCC로 성적서 발행", "weeks": null, "cond": "SMTK", "analysis": ["GC #2", "Apha Color", "Polymer", "TBC", "Aldehyde", "Peroxide", "T-S", "WTR", "성적서"]}, {"proc": "SM", "slot": "n2", "title": "S-20", "note": "", "weeks": null, "cond": null, "analysis": ["TBC"]}, {"proc": "SM", "slot": "n2", "title": "S-20A", "note": "", "weeks": null, "cond": null, "analysis": ["TBC"]}, {"proc": "SM", "slot": "n2", "title": "S-10B", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2"]}, {"proc": "C5", "slot": "n1", "title": "S-015", "note": "T-S as CS₂", "weeks": null, "cond": null, "analysis": ["GC #19", "GC #20", "T-S"]}, {"proc": "C5", "slot": "n1", "title": "S-001", "note": "", "weeks": null, "cond": null, "analysis": ["GC #17", "TBC", "T-S", "WTR"]}, {"proc": "SM", "slot": "n1", "title": "E-12", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1", "WTR"]}, {"proc": "SM", "slot": "n1", "title": "EC-204", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1", "WTR"]}, {"proc": "SM", "slot": "n1", "title": "EO-01", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1", "WTR"]}, {"proc": "SM", "slot": "n1", "title": "S-12", "note": "DNPC", "weeks": null, "cond": null, "analysis": ["DNPC"]}, {"proc": "SM", "slot": "n1", "title": "S-11B", "note": "", "weeks": null, "cond": null, "analysis": ["GC #9", "GC #13", "GC #10"]}], "0": [{"proc": "SM", "slot": "d2", "title": "S-11B", "note": "Teledyne 분석 추가", "weeks": [1, 3], "cond": null, "analysis": ["GC #9", "GC #10", "GC #13", "Teledyne"]}, {"proc": "SM", "slot": "d2", "title": "S-11", "note": "Teledyne 분석 추가", "weeks": [1, 3], "cond": null, "analysis": ["GC #9", "GC #10", "GC #13", "Teledyne"]}, {"proc": "T/Y", "slot": "ty", "title": "U-FB-108", "note": "", "weeks": null, "cond": null, "analysis": ["GC #4", "GC #14", "GC #16", "GC #27", "WTR(Gas)"]}, {"proc": "T/Y", "slot": "ty", "title": "C-602A/B", "note": "", "weeks": [1, 3], "cond": null, "analysis": ["GC #11", "GC #8", "T-S", "WTR(Gas)"]}, {"proc": "T/Y", "slot": "ty", "title": "U-FB-103A", "note": "", "weeks": [2, 4], "cond": null, "analysis": ["GC #5", "GC #6", "GC #14", "GC #16", "GC #27", "WTR(Gas)"]}, {"proc": "성적서발행", "slot": "ship", "title": "SM TK (MT-317B) 출하 분석", "note": "분석 후 KRCC로 성적서 발행", "weeks": null, "cond": "SMTK", "analysis": ["GC #2", "Apha Color", "Polymer", "TBC", "Aldehyde", "Peroxide", "T-S", "WTR", "성적서"]}, {"proc": "성적서발행", "slot": "ship", "title": "C3H6 (U-108) 금호P&B 성적서 발행", "note": "매주 · 분석 후 금호P&B로 발송", "weeks": null, "cond": null, "analysis": ["성적서"]}, {"proc": "SM", "slot": "n2", "title": "S-10B", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2"]}, {"proc": "C5", "slot": "n1", "title": "S-001", "note": "", "weeks": null, "cond": null, "analysis": ["GC #17", "T-S", "WTR"]}, {"proc": "C5", "slot": "n1", "title": "S-031", "note": "", "weeks": null, "cond": null, "analysis": ["GC #20", "Apha Color"]}, {"proc": "SM", "slot": "n1", "title": "S-12", "note": "DNPC", "weeks": null, "cond": null, "analysis": ["DNPC"]}, {"proc": "SM", "slot": "n1", "title": "S-8D", "note": "1주", "weeks": [1], "cond": null, "analysis": ["pH", "Conductivity", "PO₄³⁻", "Fe", "E-OX"]}, {"proc": "SM", "slot": "n1", "title": "S-8E", "note": "1주", "weeks": [1], "cond": null, "analysis": ["pH", "Conductivity", "PO₄³⁻", "Fe", "E-OX"]}, {"proc": "SM", "slot": "n1", "title": "S-8F", "note": "1주", "weeks": [1], "cond": null, "analysis": ["pH", "Conductivity", "PO₄³⁻", "Fe", "E-OX"]}, {"proc": "SM", "slot": "n1", "title": "S-8G", "note": "1주", "weeks": [1], "cond": null, "analysis": ["pH", "Conductivity", "PO₄³⁻", "Fe", "E-OX"]}, {"proc": "SM", "slot": "n1", "title": "S-2B", "note": "", "weeks": null, "cond": null, "analysis": ["GC #1"]}, {"proc": "SM", "slot": "n1", "title": "S-8B", "note": "2주", "weeks": [2], "cond": null, "analysis": ["pH", "Conductivity", "PO₄³⁻", "Fe", "E-OX"]}, {"proc": "SM", "slot": "n1", "title": "S-8C", "note": "2주", "weeks": [2], "cond": null, "analysis": ["pH", "Conductivity", "PO₄³⁻", "Fe", "E-OX"]}, {"proc": "SM", "slot": "n1", "title": "S-9", "note": "2주", "weeks": [2], "cond": null, "analysis": ["pH", "Fe", "Ca-Hard"]}, {"proc": "SM", "slot": "n1", "title": "S-9B", "note": "2주", "weeks": [2], "cond": null, "analysis": ["pH", "Fe", "Ca-Hard"]}, {"proc": "SM", "slot": "n1", "title": "SO-005", "note": "2주", "weeks": [2], "cond": null, "analysis": ["pH", "Fe"]}, {"proc": "SM", "slot": "n1", "title": "S-3", "note": "3주", "weeks": [3], "cond": null, "analysis": ["pH", "Conductivity", "PO₄³⁻", "Fe", "E-OX", "Ca-Hard"]}, {"proc": "SM", "slot": "n1", "title": "S-3A", "note": "3주", "weeks": [3], "cond": null, "analysis": ["pH", "Conductivity", "PO₄³⁻", "Fe", "E-OX", "Ca-Hard"]}, {"proc": "SM", "slot": "n1", "title": "S-205", "note": "3주", "weeks": [3], "cond": null, "analysis": ["pH", "Fe", "E-OX", "Ca-Hard"]}, {"proc": "SM", "slot": "n1", "title": "S-205B", "note": "3주", "weeks": [3], "cond": null, "analysis": ["pH", "Fe", "E-OX", "Ca-Hard"]}, {"proc": "SM", "slot": "n1", "title": "S-32", "note": "4주", "weeks": [4], "cond": null, "analysis": ["pH", "Conductivity", "Fe", "E-OX"]}, {"proc": "SM", "slot": "n1", "title": "S-33", "note": "4주", "weeks": [4], "cond": null, "analysis": ["pH", "Conductivity", "Fe", "E-OX"]}, {"proc": "SM", "slot": "n1", "title": "EC-140", "note": "4주", "weeks": [4], "cond": null, "analysis": ["pH", "Conductivity", "PO₄³⁻", "Fe", "E-OX"]}, {"proc": "SM", "slot": "n1", "title": "SC-201", "note": "4주", "weeks": [4], "cond": null, "analysis": ["pH", "Conductivity", "PO₄³⁻", "Fe", "E-OX"]}, {"proc": "SM", "slot": "n1", "title": "SC-202", "note": "4주", "weeks": [4], "cond": null, "analysis": ["pH", "Conductivity", "PO₄³⁻", "Fe", "E-OX"]}, {"proc": "SM", "slot": "n2", "title": "S-10", "note": "", "weeks": null, "cond": null, "analysis": ["GC #2"]}, {"proc": "성적서발행", "slot": "ship", "title": "HP C2- (U-FB-103A) 한화솔루션 성적서 발행", "note": "한화솔루션으로 발송", "weeks": [2, 4], "cond": null, "analysis": ["성적서"]}]};
 var DAY_NAMES = ['일','월','화','수','목','금','토'];
@@ -497,18 +512,28 @@ function reasonIconHtml(sample){
   var has = !!getReason(sample);
   var cls = has ? 'reason-icon has' : 'reason-icon';
   return '<span class="'+cls+'" '
+    // 모바일 터치
     +'ontouchstart="onReasonTouchStart(event,\''+s+'\')" '
     +'ontouchend="onReasonTouchEnd(event,\''+s+'\')" '
     +'ontouchmove="onReasonTouchCancel()" '
+    // PC: hover → 툴팁, click → 수정 팝업
     +'onmouseenter="showReasonTip(event,\''+s+'\')" '
     +'onmouseleave="hideReasonTip()" '
-    +'onclick="showReasonTip(event,\''+s+'\')" '
-    +'title="분석 이유">💡</span>';
+    +'onclick="onReasonClick(event,\''+s+'\')" '
+    +'title="분석 이유 (클릭하여 수정)">💡</span>';
+}
+
+// PC 클릭: 터치 이벤트가 없는 환경에서만 수정 팝업 열기
+function onReasonClick(ev, sample){
+  if('ontouchstart' in window) return; // 모바일은 터치 이벤트로 처리
+  ev.stopPropagation();
+  hideReasonTip();
+  openReasonEdit(sample);
 }
 
 function showReasonTip(ev, sample){
   var txt = getReason(sample);
-  if(!txt){ openReasonEdit(sample); return; }
+  if(!txt) return; // 내용 없으면 툴팁 안 띄움 (PC는 클릭으로만 수정)
   hideReasonTip();
   var tip = document.createElement('div');
   tip.className = 'reason-tip show';
@@ -525,10 +550,9 @@ function showReasonTip(ev, sample){
   if(left < 4) left = 4;
   tip.style.top = top + 'px';
   tip.style.left = left + 'px';
-  // 3초 후 자동 숨김
   if(_reasonTipTimer) clearTimeout(_reasonTipTimer);
   _reasonTipTimer = setTimeout(hideReasonTip, 3000);
-  // 툴팁 자체 탭하면 수정 팝업
+  // 툴팁 클릭하면 수정 팝업
   tip.style.pointerEvents = 'auto';
   tip.onclick = function(){ hideReasonTip(); openReasonEdit(sample); };
 }
@@ -537,7 +561,7 @@ function hideReasonTip(){
   if(_reasonTipTimer){ clearTimeout(_reasonTipTimer); _reasonTipTimer = null; }
 }
 
-// 모바일 long press
+// 모바일 long press → 수정 팝업
 function onReasonTouchStart(ev, sample){
   onReasonTouchCancel();
   _reasonLongTimer = setTimeout(function(){
@@ -1086,6 +1110,7 @@ function render(){
   html += '<div class="progress-txt">' + done + ' / ' + total + ' 완료 (' + pct + '%)</div></div>';
 
   html += renderNoticeBanner();
+  html += renderSampleSearch();
 
   html += '<div class="view-tabs">';
   html += '<button class="'+(daily.view!=='anal'&&daily.view!=='ref'&&daily.view!=='special'?'active':'')+'" onclick="setView(\'day\')">📅 요일별 보기</button>';
@@ -1351,7 +1376,110 @@ function closeGcPopup(e){
 function setView(v){ var tk=todayKey(); var d=loadDaily(tk); d.view = (v==='anal'?'anal':v==='ref'?'ref':v==='special'?'special':'day'); saveDaily(tk,d); render(); }
 
 // ══════════════════════════════════════════════════════════════════
-// 🧪 Special Sample 뷰 (special_data.json — lab-daily 저장소)
+// 🔍 샘플 검색 (전체 스케줄에서 샘플명으로 검색)
+// ══════════════════════════════════════════════════════════════════
+var SS_QUERY = '';
+
+function renderSampleSearch(){
+  var h = '<div class="sample-search-wrap">';
+  h += '<input id="ssInp" value="'+esc(SS_QUERY)+'" placeholder="🔍 샘플명 검색 (예: S-17, E-2...)" '
+     + 'oninput="ssOnInput(this.value)" autocomplete="off">';
+  if(SS_QUERY) h += '<button class="s-clear" onclick="ssClear()">✕</button>';
+  h += '</div>';
+  if(SS_QUERY.trim()){
+    h += '<div class="sample-search-result">';
+    h += ssRenderResults(SS_QUERY.trim());
+    h += '</div>';
+  }
+  return h;
+}
+
+function ssOnInput(v){
+  SS_QUERY = v;
+  // 결과 패널만 업데이트 (전체 render 대신)
+  var wrap = document.querySelector('.sample-search-wrap');
+  if(!wrap) return;
+  // clear 버튼
+  var existing = wrap.querySelector('.s-clear');
+  if(v && !existing){
+    var btn=document.createElement('button'); btn.className='s-clear'; btn.textContent='✕'; btn.onclick=ssClear; wrap.appendChild(btn);
+  } else if(!v && existing){ existing.remove(); }
+  // 결과 패널
+  var panel = wrap.nextElementSibling;
+  if(panel && panel.classList.contains('sample-search-result')) panel.remove();
+  if(v.trim()){
+    var div=document.createElement('div'); div.className='sample-search-result';
+    div.innerHTML=ssRenderResults(v.trim()); wrap.insertAdjacentElement('afterend',div);
+  }
+}
+function ssClear(){ SS_QUERY=''; var wrap=document.querySelector('.sample-search-wrap'); if(wrap){ var inp=wrap.querySelector('input'); if(inp) inp.value=''; var btn=wrap.querySelector('.s-clear'); if(btn) btn.remove(); var panel=wrap.nextElementSibling; if(panel&&panel.classList.contains('sample-search-result')) panel.remove(); } }
+
+function ssRenderResults(q){
+  var sched = loadSchedule();
+  var dayNames = DAY_NAMES; // ['일','월','화','수','목','금','토']
+  var slotLabel = { d1:'주간 전반', d2:'주간 후반', n1:'야간 전반', n2:'야간 후반', ty:'T/Y', ship:'출하·성적서' };
+  var reasons = loadReasons();
+
+  // 전체 스케줄에서 쿼리와 일치하는 샘플명 수집 (부분 일치)
+  var found = {}; // { title: { proc, cycles:[{day,slot,weeks}], anals:Set } }
+  for(var day in sched){
+    sched[day].forEach(function(t){
+      var disp = getDisplayName(t.title); // 사용자 지정 이름 반영
+      if(t.title.toLowerCase().indexOf(q.toLowerCase())!==-1 || disp.toLowerCase().indexOf(q.toLowerCase())!==-1){
+        if(!found[t.title]) found[t.title]={ proc:t.proc, cycles:[], anals:[] };
+        found[t.title].cycles.push({ day:parseInt(day), slot:t.slot, weeks:t.weeks });
+        (t.analysis||[]).forEach(function(a){ if(found[t.title].anals.indexOf(a)===-1) found[t.title].anals.push(a); });
+      }
+    });
+  }
+
+  var keys = Object.keys(found);
+  if(!keys.length) return '<div class="sr-none">검색 결과가 없어요.</div>';
+
+  var h = '';
+  keys.forEach(function(title){
+    var info = found[title];
+    var disp = getDisplayName(title);
+    h += '<div class="sr-item">';
+    h += '<div class="sr-name">'+esc(disp)+(disp!==title?'<span style="font-size:11px;color:#aaa;font-weight:400;"> ('+esc(title)+')</span>':'')+'</div>';
+
+    // 공정
+    h += '<div class="sr-row"><span class="sr-label">공정</span><span class="sr-val">'+esc(info.proc)+'</span></div>';
+
+    // 분석 주기 (요일+슬롯+주차)
+    h += '<div class="sr-row"><span class="sr-label">분석 주기</span><div>';
+    info.cycles.forEach(function(c){
+      var wk = c.weeks ? c.weeks.join('·')+'주' : '매주';
+      var dayN = dayNames[c.day]+'요일';
+      var slotN = slotLabel[c.slot] || c.slot;
+      h += '<span class="sr-cycle">'+esc(dayN)+' '+esc(slotN)+' ('+esc(wk)+')</span>';
+    });
+    h += '</div></div>';
+
+    // 분석 항목
+    if(info.anals.length){
+      h += '<div class="sr-row"><span class="sr-label">분석 항목</span><div class="sr-anal">';
+      info.anals.forEach(function(a){ h += '<span>'+esc(a)+'</span>'; });
+      h += '</div></div>';
+    }
+
+    // 분석 이유 (입력된 경우만)
+    var reason = reasons[title] || '';
+    if(reason){
+      h += '<div class="sr-reason">💡 <b>분석 이유</b> '+esc(reason)+'</div>';
+    }
+
+    // 주의사항·개별 메모 (입력된 경우만)
+    var w = loadWarnings();
+    var memo = w[title] || '';
+    if(memo){
+      h += '<div class="sr-reason" style="background:#fff3e0;border-color:#e67e22;margin-top:4px;">📝 <b>메모</b> '+esc(memo)+'</div>';
+    }
+
+    h += '</div>';
+  });
+  return h;
+}
 // ══════════════════════════════════════════════════════════════════
 var SP_FILE = 'special_data.json';
 var SP_DATA = { procs:['C5','SM','MTBE','T/Y'], records:{} };
