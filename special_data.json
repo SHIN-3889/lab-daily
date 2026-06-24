@@ -1,0 +1,23 @@
+{
+  "procs": [
+    "C5",
+    "SM",
+    "MTBE",
+    "T/Y"
+  ],
+  "records": {
+    "C5": [
+      {
+        "id": "mqrmjgzejp6w",
+        "name": "S-002",
+        "reason": "S-001 IPM PROD에서 수분이 많이 측정되어서 Cross Check 겸 분석",
+        "anals": [
+          "WTR"
+        ],
+        "result": "40ppm",
+        "date": "2026-06-24-오후 02:19",
+        "resultDate": "2026-06-24-오후 02:19"
+      }
+    ]
+  }
+}
