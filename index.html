@@ -1313,4 +1313,266 @@ async function loadNoticeState(){
     var data = null, sha = null;
     if(token){
       var r = await fetch('https://api.github.com/repos/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/contents/notice_state.json?ref='+GH_BRANCH+'&t='+Date.now(),
-        {headers:{'Authorization':'Bear
+        {headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}});
+      if(r.ok){ var j=await r.json(); sha=j.sha; data=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))))); }
+      else if(r.status!==404){ console.warn('notice_state 로드 실패:', r.status); }
+    }
+    if(!data){
+      var r2=await fetch('https://raw.githubusercontent.com/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/'+GH_BRANCH+'/notice_state.json?t='+Date.now());
+      if(r2.ok) data=await r2.json();
+    }
+    if(data){
+      NOTICE_STATE = { hidden:data.hidden||[], hl:data.hl||{}, edits:data.edits||{}, manual:data.manual||[] };
+      NS_SHA = sha;
+    }
+    render();
+  } catch(e){ console.warn('notice_state 로드 오류:', e); }
+}
+async function saveNoticeState(){
+  var token = getGhToken();
+  if(!token){ console.warn('토큰 없음 — notice_state 저장 불가'); return; }
+  NS_DIRTY = false;
+  try {
+    var payload = { message:'update notice_state.json', branch:GH_BRANCH,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(NOTICE_STATE, null, 2)))) };
+    if(NS_SHA) payload.sha = NS_SHA;
+    var r = await fetch('https://api.github.com/repos/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/contents/notice_state.json',
+      {method:'PUT', headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
+       body:JSON.stringify(payload)});
+    if(r.ok){ var j=await r.json(); NS_SHA=j.content.sha; }
+    else console.warn('notice_state 저장 실패:', r.status, await r.text());
+  } catch(e){ console.warn('notice_state 저장 오류:', e); }
+}
+
+// ── 공지 고유 ID ──
+function noticeId(n){ return (n.date||'')+'||'+(n.title||''); }
+
+// ── 숨기기 (최대 15개, 초과 시 가장 오래된 것 삭제) ──
+var HIDDEN_MAX = 15;
+function hideNotice(id){
+  nsSet(function(st){
+    if(st.hidden.indexOf(id)===-1){
+      st.hidden.push(id);
+      if(st.hidden.length > HIDDEN_MAX) st.hidden = st.hidden.slice(st.hidden.length - HIDDEN_MAX);
+    }
+  });
+}
+function restoreNotice(id, overlay){
+  nsSet(function(st){ st.hidden = st.hidden.filter(function(x){return x!==id;}); });
+  if(overlay) overlay.remove();
+}
+
+// ── 줄 강조 ──
+var HL_COLORS = ['yellow','green','red'];
+function getHlMap(nid){ return (NOTICE_STATE.hl||{})[nid] || {}; }
+function toggleHl(nid, idx){
+  nsSet(function(st){
+    var map = st.hl[nid] || {};
+    var cur = map[idx] || '';
+    var ci = HL_COLORS.indexOf(cur);
+    var next = ci < HL_COLORS.length-1 ? HL_COLORS[ci+1] : '';
+    if(next) map[idx]=next; else delete map[idx];
+    if(Object.keys(map).length) st.hl[nid]=map; else delete st.hl[nid];
+  });
+}
+
+// ── 요약 내용 수정 팝업 ──
+function openNoticeEdit(nid){
+  var all = allNotices();
+  var n = all.filter(function(x){ return noticeId(x)===nid; })[0];
+  if(!n) return;
+  var st = nsGet();
+  var edit = (st.edits||{})[nid] || {};
+  var curTitle = edit.title !== undefined ? edit.title : (n.title||'');
+  var curBody  = edit.body  !== undefined ? edit.body  : (n.body||'');
+  openNoticeEditPopup(nid, curTitle, curBody, false);
+}
+
+// ── 직접 공지 작성/수정 팝업 ──
+function openManualWrite(idx){
+  var st = nsGet();
+  if(idx === undefined || idx === null){
+    // 새 공지 작성
+    openNoticeEditPopup(null, '', '', true, null);
+  } else {
+    var m = (st.manual||[])[idx];
+    if(!m) return;
+    openNoticeEditPopup(null, m.title||'', m.body||'', true, idx);
+  }
+}
+
+function openNoticeEditPopup(nid, curTitle, curBody, isManual, manualIdx){
+  var overlay = document.createElement('div');
+  overlay.className = 'hidden-notice-overlay';
+  overlay._mdTarget=null;
+  overlay.addEventListener('mousedown',function(e){ overlay._mdTarget=e.target; });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay && overlay._mdTarget===overlay) overlay.remove(); });
+  var box = document.createElement('div');
+  box.className = 'hidden-notice-box';
+  var label = isManual ? (manualIdx!=null?'✏️ 공지 수정':'✏️ 공지 직접 작성') : '✏️ 요약 내용 수정';
+  box.innerHTML =
+    '<h3>'+label+'</h3>'+
+    (isManual ? '' : '<div style="font-size:11px;color:#a0813a;margin-bottom:10px;">AI 요약 원본은 유지되며, 수정본이 표시돼요.</div>')+
+    '<div style="font-size:12px;font-weight:600;color:#555;margin-bottom:4px;">제목</div>'+
+    '<input id="neTitle" value="'+esc(curTitle)+'" style="width:100%;padding:8px 10px;border:1.5px solid #b0b8c1;border-radius:8px;font-size:13px;margin-bottom:10px;">'+
+    '<div style="font-size:12px;font-weight:600;color:#555;margin-bottom:4px;">내용 <span style="font-size:11px;color:#999;">(- 로 시작하면 불릿)</span></div>'+
+    '<textarea id="neBody" style="width:100%;height:160px;padding:8px 10px;border:1.5px solid #b0b8c1;border-radius:8px;font-size:13px;resize:vertical;">'+esc(curBody)+'</textarea>'+
+    '<div style="display:flex;gap:8px;margin-top:10px;">'+
+    '<button id="neBtnSave" style="flex:1;background:#f39c12;color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;">저장</button>'+
+    ((!isManual || manualIdx!=null) ? '<button id="neBtnDel" style="flex:0 0 auto;background:#e74c3c;color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;">삭제</button>' : '')+
+    '<button id="neBtnCan" style="flex:0 0 auto;background:#ddd;border:none;border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;">취소</button>'+
+    '</div>';
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  box.querySelector('#neTitle').focus();
+  box.querySelector('#neBtnCan').onclick = function(){ overlay.remove(); };
+  box.querySelector('#neBtnSave').onclick = function(){
+    var t = box.querySelector('#neTitle').value.trim();
+    var b = box.querySelector('#neBody').value.trim();
+    if(!t){ alert('제목을 입력하세요.'); return; }
+    nsSet(function(st){
+      if(isManual){
+        st.manual = st.manual||[];
+        if(manualIdx!=null) st.manual[manualIdx]={title:t,body:b,date:st.manual[manualIdx].date,from:'직접 작성'};
+        else st.manual.unshift({title:t,body:b,date:new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).replace(/\. /g,'-').replace('.',':').replace('. ',''),from:'직접 작성'});
+      } else {
+        st.edits = st.edits||{};
+        st.edits[nid] = {title:t, body:b};
+      }
+    });
+    overlay.remove();
+  };
+  var delBtn = box.querySelector('#neBtnDel');
+  if(delBtn) delBtn.onclick = function(){
+    if(!confirm('삭제할까요?')) return;
+    nsSet(function(st){
+      if(isManual && manualIdx!=null){ st.manual.splice(manualIdx,1); }
+      else if(!isManual){ delete (st.edits||{})[nid]; }
+    });
+    overlay.remove();
+  };
+}
+
+// ── 전체 공지 목록 (직접작성 + AI요약, 날짜 내림차순) ──
+function allNotices(){
+  var st = nsGet();
+  var ai = (NOTICE||[]).map(function(n){
+    var nid = noticeId(n);
+    var edit = (st.edits||{})[nid];
+    if(edit) return Object.assign({}, n, {title:edit.title, body:edit.body, _nid:nid, _edited:true, _manual:false});
+    return Object.assign({}, n, {_nid:nid, _edited:false, _manual:false});
+  });
+  var manual = (st.manual||[]).map(function(m,i){ return Object.assign({},m,{_nid:'manual||'+i, _manual:true, _midx:i}); });
+  var merged = manual.concat(ai);
+  merged.sort(function(a,b){ return (b.date||'') > (a.date||'') ? 1 : -1; });
+  return merged;
+}
+
+// ── 숨긴 공지 보관함 팝업 ──
+function openHiddenNotices(){
+  var st = nsGet();
+  var all = allNotices();
+  var hiddenItems = all.filter(function(n){ return st.hidden.indexOf(noticeId(n))!==-1 || (n._manual && st.hidden.indexOf(n._nid)!==-1); });
+  if(!hiddenItems.length){ alert('숨긴 공지가 없어요.'); return; }
+  var overlay = document.createElement('div');
+  overlay.className = 'hidden-notice-overlay';
+  overlay._mdTarget=null;
+  overlay.addEventListener('mousedown',function(e){ overlay._mdTarget=e.target; });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay && overlay._mdTarget===overlay) overlay.remove(); });
+  var box = document.createElement('div');
+  box.className = 'hidden-notice-box';
+  var h='<h3>🗂 숨긴 공지 보관함 ('+hiddenItems.length+'건)</h3>';
+  hiddenItems.forEach(function(n){
+    var id = n._manual ? n._nid : noticeId(n);
+    var meta=[n.date,n.from].filter(Boolean).join(' · ');
+    h+='<div class="hidden-notice-item">';
+    h+='<div class="hn-title">'+esc(n.title||'(제목없음)')+'</div>';
+    if(meta) h+='<div class="hn-meta">'+esc(meta)+'</div>';
+    h+='<button onclick="restoreNotice(\''+id.replace(/'/g,"\\'")+'\',this.closest(\'.hidden-notice-overlay\'))">↩ 되돌리기</button>';
+    h+='</div>';
+  });
+  box.innerHTML=h;
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
+// ── 공지 배너 렌더링 ──
+function renderNoticeBanner(){
+  var st = nsGet();
+  var all = allNotices();
+  if(!all.length && !(st.manual&&st.manual.length)){
+    // 직접 작성 버튼만 표시
+    return '<div class="notice-box"><div class="notice-head"><span>📢 공지사항</span></div>'
+      +'<button class="notice-restore-btn" onclick="openManualWrite()">✏️ 공지 직접 작성</button></div>';
+  }
+  var hidden = st.hidden||[];
+  var visible = all.filter(function(n){
+    var id = n._manual ? n._nid : noticeId(n);
+    return hidden.indexOf(id)===-1;
+  });
+  var hiddenCount = all.length - visible.length;
+  var headRight = '<span class="notice-count">'+visible.length+(hiddenCount?' / '+all.length:'')+'건</span>';
+  if(!visible.length){
+    return '<div class="notice-box"><div class="notice-head"><span>📢 공지사항</span>'+headRight+'</div>'
+      +'<button class="notice-restore-btn" onclick="openHiddenNotices()">🗂 숨긴 공지 '+hiddenCount+'건 보기 / 되돌리기</button>'
+      +'<button class="notice-restore-btn" style="margin-left:8px;" onclick="openManualWrite()">✏️ 직접 작성</button></div>';
+  }
+  var h='<div class="notice-box"><div class="notice-head"><span>📢 공지사항</span>'+headRight+'</div>';
+  visible.forEach(function(n){
+    var nid = n._manual ? n._nid : noticeId(n);
+    var hideId = nid.replace(/'/g,"\\'");
+    h+='<div class="notice-item">';
+    h+='<div class="notice-btn-group">';
+    if(n._manual){
+      h+='<button class="notice-del" onclick="openManualWrite('+n._midx+')" title="수정">✏️</button>';
+    } else {
+      h+='<button class="notice-del" onclick="openNoticeEdit(\''+nid.replace(/'/g,"\\'")+'\''+')" title="내용 수정">✏️</button>';
+    }
+    h+='<button class="notice-del" onclick="hideNotice(\''+hideId+'\')" title="숨기기">✕</button>';
+    h+='</div>';
+    if(n._edited) h+='<div style="font-size:10px;color:#a0813a;margin-bottom:2px;">✏️ 수정됨</div>';
+    h+='<div class="notice-title">'+esc(n.title||'(제목없음)')+'</div>';
+    var meta=[]; if(n.date) meta.push(esc(n.date)); if(n.from) meta.push(esc(n.from));
+    if(meta.length) h+='<div class="notice-meta">'+meta.join(' · ')+'</div>';
+    if(n.body) h+='<div class="notice-body">'+mdLiteNotice(n.body, nid)+'</div>';
+    h+='</div>';
+  });
+  if(hiddenCount) h+='<button class="notice-restore-btn" onclick="openHiddenNotices()">🗂 숨긴 공지 '+hiddenCount+'건 보기 / 되돌리기</button>';
+  h+='<button class="notice-restore-btn" style="margin-left:8px;" onclick="openManualWrite()">✏️ 공지 직접 작성</button>';
+  h+='</div>';
+  return h;
+}
+
+async function loadNotice(){
+  var token = getGhToken();
+  try{
+    var data = null;
+    if(token){
+      var r=await fetch('https://api.github.com/repos/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/contents/notice.json?ref='+GH_BRANCH+'&t='+Date.now(),
+        {headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}});
+      if(r.ok){ var j=await r.json(); data=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))))); }
+      else if(r.status===404){ NOTICE=null; return; }
+    }
+    if(!data){
+      var r2=await fetch('https://raw.githubusercontent.com/'+GH_REPO_OWNER+'/'+GH_REPO_NAME+'/'+GH_BRANCH+'/notice.json?t='+Date.now());
+      if(!r2.ok){ NOTICE=null; return; }
+      data=await r2.json();
+    }
+    NOTICE = Array.isArray(data) ? data : (data ? [data] : null);
+    render();
+  }catch(e){ console.warn('공지 로드 실패:', e); NOTICE=null; }
+}
+
+checkLockOnLoad();
+// 페이지 열 때마다 현재 시간 기준으로 교대 자동 설정
+(function(){
+  var tk = todayKey();
+  var d = loadDaily(tk);
+  var autoShift = new Date().getHours() >= 7 && new Date().getHours() < 19 ? 'day' : 'night';
+  d.shift = autoShift;
+  saveDaily(tk, d);
+})();
+loadCloudData().then(function(){ render(); loadNotice(); loadNoticeState(); });
+</script>
+</body>
+</html>
