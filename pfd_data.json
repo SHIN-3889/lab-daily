@@ -525,7 +525,7 @@
       "type": "tower",
       "label": "DA-411",
       "name": "DA-411 Pre-Cut Tower",
-      "desc": "C4 원료 예비 분리탑. Mixed C4에서 1,3-BD 등 중질분 분리 (탑저 C4-R3 Heavy End → LGC NCC).",
+      "desc": "C4 원료 예비 분리탑. Mixed C4에서 1,3-BD 등 중질분 분리 (탑저 C4-R3 → LGC NCC).",
       "process": "MTBE"
     },
     {
@@ -561,7 +561,7 @@
       "type": "tower",
       "label": "DA-101",
       "name": "DA-101 NMP Removal Tower",
-      "desc": "NMP/DMF 제거탑. 추출용제(NMP·DMF) 회수.",
+      "desc": "NMP/DMF 제거탑. 추출용제 회수.",
       "process": "MTBE"
     },
     {
@@ -597,7 +597,7 @@
       "type": "reactor",
       "label": "DC-101",
       "name": "DC-101 First Reactor",
-      "desc": "MTBE 1차 합성 반응기 (First Reactor). 이소부텐+메탄올 → MTBE.",
+      "desc": "MTBE 1차 합성 반응기 (First Reactor). 이소부텐+메탄올→MTBE.",
       "process": "MTBE"
     },
     {
@@ -609,7 +609,7 @@
       "type": "reactor",
       "label": "DC-102B",
       "name": "DC-102B Second Reactor",
-      "desc": "MTBE 2차 합성 반응기 B (Second Reactor). 미반응 이소부텐 추가 전환.",
+      "desc": "MTBE 2차 합성 반응기 B.",
       "process": "MTBE"
     },
     {
@@ -621,7 +621,7 @@
       "type": "reactor",
       "label": "DC-102A",
       "name": "DC-102A Second Reactor",
-      "desc": "MTBE 2차 합성 반응기 A (Second Reactor).",
+      "desc": "MTBE 2차 합성 반응기 A.",
       "process": "MTBE"
     },
     {
@@ -633,7 +633,7 @@
       "type": "tower",
       "label": "DA-102",
       "name": "DA-102 MTBE Fractionation Tower",
-      "desc": "MTBE 분리탑. 탑저에서 MTBE 제품 분리 (MTBE PROD).",
+      "desc": "MTBE 분리탑. 탑저 MTBE 제품 (MTBE PROD).",
       "process": "MTBE"
     },
     {
@@ -669,7 +669,7 @@
       "type": "tower",
       "label": "DA-104",
       "name": "DA-104 Methanol Removal Tower",
-      "desc": "메탄올 제거탑. C4 중 메탄올을 수세·분리.",
+      "desc": "메탄올 제거탑.",
       "process": "MTBE"
     },
     {
@@ -681,7 +681,7 @@
       "type": "tower",
       "label": "DA-105",
       "name": "DA-105 Methanol Water Fractionation Tower",
-      "desc": "메탄올-물 분리탑. 메탄올 회수하여 반응부로 재순환.",
+      "desc": "메탄올-물 분리탑. 메탄올 회수 재순환.",
       "process": "MTBE"
     },
     {
@@ -717,7 +717,7 @@
       "type": "reactor",
       "label": "DC-301",
       "name": "DC-301 Hydrogenation Reactor",
-      "desc": "수소화 반응기 (Hydrogenation). H2로 디엔류(1,3-BD 등) 선택 수소화 제거.",
+      "desc": "수소화 반응기. H2로 디엔류 선택 수소화.",
       "process": "MTBE"
     },
     {
@@ -777,7 +777,7 @@
       "type": "tower",
       "label": "DA-302",
       "name": "DA-302 Butene-1 Fractionation Tower",
-      "desc": "부텐-1 분리탑 (Butene-1 Fractionation). Butene-1 제품 분리.",
+      "desc": "부텐-1 분리탑. Butene-1 제품.",
       "process": "MTBE"
     },
     {
@@ -801,7 +801,7 @@
       "type": "reactor",
       "label": "DC-201",
       "name": "DC-201 MTBE Decomposition Reactor",
-      "desc": "MTBE 분해 반응기 (Decomposition). MTBE → 이소부텐 + 메탄올 (역반응).",
+      "desc": "MTBE 분해 반응기. MTBE→이소부텐+메탄올.",
       "process": "MTBE"
     },
     {
@@ -825,7 +825,7 @@
       "type": "tower",
       "label": "DA-201",
       "name": "DA-201 NMP Removal Tower",
-      "desc": "NMP 제거탑. 분해 생성물 중 메탄올 제거.",
+      "desc": "NMP 제거탑 (분해 생성물 메탄올 제거).",
       "process": "MTBE"
     },
     {
@@ -837,7 +837,7 @@
       "type": "tower",
       "label": "DA-202",
       "name": "DA-202 Isobutene Fractionation Tower",
-      "desc": "이소부텐 분리탑 (Isobutene Fractionation).",
+      "desc": "이소부텐 분리탑.",
       "process": "MTBE"
     },
     {
@@ -849,7 +849,7 @@
       "type": "tower",
       "label": "DA-203",
       "name": "DA-203 Isobutene Purification Tower",
-      "desc": "이소부텐 정제탑 (Purification). DME 제거하여 고순도 이소부텐 (ISOBUTENE PROD).",
+      "desc": "이소부텐 정제탑. DME 제거 (ISOBUTENE PROD).",
       "process": "MTBE"
     },
     {
@@ -1415,7 +1415,7 @@
       "y": 740,
       "label": "S-205",
       "name": "S-205 샘플포인트",
-      "desc": "분석항목: Ca-Hard, E-OX, Fe, pH (3주)",
+      "desc": "DA-202/203 이소부텐 계통. (SM의 S-205[냉각수]와 다른 포인트 — MTBE 스케줄 미등록)",
       "process": "MTBE"
     },
     {
@@ -1441,7 +1441,7 @@
       "x": 325,
       "y": 305,
       "label": "S-103",
-      "name": "S-103 샘플포인트",
+      "name": "새 샘플포인트",
       "desc": "분석항목: GC #16, GC #22",
       "process": "MTBE"
     },
@@ -1450,7 +1450,7 @@
       "x": 455,
       "y": 455,
       "label": "S-106",
-      "name": "",
+      "name": "S-106 샘플포인트",
       "desc": "DC-102 Second Reactor 계통. (분석 스케줄 미등록)",
       "process": "MTBE"
     },
@@ -1468,7 +1468,7 @@
       "x": 265,
       "y": 605,
       "label": "S-122",
-      "name": "S-122 샘플포인트",
+      "name": "새 샘플포인트",
       "desc": "분석항목: GC #19",
       "process": "MTBE"
     }
@@ -4639,5 +4639,15 @@
       "color": "#e8eef5",
       "process": "MTBE"
     }
-  ]
+  ],
+  "processes": {
+    "SM": {
+      "label": "SM (스티렌)",
+      "color": "#2980b9"
+    },
+    "MTBE": {
+      "label": "MTBE",
+      "color": "#e67e22"
+    }
+  }
 }
