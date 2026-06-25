@@ -1266,15 +1266,6 @@
       "process": "MTBE"
     },
     {
-      "id": "sp-SC-101",
-      "x": 280,
-      "y": 30,
-      "label": "SC-101",
-      "name": "SC-101 샘플포인트",
-      "desc": "DC-101 First Reactor 상부 계통. (분석 스케줄 미등록)",
-      "process": "MTBE"
-    },
-    {
       "id": "sp-S-104",
       "x": 360,
       "y": 285,
@@ -4648,15 +4639,5 @@
       "color": "#e8eef5",
       "process": "MTBE"
     }
-  ],
-  "processes": {
-    "SM": {
-      "label": "SM (스티렌)",
-      "color": "#2980b9"
-    },
-    "MTBE": {
-      "label": "MTBE",
-      "color": "#e67e22"
-    }
-  }
+  ]
 }
