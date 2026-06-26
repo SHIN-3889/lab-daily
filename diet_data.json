@@ -62,6 +62,13 @@
     ],
     "2026-06-26": [
       {
+        "id": "mquyt1ugxv0",
+        "food": "약과 60kcal",
+        "kcal": 60,
+        "detail": "제시된 약과의 칼로리가 60kcal로 주어졌습니다.",
+        "time": "22:26"
+      },
+      {
         "id": "mqult9gd95t",
         "food": "초코우유300ml",
         "kcal": 300,
