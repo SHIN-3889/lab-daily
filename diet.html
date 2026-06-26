@@ -116,7 +116,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','맑은 고�
 </div>
 <div class="toast" id="toast"></div>
 <script>
-var APP_VERSION = 'v2.3';
+var APP_VERSION = 'v2.4';
 document.addEventListener('DOMContentLoaded', function(){
   var el = document.getElementById('dietVer');
   if(el) el.textContent = APP_VERSION;
@@ -283,30 +283,105 @@ function eatenMeals(date){
   });
   return meals;
 }
-// 끼니 카드 탭 → 먹음/취소 토글
-async function toggleCafeteriaMeal(meal){
+
+// 끼니 카드 탭 → 메뉴별 양 선택 팝업
+var _portionOpts=[
+  {label:'안 먹음', val:0},
+  {label:'¼', val:0.25},
+  {label:'⅓', val:0.33},
+  {label:'½', val:0.5},
+  {label:'⅔', val:0.67},
+  {label:'1인분', val:1},
+  {label:'1.5', val:1.5},
+  {label:'2인분', val:2}
+];
+var _cafSel=null; // {meal, items:[{name, portion}]}
+function openCafeteriaMeal(meal){
   var menu=todayMenu();
   if(!menu||!menu[meal]||!menu[meal].length) return;
-  var eaten=eatenMeals(SEL_DATE);
-  if(eaten.indexOf(meal)>=0){
-    // 이미 먹음 → 취소 (해당 기록 삭제)
-    var recs=(DATA.records||{})[SEL_DATE]||[];
-    var target=recs.find(function(r){ return (r.food||'').indexOf('회사밥('+meal+')')===0; });
-    if(target){ delRecord(SEL_DATE, target.id); render(); }
-    return;
+  // 기존 기록이 있으면 그 양을 불러오기
+  var existing=null;
+  var recs=(DATA.records||{})[SEL_DATE]||[];
+  recs.forEach(function(r){ if((r.food||'').indexOf('회사밥('+meal+')')===0 && r.portions) existing=r.portions; });
+  _cafSel={ meal:meal, items: menu[meal].map(function(name){
+    var p = existing && existing[name]!=null ? existing[name] : 1; // 기본 1인분
+    return {name:name, portion:p};
+  })};
+  renderCafeteriaPopup();
+}
+function renderCafeteriaPopup(){
+  var old=document.getElementById('caf-popup'); if(old) old.remove();
+  var ov=document.createElement('div'); ov.id='caf-popup';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;display:flex;align-items:flex-end;justify-content:center;';
+  var h='<div style="background:#fff;width:100%;max-width:460px;border-radius:16px 16px 0 0;max-height:85vh;overflow-y:auto;padding:18px 16px 24px;">';
+  h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">';
+  h+='<div style="font-size:17px;font-weight:800;color:#2e7d32;">🍱 '+esc(_cafSel.meal)+' — 먹은 만큼 선택</div>';
+  h+='<button onclick="closeCafeteriaPopup()" style="border:none;background:transparent;font-size:22px;color:#999;cursor:pointer;">×</button>';
+  h+='</div>';
+  h+='<div style="font-size:12px;color:#888;margin-bottom:14px;">안 먹은 메뉴는 “안 먹음”으로, 먹은 메뉴는 양을 선택하세요.</div>';
+  _cafSel.items.forEach(function(it,idx){
+    h+='<div style="border-bottom:1px solid #eee;padding:10px 0;">';
+    h+='<div style="font-size:14px;font-weight:700;color:#333;margin-bottom:7px;">'+esc(it.name)+'</div>';
+    h+='<div style="display:flex;flex-wrap:wrap;gap:5px;">';
+    _portionOpts.forEach(function(opt){
+      var on=(it.portion===opt.val);
+      h+='<button onclick="setCafPortion('+idx+','+opt.val+')" style="border:1.5px solid '+(on?'#2e7d32':'#ddd')+';background:'+(on?'#2e7d32':'#fff')+';color:'+(on?'#fff':'#666')+';border-radius:7px;padding:6px 11px;font-size:13px;font-weight:700;cursor:pointer;">'+opt.label+'</button>';
+    });
+    h+='</div></div>';
+  });
+  // 합계 미리보기
+  var eatenCnt=_cafSel.items.filter(function(it){return it.portion>0;}).length;
+  h+='<div style="margin-top:16px;display:flex;gap:8px;">';
+  h+='<button onclick="closeCafeteriaPopup()" style="flex:1;border:none;background:#eee;color:#666;border-radius:9px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;">취소</button>';
+  h+='<button onclick="confirmCafeteriaMeal()" style="flex:2;border:none;background:#2e7d32;color:#fff;border-radius:9px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;">'+eatenCnt+'개 메뉴 칼로리 계산 ▶</button>';
+  h+='</div>';
+  h+='</div>';
+  ov.innerHTML=h;
+  ov.onclick=function(e){ if(e.target===ov) closeCafeteriaPopup(); };
+  document.body.appendChild(ov);
+}
+function setCafPortion(idx, val){ _cafSel.items[idx].portion=val; renderCafeteriaPopup(); }
+function closeCafeteriaPopup(){ var el=document.getElementById('caf-popup'); if(el) el.remove(); _cafSel=null; }
+
+// 선택한 메뉴들 한꺼번에 칼로리 계산 → 기록
+async function confirmCafeteriaMeal(){
+  if(!_cafSel) return;
+  var meal=_cafSel.meal;
+  var eatenItems=_cafSel.items.filter(function(it){return it.portion>0;});
+  if(!eatenItems.length){
+    // 다 안 먹음 → 기존 기록 삭제
+    removeMealRecord(meal); closeCafeteriaPopup(); render(); return;
   }
-  // 안 먹음 → 칼로리 분석 후 기록
-  var foodText=menu[meal].join(', ');
+  // 양 표시 텍스트 (예: "제육볶음(2/3), 현미밥, 김치(1/2)")
+  function pLabel(v){ var f={0.25:'¼',0.33:'⅓',0.5:'½',0.67:'⅔',1:'',1.5:'1.5인분',2:'2인분'}; return f[v]!=null?f[v]:v+'인분'; }
+  var foodParts=eatenItems.map(function(it){ var l=pLabel(it.portion); return it.name+(l?'('+l+')':''); });
+  var foodText=foodParts.join(', ');
+  // Gemini에 양까지 반영해서 보냄
+  var promptText=eatenItems.map(function(it){ return it.name+' '+it.portion+'인분'; }).join(', ');
   try{
-    showCafeteriaStatus(meal+' 칼로리 분석 중…');
-    var obj=await analyzeFood(foodText);
-    addRecord('회사밥('+meal+'): '+foodText, obj.kcal, obj.detail||'');
+    showCafeteriaStatus(meal+' 칼로리 계산 중…');
+    var obj=await analyzeFood(promptText);
+    removeMealRecord(meal); // 기존 같은 끼니 기록 제거 후 새로
+    var portions={}; eatenItems.forEach(function(it){ portions[it.name]=it.portion; });
+    addRecordWithPortions('회사밥('+meal+'): '+foodText, obj.kcal, obj.detail||'', portions);
     showCafeteriaStatus('');
+    closeCafeteriaPopup();
     render();
   }catch(e){
     showCafeteriaStatus('');
-    alert('칼로리 분석 실패: '+(e.message||e));
+    alert('칼로리 계산 실패: '+(e.message||e));
   }
+}
+function removeMealRecord(meal){
+  var recs=(DATA.records||{})[SEL_DATE]||[];
+  var target=recs.filter(function(r){ return (r.food||'').indexOf('회사밥('+meal+')')===0; });
+  target.forEach(function(r){ delRecord(SEL_DATE, r.id); });
+}
+function addRecordWithPortions(food,kcal,detail,portions){
+  if(!DATA.records) DATA.records={};
+  if(!DATA.records[SEL_DATE]) DATA.records[SEL_DATE]=[];
+  DATA.records[SEL_DATE].unshift({id:uid(),food:food,kcal:kcal,detail:detail,time:nowTime(),portions:portions});
+  scheduleSync();
 }
 
 async function analyzeFood(text){
@@ -428,13 +503,27 @@ function renderToday(){
       var items=menu[meal];
       if(!items||!items.length) return;
       var isEaten=eaten.indexOf(meal)>=0;
-      h+='<div onclick="toggleCafeteriaMeal(\''+meal+'\')" style="border:2px solid '+(isEaten?'#2e7d32':'#e0e0e0')+';background:'+(isEaten?'#e8f5e9':'#fafafa')+';border-radius:10px;padding:11px 13px;margin-bottom:8px;cursor:pointer;transition:all .15s;">';
+      // 먹은 기록의 portions 가져오기
+      var portions=null;
+      ((DATA.records||{})[SEL_DATE]||[]).forEach(function(r){ if((r.food||'').indexOf('회사밥('+meal+')')===0 && r.portions) portions=r.portions; });
+      h+='<div onclick="openCafeteriaMeal(\''+meal+'\')" style="border:2px solid '+(isEaten?'#2e7d32':'#e0e0e0')+';background:'+(isEaten?'#e8f5e9':'#fafafa')+';border-radius:10px;padding:11px 13px;margin-bottom:8px;cursor:pointer;transition:all .15s;">';
       h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">';
       h+='<div style="font-size:13px;font-weight:700;color:'+(isEaten?'#2e7d32':'#555')+';">'+mealIcon[meal]+' '+meal+'</div>';
-      h+='<div style="font-size:12px;font-weight:700;color:'+(isEaten?'#2e7d32':'#bbb')+';">'+(isEaten?'✓ 먹음':'탭하면 기록')+'</div>';
+      h+='<div style="font-size:12px;font-weight:700;color:'+(isEaten?'#2e7d32':'#bbb')+';">'+(isEaten?'✓ 먹음 (탭하여 수정)':'탭하여 선택')+'</div>';
       h+='</div>';
       h+='<div style="display:flex;flex-wrap:wrap;gap:5px;">';
-      items.forEach(function(m){ h+='<span style="background:'+(isEaten?'#c8e6c9':'#f0f0f0')+';color:#33691e;border-radius:6px;padding:4px 9px;font-size:12px;">'+esc(m)+'</span>'; });
+      function pMark(v){ var f={0.25:'¼',0.33:'⅓',0.5:'½',0.67:'⅔',1.5:'1.5',2:'2'}; return f[v]!=null?f[v]:''; }
+      items.forEach(function(m){
+        var p = portions && portions[m]!=null ? portions[m] : null;
+        var didEat = isEaten ? (p!=null && p>0) : true; // 기록 전엔 전부 보통색
+        var mark = (p!=null && p>0) ? pMark(p) : '';
+        if(isEaten && (p==null || p===0)){
+          // 안 먹은 메뉴는 흐리게 + 취소선
+          h+='<span style="background:#f5f5f5;color:#bbb;border-radius:6px;padding:4px 9px;font-size:12px;text-decoration:line-through;">'+esc(m)+'</span>';
+        } else {
+          h+='<span style="background:'+(isEaten?'#c8e6c9':'#f0f0f0')+';color:#33691e;border-radius:6px;padding:4px 9px;font-size:12px;">'+esc(m)+(mark?' <b>'+mark+'</b>':'')+'</span>';
+        }
+      });
       h+='</div></div>';
     });
   } else {
