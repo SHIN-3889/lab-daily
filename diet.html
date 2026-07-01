@@ -116,7 +116,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','맑은 고�
 </div>
 <div class="toast" id="toast"></div>
 <script>
-var APP_VERSION = 'v2.6';
+var APP_VERSION = 'v2.7';
 document.addEventListener('DOMContentLoaded', function(){
   var el = document.getElementById('dietVer');
   if(el) el.textContent = APP_VERSION;
@@ -870,7 +870,7 @@ function resetKey(){
 }
 function saveGoal(){
   var v=parseInt(document.getElementById('goalInp').value)||1800;
-  v=Math.max(500,Math.min(5000,v)); setGoal(v); render();
+  v=Math.max(500,Math.min(5000,v)); setGoal(v); showToast('🎯 목표 '+v+'kcal 저장됨'); render();
 }
 function onSaveWeight(){
   var v=parseFloat(document.getElementById('wInp').value);
