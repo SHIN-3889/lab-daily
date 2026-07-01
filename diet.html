@@ -116,7 +116,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Malgun Gothic','맑은 고�
 </div>
 <div class="toast" id="toast"></div>
 <script>
-var APP_VERSION = 'v2.5';
+var APP_VERSION = 'v2.6';
 document.addEventListener('DOMContentLoaded', function(){
   var el = document.getElementById('dietVer');
   if(el) el.textContent = APP_VERSION;
@@ -145,6 +145,18 @@ function setGoal(v){ localStorage.setItem(GOAL_KEY,String(v)); }
 function getGeminiKey(){ return localStorage.getItem(GEMINI_KEY_NAME)||''; }
 function saveGeminiKey(k){ localStorage.setItem(GEMINI_KEY_NAME,k); }
 function getGhToken(){ return localStorage.getItem(GH_TOKEN_KEY)||''; }
+function setGhToken(v){ localStorage.setItem(GH_TOKEN_KEY, v); }
+function clearGhToken(){ localStorage.removeItem(GH_TOKEN_KEY); }
+function onSaveGhToken(){
+  var inp=document.getElementById('ghTokenInput');
+  var v=(inp&&inp.value||'').trim();
+  if(!v){ showToast('토큰을 입력하세요'); return; }
+  setGhToken(v); showToast('✓ GitHub 토큰 저장됨'); render();
+}
+function onClearGhToken(){
+  if(!confirm('저장된 GitHub 토큰을 지울까요?')) return;
+  clearGhToken(); showToast('토큰 삭제됨'); render();
+}
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function dayRecs(d){ return (DATA.records||{})[d||SEL_DATE]||[]; }
@@ -623,6 +635,19 @@ function renderToday(){
   } else {
     h+='<div style="display:flex;justify-content:flex-end;margin-bottom:8px;">';
     h+='<button onclick="resetKey()" style="border:none;background:transparent;font-size:11px;color:#bbb;cursor:pointer;text-decoration:underline;">🔑 API 키 재등록</button>';
+    h+='</div>';
+  }
+  // GitHub 토큰 (식단표·기록 저장 동기화용)
+  var ghTok=getGhToken();
+  if(!ghTok){
+    h+='<div class="key-row" style="margin-top:4px;"><span>GitHub 토큰:</span>';
+    h+='<input type="password" id="ghTokenInput" placeholder="github_pat_... (저장 동기화용)">';
+    h+='<button onclick="onSaveGhToken()">저장</button>';
+    h+='<span class="key-no">✖ 미등록</span></div>';
+  } else {
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:11px;color:#888;">';
+    h+='<span>🔗 GitHub 토큰 저장됨 ('+esc(ghTok.slice(0,11))+'...'+esc(ghTok.slice(-4))+')</span>';
+    h+='<button onclick="onClearGhToken()" style="border:none;background:transparent;font-size:11px;color:#c0392b;cursor:pointer;text-decoration:underline;">토큰 재등록</button>';
     h+='</div>';
   }
 
