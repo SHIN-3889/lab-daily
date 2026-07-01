@@ -700,6 +700,12 @@
       ]
     }
   },
+  "profile": {
+    "sex": "male",
+    "age": 35,
+    "height": 172,
+    "activity": "sedentary"
+  },
   "2026-06-24": [
     {
       "id": "mqrpprrujxb",
